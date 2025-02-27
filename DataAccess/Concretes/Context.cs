@@ -12,6 +12,9 @@ namespace DataAccess.Concretes
 {
     public class Context : IdentityDbContext<AppUser, AppRole, int>
     {
+        public Context(DbContextOptions<Context> options) : base(options)
+        {
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=APBS_Database;Trusted_Connection=true;");

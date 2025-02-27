@@ -15,7 +15,7 @@ namespace Entities.Concretes
         public string NationalityId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public bool isActive { get; set; }
+        public bool Status { get; set; }
 
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
