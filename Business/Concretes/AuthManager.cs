@@ -1,138 +1,85 @@
-﻿using Business.Dtos;
-using Core.Entities.Dtos;
+﻿using Business.Abstract;
+using Business.Dtos;
+using Core.Entities.Concrete;
 using Core.Utilities.Results;
+using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.Jwt;
-using Entities.Concretes;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
+using System;
+using System.Threading.Tasks;
 
-public class AuthManager : IAuthService
+namespace Business.Concrete
 {
-    private readonly UserManager<AppUser> _userManager;
-    private readonly SignInManager<AppUser> _signInManager;
-    private readonly ITokenHelper _tokenHelper;
-
-    public AuthManager(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenHelper tokenHelper)
+    public class AuthManager : IAuthService
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _tokenHelper = tokenHelper;
-    }
+        private IUserService _userService;
+        private ITokenHelper _tokenHelper;
 
-    // Kayıt olma işlemi
-    public async Task<IDataResult<UserForTokenDto>> Register(UserForRegisterDto userForRegisterDto)
-    {
-        // Şifre doğrulaması: Şifreler eşleşiyor mu?
-        if (userForRegisterDto.Password != userForRegisterDto.ConfirmPassword)
+        public AuthManager(IUserService userService, ITokenHelper tokenHelper)
         {
-            return new ErrorDataResult<UserForTokenDto>("Şifreler uyuşmuyor.");
+            _userService = userService;
+            _tokenHelper = tokenHelper;
         }
 
-        var user = new AppUser
+        // Kullanıcıyı login yapma (TC Kimlik No ile)
+        public async Task<IDataResult<User>> LoginAsync(UserForLoginDto userForLoginDto)
         {
-            UserName = userForRegisterDto.Email,
-            FirstName = userForRegisterDto.FirstName,
-            LastName = userForRegisterDto.LastName,
-            Email = userForRegisterDto.Email,
-            NationalityId = userForRegisterDto.NationalityId,
-            CreatedDate = DateTime.Now,
-            Status = true
-        };
+            var userToCheck = await _userService.GetByNationalityIdAsync(userForLoginDto.NationalityId);
+            if (userToCheck == null)
+            {
+                return new ErrorDataResult<User>("Messages.UserNotFound");
+            }
+            if (userToCheck.Status == false)
+            {
+                return new ErrorDataResult<User>("Messages.PassiveAccount");
+            }
+            if (!HashingHelper.VerifyPasswordHash(userForLoginDto.Password, userToCheck.PasswordHash, userToCheck.PasswordSalt))
+            {
+                return new ErrorDataResult<User>("Messages.PasswordError");
+            }
+            return new SuccessDataResult<User>(userToCheck, "Messages.SuccessfulLogin");
+        }
 
-        var result = await _userManager.CreateAsync(user, userForRegisterDto.Password);
-
-        if (result.Succeeded)
+        // Kullanıcıyı kayıt etme (TC Kimlik No ile)
+        public async Task<IDataResult<User>> RegisterAsync(UserForRegisterDto userForRegisterDto)
         {
-            var userForTokenDto = new UserForTokenDto
-            {
-                UserId = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                NationalityId = user.NationalityId
-            };
+            byte[] passwordHash;
+            byte[] passwordSalt;
 
-            // Token oluşturma
-            var tokenResult = CreateAccessToken(userForTokenDto); // Token oluşturma
-
-            if (tokenResult.IsSuccess)
+            if (await UserExistsAsync(userForRegisterDto.NationalityId))
             {
-                userForTokenDto.Token = tokenResult.Data.Token; // Token'ı DTO'ya ekleyelim
+                return new ErrorDataResult<User>("Messages.UserAlreadyExists");
             }
 
-            return new SuccessDataResult<UserForTokenDto>(userForTokenDto, "Kayıt başarılı.");
-        }
-
-        return new ErrorDataResult<UserForTokenDto>("Kayıt sırasında hata oluştu.");
-    }
-
-
-    public async Task<IDataResult<UserForTokenDto>> Login(UserForLoginDto userForLoginDto)
-    {
-        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.NationalityId == userForLoginDto.NationalityId);
-
-        if (user == null)
-        {
-            return new ErrorDataResult<UserForTokenDto>("Kullanıcı bulunamadı.");
-        }
-
-        var result = await _signInManager.PasswordSignInAsync(user, userForLoginDto.Password, false, false);
-
-        if (result.Succeeded)
-        {
-            var userForTokenDto = new UserForTokenDto
+            HashingHelper.CreatePasswordHash(userForRegisterDto.Password, out passwordHash, out passwordSalt);
+            var user = new User()
             {
-                UserId = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                NationalityId = user.NationalityId
+                NationalityId = userForRegisterDto.NationalityId,
+                Email = userForRegisterDto.Email,
+                FirstName = userForRegisterDto.FirstName,
+                LastName = userForRegisterDto.LastName,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                Status = true,
+                CreatedDate = DateTime.Now
             };
 
-            // Token oluşturma
-            var tokenResult = CreateAccessToken(userForTokenDto); // Token oluşturma
-
-            if (tokenResult.IsSuccess)
-            {
-                userForTokenDto.Token = tokenResult.Data.Token; // Token'ı DTO'ya ekleyelim
-            }
-
-            return new SuccessDataResult<UserForTokenDto>(userForTokenDto, "Giriş başarılı.");
+            await _userService.AddAsync(user); // Asenkron metot ile kullanıcı ekleniyor
+            return new SuccessDataResult<User>(user, "Messages.UserRegistered");
         }
 
-        return new ErrorDataResult<UserForTokenDto>("Geçersiz şifre.");
-    }
-
-
-    public IDataResult<AccessToken> CreateAccessToken(UserForTokenDto userForTokenDto)
-    {
-        // Kullanıcının rollerini almak için userForTokenDto üzerinden erişim sağlıyoruz
-        var operationClaims = new List<OperationClaimForTokenDto>();
-
-        // Kullanıcı rolünü ekliyoruz
-        // Burada, userForTokenDto üzerinden kullanıcının rollerini alıyoruz.
-        // Örnek: userForTokenDto.Roles yerine gerçek roller eklenmeli.
-        foreach (var role in userForTokenDto.Roles)
+        // Kullanıcı var mı kontrol etme (TC Kimlik No ile)
+        public async Task<bool> UserExistsAsync(string nationalityId)
         {
-            operationClaims.Add(new OperationClaimForTokenDto { Name = role });
+            var user = await _userService.GetByNationalityIdAsync(nationalityId);
+            return user != null;
         }
 
-        // Şimdi CreateToken metoduna doğru türde parametre gönderiyoruz
-        var accessToken = _tokenHelper.CreateToken(userForTokenDto, operationClaims);
-
-        return new SuccessDataResult<AccessToken>(accessToken, "Token oluşturuldu.");
-    }
-
-
-    // Kullanıcı var mı kontrolü
-    public async Task<IResult> UserExists(string nationalityId)
-    {
-        var user = await _userManager.FindByEmailAsync(nationalityId);
-        if (user != null)
+        // Erişim token'ı oluşturma
+        public async Task<IDataResult<AccessToken>> CreateAccessTokenAsync(User user)
         {
-            return new ErrorResult("Kullanıcı zaten var.");
+            var claims = await _userService.GetClaimsAsync(user); // Claims alınıyor
+            var accessToken = _tokenHelper.CreateToken(user, claims);
+            return new SuccessDataResult<AccessToken>(accessToken, "Token Created");
         }
-        return new SuccessResult("Kullanıcı bulunamadı.");
     }
 }

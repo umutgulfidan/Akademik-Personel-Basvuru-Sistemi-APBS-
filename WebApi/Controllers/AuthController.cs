@@ -1,8 +1,9 @@
-﻿using Business.Dtos;
-using Core.Entities.Dtos;
+﻿using Business.Abstract;
+using Business.Dtos;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Jwt;
 using Entities.Concretes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -19,30 +20,40 @@ namespace WebAPI.Controllers
             _authService = authService;
         }
 
-        // Kayıt işlemi
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] UserForRegisterDto userForRegisterDto)
-        {
-            var result = await _authService.Register(userForRegisterDto);
-
-            if (result.IsSuccess)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
-        // Giriş işlemi
+        // Kullanıcı giriş işlemi
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
         {
-            var result = await _authService.Login(userForLoginDto);
-
-            if (result.IsSuccess)
+            var loginResult = await _authService.LoginAsync(userForLoginDto);
+            if (!loginResult.IsSuccess)
             {
-                return Ok(result);
+                return BadRequest(loginResult.Message);
             }
-            return BadRequest(result);
+
+            var tokenResult = await _authService.CreateAccessTokenAsync(loginResult.Data);
+            if (tokenResult.IsSuccess)
+            {
+                return Ok(tokenResult);
+            }
+            return BadRequest(tokenResult.Message);
+        }
+
+        // Kullanıcı kayıt işlemi
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] UserForRegisterDto userForRegisterDto)
+        {
+            var registerResult = await _authService.RegisterAsync(userForRegisterDto);
+            if (!registerResult.IsSuccess)
+            {
+                return BadRequest(registerResult.Message);
+            }
+
+            var tokenResult = await _authService.CreateAccessTokenAsync(registerResult.Data);
+            if (tokenResult.IsSuccess)
+            {
+                return Ok(tokenResult);
+            }
+            return BadRequest(tokenResult.Message);
         }
 
     }

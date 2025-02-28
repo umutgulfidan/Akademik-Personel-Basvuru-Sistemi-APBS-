@@ -18,6 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\Concrete\" />
+    <Folder Include="Entities\Dtos\" />
   </ItemGroup>
 </Project>

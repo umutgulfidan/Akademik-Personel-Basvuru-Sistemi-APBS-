@@ -1,12 +1,16 @@
 ﻿using Business.Dtos;
-using Core.Entities.Dtos;
+using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Jwt;
+using System.Threading.Tasks;
 
-public interface IAuthService
+namespace Business.Abstract
 {
-    Task<IDataResult<UserForTokenDto>> Register(UserForRegisterDto userForRegisterDto); // Register method updated to include password
-    Task<IDataResult<UserForTokenDto>> Login(UserForLoginDto userForLoginDto); // Login method remains unchanged
-    IDataResult<AccessToken> CreateAccessToken(UserForTokenDto userForTokenDto); // Access token creation remains unchanged
-    Task<IResult> UserExists(string nationalityId); // User exists check remains unchanged
+    public interface IAuthService
+    {
+        Task<IDataResult<User>> LoginAsync(UserForLoginDto userForLoginDto); // TC Kimlik ile login
+        Task<IDataResult<User>> RegisterAsync(UserForRegisterDto userForRegisterDto); // TC Kimlik ile kayıt
+        Task<bool> UserExistsAsync(string nationalityId); // Kullanıcı var mı kontrolü
+        Task<IDataResult<AccessToken>> CreateAccessTokenAsync(User user); // Erişim token'ı oluşturma
+    }
 }

@@ -1,6 +1,12 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Business.Abstract;
+using Business.Concrete;
 using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.Jwt;
+using DataAccess.Abstracts;
 using DataAccess.Concretes;
+using DataAccess.Concretes.EntitiyFramework;
 using Entities.Concretes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -9,60 +15,46 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Inbound claim mapping temizle
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-//builder.Services.AddOpenApi();
 
+// Swagger
 builder.Services.AddSwaggerGen();
 
-// Identity Options
-builder.Services.Configure<IdentityOptions>(options =>
+
+// JWT Authentication
+var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<Core.Utilities.Security.Jwt.TokenOptions>();
+
+builder.Services.AddAuthentication(options =>
 {
-    // Þifre gereksinimlerini kaldýrýyoruz
-    options.Password.RequireDigit = false;            // Sayý gereksinimini kaldýr
-    options.Password.RequireLowercase = false;        // Küçük harf gereksinimini kaldýr
-    options.Password.RequireNonAlphanumeric = false;  // Özel karakter gereksinimini kaldýr
-    options.Password.RequireUppercase = false;        // Büyük harf gereksinimini kaldýr
-    options.Password.RequiredLength = 6;               // Þifre uzunluðunu 6 karaktere ayarladýk, opsiyonel
-    options.Password.RequiredUniqueChars = 1;          // Tek benzersiz karakter gereksinimini kaldýr
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidIssuer = tokenOptions.Issuer,
+        ValidAudience = tokenOptions.Audience,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey),
+        NameClaimType = ClaimTypes.Name,
+        RoleClaimType = ClaimTypes.Role
+    };
 });
 
 
-
-// Token
-builder.Services.AddDbContext<Context>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
-
-builder.Services.AddIdentity<AppUser, AppRole>()
-    .AddEntityFrameworkStores<Context>()
-    .AddDefaultTokenProviders();
-
-
-var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<Core.Utilities.Security.Jwt.TokenOptions>();
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidIssuer = tokenOptions.Issuer,
-                        ValidAudience = tokenOptions.Audience,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
-                    };
-                });
-
-
 // Singletons
-
-builder.Services.AddScoped<IAuthService, AuthManager>();
+builder.Services.AddSingleton<IAuthService, AuthManager>();
 builder.Services.AddSingleton<ITokenHelper, JwtHelper>();
+builder.Services.AddSingleton<IUserService, UserManager>();
+builder.Services.AddSingleton<IUserDal, EfUserDal>();
 
 var app = builder.Build();
 
@@ -78,7 +70,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+// Ensure authentication and authorization are in the correct order
+app.UseAuthentication(); // JWT middleware
+app.UseAuthorization();  // Authorization middleware
 
 app.MapControllers();
 

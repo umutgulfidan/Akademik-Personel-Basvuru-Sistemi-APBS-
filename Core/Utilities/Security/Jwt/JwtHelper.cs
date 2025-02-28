@@ -1,30 +1,32 @@
-﻿
+﻿using Core.Entities.Concrete;
 using Core.Utilities.Security.Encryption;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-
-using Core.Entities.Dtos;
+using System.Security.Claims;
+using System.Text;
+using Core.Extensions.Claims;
 
 namespace Core.Utilities.Security.Jwt
 {
     public class JwtHelper : ITokenHelper
     {
+
         public IConfiguration Configuration { get; }
         private TokenOptions _tokenOptions;
         private DateTime _accessTokenExpiration;
-
         public JwtHelper(IConfiguration configuration)
         {
             Configuration = configuration;
             _tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
-        }
 
-        public AccessToken CreateToken(UserForTokenDto user, List<OperationClaimForTokenDto> operationClaims)
+        }
+        public AccessToken CreateToken(User user, List<OperationClaim> operationClaims)
         {
             _accessTokenExpiration = DateTime.UtcNow.AddMinutes(_tokenOptions.AccessTokenExpiration);
             var securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
@@ -38,10 +40,11 @@ namespace Core.Utilities.Security.Jwt
                 Token = token,
                 Expiration = _accessTokenExpiration
             };
+
         }
 
-        public JwtSecurityToken CreateJwtSecurityToken(TokenOptions tokenOptions, UserForTokenDto user,
-            SigningCredentials signingCredentials, List<OperationClaimForTokenDto> operationClaims)
+        public JwtSecurityToken CreateJwtSecurityToken(TokenOptions tokenOptions, User user,
+            SigningCredentials signingCredentials, List<OperationClaim> operationClaims)
         {
             var jwt = new JwtSecurityToken(
                 issuer: tokenOptions.Issuer,
@@ -54,20 +57,15 @@ namespace Core.Utilities.Security.Jwt
             return jwt;
         }
 
-        private IEnumerable<Claim> SetClaims(UserForTokenDto user, List<OperationClaimForTokenDto> operationClaims)
+        private IEnumerable<Claim> SetClaims(User user, List<OperationClaim> operationClaims)
         {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}")
-            };
-
-            // OperationClaimForTokenDto nesnelerini Claims'e ekle
-            claims.AddRange(operationClaims.Select(c => new Claim(ClaimTypes.Role, c.Name)));
+            var claims = new List<Claim>();
+            claims.AddNameIdentifier(user.Id.ToString());
+            claims.AddEmail(user.Email);
+            claims.AddName($"{user.FirstName} {user.LastName}");
+            claims.AddRoles(operationClaims.Select(c => c.Name).ToArray());
 
             return claims;
         }
-
     }
 }
