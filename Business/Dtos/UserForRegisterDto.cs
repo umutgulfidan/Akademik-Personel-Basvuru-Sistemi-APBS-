@@ -14,6 +14,8 @@ namespace Business.Dtos
         public string NationalityId { get; set; }
         public string Password { get; set; }  // Şifreyi ekliyoruz
         public string ConfirmPassword { get; set; }  // Şifre doğrulama alanı
+
+        public DateTime DateOfBirth { get; set; }
     }
 
 

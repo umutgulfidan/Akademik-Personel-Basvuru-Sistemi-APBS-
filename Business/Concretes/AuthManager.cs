@@ -4,6 +4,7 @@ using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.Jwt;
+using MernisService;
 using System;
 using System.Threading.Tasks;
 
@@ -45,10 +46,16 @@ namespace Business.Concrete
             byte[] passwordHash;
             byte[] passwordSalt;
 
+            if (!CheckPerson(userForRegisterDto))
+            {
+                return new ErrorDataResult<User>("Gerçek Bir Kullanıcı Değil");
+            }
+
             if (await UserExistsAsync(userForRegisterDto.NationalityId))
             {
                 return new ErrorDataResult<User>("Messages.UserAlreadyExists");
             }
+            
 
             HashingHelper.CreatePasswordHash(userForRegisterDto.Password, out passwordHash, out passwordSalt);
             var user = new User()
@@ -60,7 +67,8 @@ namespace Business.Concrete
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 Status = true,
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
+                DateOfBirth = userForRegisterDto.DateOfBirth,
             };
 
             await _userService.AddAsync(user); // Asenkron metot ile kullanıcı ekleniyor
@@ -80,6 +88,19 @@ namespace Business.Concrete
             var claims = await _userService.GetClaimsAsync(user); // Claims alınıyor
             var accessToken = _tokenHelper.CreateToken(user, claims);
             return new SuccessDataResult<AccessToken>(accessToken, "Token Created");
+        }
+
+        private bool CheckPerson(UserForRegisterDto user)
+        {
+            KPSPublicSoapClient client = new KPSPublicSoapClient(KPSPublicSoapClient.EndpointConfiguration.KPSPublicSoap);
+
+            // TCKimlikNoDogrulaAsync metoduna doğru parametreler ile çağrı yapıyoruz
+            return client.TCKimlikNoDogrulaAsync(
+                Convert.ToInt64(user.NationalityId),  // TC Kimlik Numarası
+                user.FirstName,                       // Ad
+                user.LastName,                        // Soyad
+                user.DateOfBirth.Year                 // Doğum Yılı
+            ).Result.Body.TCKimlikNoDogrulaResult;
         }
     }
 }
