@@ -1,6 +1,8 @@
 ﻿using Business.Abstract;
 using Business.BusinessAspects;
 using Business.Dtos;
+using Business.ValidationRules;
+using Core.Aspects.Autofac.Validation;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
@@ -23,6 +25,7 @@ namespace Business.Concrete
         }
 
         // Kullanıcıyı login yapma (TC Kimlik No ile)
+        [ValidationAspect(typeof(LoginValidator))]
         public async Task<IDataResult<User>> LoginAsync(UserForLoginDto userForLoginDto)
         {
             var userToCheck = await _userService.GetByNationalityIdAsync(userForLoginDto.NationalityId);
@@ -42,6 +45,8 @@ namespace Business.Concrete
         }
 
         // Kullanıcıyı kayıt etme (TC Kimlik No ile)
+
+        [ValidationAspect(typeof(RegisterValidator))]
         public async Task<IDataResult<User>> RegisterAsync(UserForRegisterDto userForRegisterDto)
         {
             byte[] passwordHash;
