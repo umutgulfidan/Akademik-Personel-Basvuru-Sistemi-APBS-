@@ -16,13 +16,8 @@ namespace DataAccess.Concretes.EntitiyFramework
         {
             using (var context = new Context())
             {
-                var result = from userClaim in context.UserOperationClaims
-                             join claim in context.OperationClaims
-                             on userClaim.OperationClaimId equals claim.Id
-                             where userClaim.UserId == user.Id
-                             select claim;
-
-                return await result.ToListAsync();
+                var result = context.Set<UserOperationClaim>().Where(u=> u.UserId == user.Id).Include(c=> c.OperationClaim).Select(c=> c.OperationClaim).ToListAsync();
+                return await result;
             }
         }
     }
