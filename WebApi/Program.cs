@@ -36,8 +36,6 @@ builder.Services.AddControllers();
 // Swagger
 builder.Services.AddSwaggerGen();
 
-// CORS
-app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader());
 
 // JWT Authentication
 var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<Core.Utilities.Security.Jwt.TokenOptions>();
@@ -84,6 +82,8 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty;
     });
 }
+
+app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader());
 
 app.UseHttpsRedirection();
 
