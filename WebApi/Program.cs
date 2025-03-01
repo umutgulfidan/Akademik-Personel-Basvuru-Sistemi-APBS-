@@ -2,22 +2,14 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Business.Abstract;
-using Business.Concrete;
 using Business.DependencyResolvers;
 using Core.DependencyResolvers;
 using Core.Extensions;
 using Core.Utilities.IoC;
 using Core.Utilities.Security.Encryption;
-using Core.Utilities.Security.Jwt;
-using DataAccess.Abstracts;
-using DataAccess.Concretes;
-using DataAccess.Concretes.EntitiyFramework;
-using Entities.Concretes;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Core.Extensions.Exception;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,6 +64,9 @@ builder.Services.AddDependencyResolvers(new ICoreModule[] {new CoreModule()});
 //builder.Services.AddSingleton<IUserDal, EfUserDal>();
 
 var app = builder.Build();
+
+// Yazdýðýmýz middleware
+app.ConfigureCustomExceptionMiddleware();
 
 if (app.Environment.IsDevelopment())
 {
