@@ -26,7 +26,7 @@ namespace Business.ValidationRules
             RuleFor(x => x.FirstName).MinimumLength(2).WithMessage("Kullanıcı adı 2 karakterden kısa olamaz");
             RuleFor(x => x.LastName).MinimumLength(2).WithMessage("Kullanıcı soyadı 2 karakterden kısa olamaz");
             RuleFor(x => x.DateOfBirth).LessThanOrEqualTo(DateTime.Now).WithMessage("Doğum günü kabul edilen aralık dışında.");
-            RuleFor(x=> x.DateOfBirth).GreaterThanOrEqualTo(new DateTime(1900,0,1)).WithMessage("Doğum günü kabul edilen aralık dışında.");
+            RuleFor(x=> x.DateOfBirth).GreaterThanOrEqualTo(new DateTime(1900,1,1)).WithMessage("Doğum günü kabul edilen aralık dışında.");
 
 
             // PASSWORD RULES
