@@ -1,7 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Business.Abstract;
 using Business.Concrete;
+using Business.DependencyResolvers;
 using Core.DependencyResolvers;
 using Core.Extensions;
 using Core.Utilities.IoC;
@@ -17,6 +20,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory()).ConfigureContainer<ContainerBuilder>(builder =>
+{
+    builder.RegisterModule(new AutofacBusinessModule());
+});
+//
 
 // Inbound claim mapping temizle
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -57,10 +66,10 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddDependencyResolvers(new ICoreModule[] {new CoreModule()});
 
 // Singletons
-builder.Services.AddSingleton<IAuthService, AuthManager>();
-builder.Services.AddSingleton<ITokenHelper, JwtHelper>();
-builder.Services.AddSingleton<IUserService, UserManager>();
-builder.Services.AddSingleton<IUserDal, EfUserDal>();
+//builder.Services.AddSingleton<IAuthService, AuthManager>();
+//builder.Services.AddSingleton<ITokenHelper, JwtHelper>();
+//builder.Services.AddSingleton<IUserService, UserManager>();
+//builder.Services.AddSingleton<IUserDal, EfUserDal>();
 
 var app = builder.Build();
 
