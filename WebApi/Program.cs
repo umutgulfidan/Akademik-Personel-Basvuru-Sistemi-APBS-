@@ -2,6 +2,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Business.Abstract;
 using Business.Concrete;
+using Core.DependencyResolvers;
+using Core.Extensions;
+using Core.Utilities.IoC;
 using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.Jwt;
 using DataAccess.Abstracts;
@@ -49,6 +52,9 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
+// Core Dependency Resolvers
+builder.Services.AddDependencyResolvers(new ICoreModule[] {new CoreModule()});
 
 // Singletons
 builder.Services.AddSingleton<IAuthService, AuthManager>();
