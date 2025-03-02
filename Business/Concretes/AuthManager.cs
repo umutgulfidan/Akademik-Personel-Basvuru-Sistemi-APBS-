@@ -33,15 +33,15 @@ namespace Business.Concrete
             {
                 return new ErrorDataResult<User>("Messages.UserNotFound");
             }
-            if (userToCheck.Status == false)
+            if (userToCheck.Data.Status == false)
             {
                 return new ErrorDataResult<User>("Messages.PassiveAccount");
             }
-            if (!HashingHelper.VerifyPasswordHash(userForLoginDto.Password, userToCheck.PasswordHash, userToCheck.PasswordSalt))
+            if (!HashingHelper.VerifyPasswordHash(userForLoginDto.Password, userToCheck.Data.PasswordHash, userToCheck.Data.PasswordSalt))
             {
                 return new ErrorDataResult<User>("Messages.PasswordError");
             }
-            return new SuccessDataResult<User>(userToCheck, "Messages.SuccessfulLogin");
+            return new SuccessDataResult<User>(userToCheck.Data, "Messages.SuccessfulLogin");
         }
 
         // Kullanıcıyı kayıt etme (TC Kimlik No ile)

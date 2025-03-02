@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Business.BusinessAspects;
 using Business.Dtos;
+using Core.Extensions.Claims;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Jwt;
 using Entities.Concretes;
@@ -15,10 +16,12 @@ namespace WebAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IUserService _userService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IUserService userService)
         {
             _authService = authService;
+            _userService = userService;
         }
 
         // Kullanıcı giriş işlemi
@@ -55,6 +58,30 @@ namespace WebAPI.Controllers
                 return Ok(tokenResult);
             }
             return BadRequest(tokenResult.Message);
+        }
+
+        [HttpGet("getuserbytoken")]
+        public async Task<IActionResult> GetUserFromToken()
+        {
+            if (!HttpContext.User.Identity?.IsAuthenticated ?? false)
+            {
+                return Unauthorized("User is not authenticated.");
+            }
+
+            var userId = HttpContext.User.ClaimUserId();
+
+            if (userId == null)
+            {
+                return Unauthorized("Invalid or missing user ID in token.");
+            }
+
+            var result = await _userService.GetUserDto(userId);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+
         }
 
     }
