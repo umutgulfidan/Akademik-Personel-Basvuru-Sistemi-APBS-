@@ -1,7 +1,9 @@
 ﻿using Autofac;
 using Autofac.Extras.DynamicProxy;
+using AutoMapper;
 using Business.Abstract;
 using Business.Concrete;
+using Business.Mapping;
 using Core.Utilities.Interceptors;
 using Core.Utilities.Security.Jwt;
 using DataAccess.Abstracts;
@@ -26,7 +28,20 @@ namespace Business.DependencyResolvers
 
             builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
 
-            
+
+            // AutoMapper Konfigürasyonu
+            builder.Register(c =>
+            {
+                var config = new MapperConfiguration(cfg =>
+                {
+                    // Mapping profilini buradan ekleyebilirsiniz
+                    cfg.AddProfile(new MappingProfile()); // MappingProfile'ı projede oluşturduğunuz yerden çağırıyorsunuz.
+                });
+                return config.CreateMapper(); // AutoMapper'ı döndürüyoruz.
+            }).As<IMapper>().SingleInstance();
+
+
+            // Interceptors ve Aspectler için yapılandırma
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces().EnableInterfaceInterceptors(new Castle.DynamicProxy.ProxyGenerationOptions()
             {

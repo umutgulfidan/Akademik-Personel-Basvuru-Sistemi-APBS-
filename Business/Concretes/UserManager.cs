@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using AutoMapper;
+using Business.Abstract;
 using Business.Dtos;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
@@ -12,10 +13,12 @@ namespace Business.Concrete
 {
     public class UserManager : IUserService
     {
-        private IUserDal _userDal;
-        public UserManager(IUserDal userDal)
+        private readonly IUserDal _userDal;
+        private readonly IMapper _mapper;
+        public UserManager(IUserDal userDal,IMapper mapper)
         {
             _userDal = userDal;
+            _mapper = mapper;
         }
 
         public async Task<IResult> AddAsync(User user)
@@ -66,15 +69,7 @@ namespace Business.Concrete
         public async Task<IDataResult<GetUserDto>> GetUserDto(int id)
         {
             var user = await _userDal.GetAsync(u => u.Id == id);
-            var result = new GetUserDto()
-            {
-                Id = user.Id,
-                DateOfBirth = user.DateOfBirth,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                NationalityId = user.NationalityId,
-            };
+            var result = _mapper.Map<GetUserDto>(user);
 
             return new SuccessDataResult<GetUserDto>(result);
 
