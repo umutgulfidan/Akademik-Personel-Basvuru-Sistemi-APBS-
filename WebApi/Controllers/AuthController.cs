@@ -4,7 +4,6 @@ using Business.Dtos;
 using Core.Extensions.Claims;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Jwt;
-using Entities.Concretes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

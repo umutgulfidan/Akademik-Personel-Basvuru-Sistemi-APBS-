@@ -1,5 +1,4 @@
 ﻿using Core.Entities.Concrete;
-using Entities.Concretes;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,6 +18,10 @@ namespace DataAccess.Concretes
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique();
+            modelBuilder.Entity<User>().HasIndex(x => x.NationalityId).IsUnique();
+
+
             base.OnModelCreating(modelBuilder);
         }
 

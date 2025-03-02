@@ -1,4 +1,5 @@
-﻿using Business.Abstract;
+﻿using AutoMapper;
+using Business.Abstract;
 using Business.BusinessAspects;
 using Business.Dtos;
 using Business.ValidationRules;
@@ -15,13 +16,15 @@ namespace Business.Concrete
 {
     public class AuthManager : IAuthService
     {
-        private IUserService _userService;
-        private ITokenHelper _tokenHelper;
+        private readonly IUserService _userService;
+        private readonly ITokenHelper _tokenHelper;
+        private readonly IMapper _mapper;
 
-        public AuthManager(IUserService userService, ITokenHelper tokenHelper)
+        public AuthManager(IUserService userService, ITokenHelper tokenHelper,IMapper mapper)
         {
             _userService = userService;
             _tokenHelper = tokenHelper;
+            _mapper = mapper;
         }
 
         // Kullanıcıyı login yapma (TC Kimlik No ile)
@@ -57,6 +60,7 @@ namespace Business.Concrete
                 return new ErrorDataResult<User>("Gerçek Bir Kullanıcı Değil");
             }
 
+
             if (await UserExistsAsync(userForRegisterDto.NationalityId))
             {
                 return new ErrorDataResult<User>("Messages.UserAlreadyExists");
@@ -64,20 +68,13 @@ namespace Business.Concrete
             
 
             HashingHelper.CreatePasswordHash(userForRegisterDto.Password, out passwordHash, out passwordSalt);
-            var user = new User()
-            {
-                NationalityId = userForRegisterDto.NationalityId,
-                Email = userForRegisterDto.Email,
-                FirstName = userForRegisterDto.FirstName,
-                LastName = userForRegisterDto.LastName,
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt,
-                Status = true,
-                CreatedDate = DateTime.Now,
-                DateOfBirth = userForRegisterDto.DateOfBirth,
-            };
 
-            await _userService.AddAsync(user); // Asenkron metot ile kullanıcı ekleniyor
+            var user = _mapper.Map<User>(userForRegisterDto);
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+            await _userService.AddAsync(user);
+
             return new SuccessDataResult<User>(user, "Messages.UserRegistered");
         }
 
@@ -85,7 +82,7 @@ namespace Business.Concrete
         public async Task<bool> UserExistsAsync(string nationalityId)
         {
             var user = await _userService.GetByNationalityIdAsync(nationalityId);
-            return user != null;
+            return user.Data != null;
         }
 
         // Erişim token'ı oluşturma
