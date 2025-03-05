@@ -4,6 +4,7 @@ using AutoMapper;
 using Business.Abstract;
 using Business.Concrete;
 using Business.Mapping;
+using Core.Aspects.Autofac.Logger;
 using Core.Utilities.Interceptors;
 using Core.Utilities.Security.Jwt;
 using DataAccess.Abstracts;
@@ -27,6 +28,7 @@ namespace Business.DependencyResolvers
 
 
             builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
+            builder.RegisterType<LoggerAspect>();  // LoggerAspect'i burada kaydediyoruz
 
 
             // AutoMapper Konfigürasyonu
