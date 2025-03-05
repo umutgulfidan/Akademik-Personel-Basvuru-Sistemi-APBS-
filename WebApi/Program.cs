@@ -10,6 +10,8 @@ using Core.Utilities.Security.Encryption;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Core.Extensions.Exception;
+using Serilog;
+using Core.CrossCuttingConcerns.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +19,13 @@ builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory()).Conf
 {
     builder.RegisterModule(new AutofacBusinessModule());
 });
-//
+
+// Serilog yapýlandýrmasý
+// LogHelper ile Serilog yapýlandýrmasýný çaðýrýyoruz
+LogHelper.ConfigureLogging();
+
+// Serilog'u ASP.NET Core ile entegre ediyoruz
+builder.Host.UseSerilog();
 
 // Inbound claim mapping temizle
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
@@ -79,6 +87,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader());
+
+// Middleware'leri kullanýyoruz
+// Loglama
+app.UseMiddleware<ExceptionLoggingMiddleware>();  // Hatalarý loglamak için
+app.UseMiddleware<RequestLoggingMiddleware>();    // Ýstekleri loglamak için
+
 
 app.UseHttpsRedirection();
 
