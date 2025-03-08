@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Entities.Concretes
 {
-    public class IlanBasvurusu : BaseEntity, IEntity
+    public class IlanBasvuru : BaseEntity, IEntity
     {
         [Key]
         public int Id { get; set; }
