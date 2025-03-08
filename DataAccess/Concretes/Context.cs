@@ -1,4 +1,5 @@
 ﻿using Core.Entities.Concrete;
+using Entities.Concretes;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -30,5 +31,11 @@ namespace DataAccess.Concretes
         public DbSet<User> Users { get; set; }
         public DbSet<OperationClaim> OperationClaims { get; set; }
         public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
+
+        public DbSet<Ilan> Ilanlar { get; set; }
+        public DbSet<Bolum> Bolumler { get; set; }
+        public DbSet<Pozisyon> Pozisyonlar { get; set; }
+        public DbSet<Alan> Alanlar { get; set; }
+
     }
 }
