@@ -26,16 +26,24 @@ namespace DataAccess.Concretes
             base.OnModelCreating(modelBuilder);
         }
 
-        //User
+        //Auth
 
         public DbSet<User> Users { get; set; }
         public DbSet<OperationClaim> OperationClaims { get; set; }
         public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
 
+        // İlanlar
         public DbSet<Ilan> Ilanlar { get; set; }
         public DbSet<Bolum> Bolumler { get; set; }
         public DbSet<Pozisyon> Pozisyonlar { get; set; }
         public DbSet<Alan> Alanlar { get; set; }
+
+        // Ön Değerlendirme
+        public DbSet<Kriter> Kriterler { get; set; }
+        public DbSet<AlanKriteri> AlanKriterleri { get; set; }
+        public DbSet<PuanKriteri> PuanKriterleri { get; set; }
+
+        // Başvuru
 
     }
 }
