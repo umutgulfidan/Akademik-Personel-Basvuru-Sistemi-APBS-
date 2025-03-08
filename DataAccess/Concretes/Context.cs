@@ -22,6 +22,30 @@ namespace DataAccess.Concretes
             modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique();
             modelBuilder.Entity<User>().HasIndex(x => x.NationalityId).IsUnique();
 
+            modelBuilder.Entity<IlanBasvuru>()
+            .HasOne(b => b.Basvuran)
+            .WithMany()
+            .HasForeignKey(b => b.BasvuranId)
+            .OnDelete(DeleteBehavior.Restrict); // ON DELETE CASCADE yerine RESTRICT kullanıldı
+
+            modelBuilder.Entity<BasvuruJuri>()
+            .HasOne(b => b.Kullanici)
+            .WithMany()
+            .HasForeignKey(b => b.KullaniciId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RaporDosya>()
+                .HasOne(r => r.Basvuru)
+                .WithMany()
+                .HasForeignKey(r => r.BasvuruId)
+                .OnDelete(DeleteBehavior.Restrict);  // veya .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<RaporDosya>()
+                .HasOne(r => r.Juri)
+                .WithMany()
+                .HasForeignKey(r => r.JuriId)
+                .OnDelete(DeleteBehavior.Restrict);  // veya .OnDelete(DeleteBehavior.SetNull);
+
 
             base.OnModelCreating(modelBuilder);
         }
@@ -44,6 +68,10 @@ namespace DataAccess.Concretes
         public DbSet<PuanKriteri> PuanKriterleri { get; set; }
 
         // Başvuru
-
+        public DbSet<IlanBasvuru> IlanBasvurulari { get; set; }
+        public DbSet<BasvuruDurumu> BasvuruDurumlari { get; set; }
+        public DbSet<BasvuruJuri> BasvuruJurileri { get; set; }
+        public DbSet<BasvuruDosya> BasvuruDosyalari { get; set; }
+        public DbSet<RaporDosya> RaporDosyalari { get; set; }
     }
 }
