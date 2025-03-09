@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
-using Business.Dtos.Alan;
 using Business.ValidationRules.Alan;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using Entities.Concretes;
+using Entities.Dtos.Alan;
 using System;
 using System.Collections.Generic;
 using System.Linq;

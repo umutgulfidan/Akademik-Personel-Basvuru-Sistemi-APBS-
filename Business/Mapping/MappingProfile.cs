@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
-using Business.Dtos;
-using Business.Dtos.Alan;
 using Core.Entities.Concrete;
 using Core.Utilities.Security.Hashing;
 using Entities.Concretes;
+using Entities.Dtos;
+using Entities.Dtos.Alan;
+using Entities.Dtos.Bolum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,10 @@ namespace Business.Mapping
             CreateMap<UpdateAlanDto, Alan>();
             CreateMap<AddAlanDto, Alan>()
                 .ForMember(dest=> dest.Id, opt=> opt.Ignore());
+
+            CreateMap<UpdateBolumDto, Bolum>();
+            CreateMap<AddBolumDto, Bolum>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             //CreateMap<UserForRegisterDto, User>().ConstructUsing(
             //    (src,context) =>

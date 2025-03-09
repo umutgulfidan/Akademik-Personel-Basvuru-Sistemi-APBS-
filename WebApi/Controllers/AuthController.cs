@@ -1,9 +1,9 @@
 ﻿using Business.Abstract;
 using Business.BusinessAspects;
-using Business.Dtos;
 using Core.Extensions.Claims;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Jwt;
+using Entities.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

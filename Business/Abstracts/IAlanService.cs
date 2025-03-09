@@ -1,6 +1,6 @@
-﻿using Business.Dtos.Alan;
-using Core.Utilities.Results;
+﻿using Core.Utilities.Results;
 using Entities.Concretes;
+using Entities.Dtos.Alan;
 using System;
 using System.Collections.Generic;
 using System.Linq;

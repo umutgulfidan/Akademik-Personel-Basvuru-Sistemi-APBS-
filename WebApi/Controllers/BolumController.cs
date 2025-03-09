@@ -1,7 +1,5 @@
 ﻿using Business.Abstracts;
-using Core.Utilities.Results;
-using Entities.Concretes;
-using Entities.Dtos.Alan;
+using Entities.Dtos.Bolum;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,20 +7,18 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AlanController : ControllerBase
+    public class BolumController : ControllerBase
     {
-        private readonly IAlanService _alanService;
-
-        public AlanController(IAlanService alanService)
+        private readonly IBolumService _bolumService;
+        public BolumController(IBolumService bolumService)
         {
-            _alanService = alanService;
+            _bolumService = bolumService;
         }
-
         [HttpGet("getall")]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _alanService.GetAll();
-            if (result.IsSuccess) 
+            var result = await _bolumService.GetAll();
+            if (result.IsSuccess)
             {
                 return Ok(result);
             }
@@ -32,7 +28,7 @@ namespace WebApi.Controllers
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetById(int id)
         {
-            var result = await _alanService.GetById(id);
+            var result = await _bolumService.GetById(id);
             if (result.IsSuccess)
             {
                 return Ok(result);
@@ -43,7 +39,7 @@ namespace WebApi.Controllers
         [HttpDelete("delete")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _alanService.Delete(id);
+            var result = await _bolumService.Delete(id);
             if (result.IsSuccess)
             {
                 return Ok(result);
@@ -52,9 +48,9 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("update")]
-        public async Task<IActionResult> Update(UpdateAlanDto updateAlanDto)
+        public async Task<IActionResult> Update(UpdateBolumDto updateBolumDto)
         {
-            var result = await _alanService.Update(updateAlanDto);
+            var result = await _bolumService.Update(updateBolumDto);
             if (result.IsSuccess)
             {
                 return Ok(result);
@@ -63,15 +59,14 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("add")]
-        public async Task<IActionResult> Add(AddAlanDto addAlanDto)
+        public async Task<IActionResult> Add(AddBolumDto addBolumDto)
         {
-            var result = await _alanService.Add(addAlanDto);
+            var result = await _bolumService.Add(addBolumDto);
             if (result.IsSuccess)
             {
                 return Ok(result);
             }
             return BadRequest(result);
         }
-
     }
 }
