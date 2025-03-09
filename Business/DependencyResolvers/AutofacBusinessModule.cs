@@ -29,6 +29,8 @@ namespace Business.DependencyResolvers
             builder.RegisterType<EfUserDal>().As<IUserDal>().SingleInstance();
             builder.RegisterType<AlanManager>().As<IAlanService>().SingleInstance();
             builder.RegisterType<EfAlanDal>().As<IAlanDal>().SingleInstance();
+            builder.RegisterType<BolumManager>().As<IBolumService>().SingleInstance();
+            builder.RegisterType<EfBolumDal>().As<IBolumDal>().SingleInstance();
 
 
             builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();

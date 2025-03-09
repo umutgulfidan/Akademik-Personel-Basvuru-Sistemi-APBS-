@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Business.Dtos.Alan
+namespace Entities.Dtos.Alan
 {
-    public class AddAlanDto
+    public class UpdateAlanDto
     {
+        public int Id { get; set; }
         public string Ad { get; set; }
         public string? Aciklama { get; set; }
     }

@@ -1,4 +1,4 @@
-﻿using Business.Dtos.Alan;
+﻿using Entities.Dtos.Alan;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

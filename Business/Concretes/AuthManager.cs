@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using Business.Abstract;
 using Business.BusinessAspects;
-using Business.Dtos;
 using Business.ValidationRules;
 using Core.Aspects.Autofac.Validation;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
 using Core.Utilities.Security.Jwt;
+using Entities.Dtos;
 using MernisService;
 using System;
 using System.Threading.Tasks;

@@ -1,7 +1,7 @@
-﻿using Business.Dtos;
-using Core.Entities.Concrete;
+﻿using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Jwt;
+using Entities.Dtos;
 using System.Threading.Tasks;
 
 namespace Business.Abstract
