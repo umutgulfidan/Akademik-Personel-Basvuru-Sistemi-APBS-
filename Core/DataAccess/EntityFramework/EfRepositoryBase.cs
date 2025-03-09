@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Core.DataAccess.EntityFramework
@@ -16,91 +15,91 @@ namespace Core.DataAccess.EntityFramework
         // Senkron Metotlar
         public void Add(TEntity entity)
         {
-            using (var context = new TContext())
-            {
-                context.Add(entity);
-                context.SaveChanges();
-            }
+            using var context = new TContext();
+            context.Add(entity);
+            context.SaveChanges();
         }
 
         public void Delete(TEntity entity)
         {
-            using (var context = new TContext())
-            {
-                context.Remove(entity);
-                context.SaveChanges();
-            }
+            using var context = new TContext();
+            context.Remove(entity);
+            context.SaveChanges();
         }
 
         public TEntity Get(Expression<Func<TEntity, bool>> filter)
         {
-            using (var context = new TContext())
-            {
-                return context.Set<TEntity>().FirstOrDefault(filter);
-            }
+            using var context = new TContext();
+            return context.Set<TEntity>().FirstOrDefault(filter);
         }
 
         public List<TEntity> GetAll(Expression<Func<TEntity, bool>> filter = null)
         {
-            using (var context = new TContext())
-            {
-                return filter==null ? context.Set<TEntity>().ToList() : context.Set<TEntity>().Where(filter).ToList();
-            }
+            using var context = new TContext();
+            return filter == null
+                ? context.Set<TEntity>().ToList()
+                : context.Set<TEntity>().Where(filter).ToList();
         }
 
         public void Update(TEntity entity)
         {
-            using (var context = new TContext())
-            {
-                context.Update(entity);
-                context.SaveChanges();
-            }
+            using var context = new TContext();
+            context.Update(entity);
+            context.SaveChanges();
+        }
+
+        public void DeleteById(int id)
+        {
+            using var context = new TContext();
+            var entity = context.Set<TEntity>().Find(id);
+            if (entity == null) return;
+            context.Remove(entity);
+            context.SaveChanges();
         }
 
         // Asenkron Metotlar
         public async Task AddAsync(TEntity entity)
         {
-            using (var context = new TContext())
-            {
-                await context.AddAsync(entity);
-                await context.SaveChangesAsync();
-            }
+            await using var context = new TContext();
+            await context.AddAsync(entity);
+            await context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(TEntity entity)
         {
-            using (var context = new TContext())
-            {
-                context.Entry(entity).State = EntityState.Deleted;
-                await context.SaveChangesAsync();
-            }
+            await using var context = new TContext();
+            context.Remove(entity);
+            await context.SaveChangesAsync();
         }
 
         public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filter)
         {
-            using (var context = new TContext())
-            {
-                return await context.Set<TEntity>().FirstOrDefaultAsync(filter);
-            }
+            await using var context = new TContext();
+            return await context.Set<TEntity>().FirstOrDefaultAsync(filter);
         }
 
         public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter = null)
         {
-            using (var context = new TContext())
-            {
-                return filter == null
-                    ? await context.Set<TEntity>().ToListAsync()
-                    : await context.Set<TEntity>().Where(filter).ToListAsync();
-            }
+            await using var context = new TContext();
+            return filter == null
+                ? await context.Set<TEntity>().ToListAsync()
+                : await context.Set<TEntity>().Where(filter).ToListAsync();
         }
 
         public async Task UpdateAsync(TEntity entity)
         {
-            using (var context = new TContext())
-            {
-                context.Entry(entity).State = EntityState.Modified;
-                await context.SaveChangesAsync();
-            }
+            await using var context = new TContext();
+            context.Update(entity);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task DeleteByIdAsync(int id)
+        {
+            await using var context = new TContext();
+            var entity = await context.Set<TEntity>().FindAsync(id);
+            if (entity == null) return;
+            context.Remove(entity);
+            await context.SaveChangesAsync();
         }
     }
 }

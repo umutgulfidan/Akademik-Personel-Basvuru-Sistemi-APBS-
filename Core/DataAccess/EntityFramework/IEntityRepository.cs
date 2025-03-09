@@ -14,6 +14,7 @@ namespace Core.DataAccess.EntityFramework
         void Add(TEntity entity);
         void Update(TEntity entity);
         void Delete(TEntity entity);
+        void DeleteById(int id);
         TEntity Get(Expression<Func<TEntity, bool>> filter);
         List<TEntity> GetAll(Expression<Func<TEntity, bool>> filter = null);
 
@@ -21,6 +22,7 @@ namespace Core.DataAccess.EntityFramework
         Task AddAsync(TEntity entity);
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(TEntity entity);
+        Task DeleteByIdAsync(int id);
         Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filter);
         Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter = null);
     }

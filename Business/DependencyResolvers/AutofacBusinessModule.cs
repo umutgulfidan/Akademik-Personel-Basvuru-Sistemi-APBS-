@@ -2,7 +2,9 @@
 using Autofac.Extras.DynamicProxy;
 using AutoMapper;
 using Business.Abstract;
+using Business.Abstracts;
 using Business.Concrete;
+using Business.Concretes;
 using Business.Mapping;
 using Core.Aspects.Autofac.Logger;
 using Core.Utilities.Interceptors;
@@ -25,6 +27,8 @@ namespace Business.DependencyResolvers
 
             builder.RegisterType<UserManager>().As<IUserService>().SingleInstance();
             builder.RegisterType<EfUserDal>().As<IUserDal>().SingleInstance();
+            builder.RegisterType<AlanManager>().As<IAlanService>().SingleInstance();
+            builder.RegisterType<EfAlanDal>().As<IAlanDal>().SingleInstance();
 
 
             builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();

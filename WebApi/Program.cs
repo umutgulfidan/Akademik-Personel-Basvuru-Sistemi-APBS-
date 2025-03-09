@@ -90,7 +90,6 @@ app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHead
 
 // Middleware'leri kullanýyoruz
 // Loglama
-app.UseMiddleware<ExceptionLoggingMiddleware>();  // Hatalarý loglamak için
 app.UseMiddleware<RequestLoggingMiddleware>();    // Ýstekleri loglamak için
 
 
