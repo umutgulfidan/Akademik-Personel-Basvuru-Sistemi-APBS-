@@ -30,7 +30,7 @@ namespace Business.ValidationRules
 
 
             // PASSWORD RULES
-            RuleFor(x => x.Password).MinimumLength(6).WithMessage("Şifre en az 2 karakter olmalıdır.");
+            RuleFor(x => x.Password).MinimumLength(6).WithMessage("Şifre en az 6 karakter olmalıdır.");
             RuleFor(x => x.Password).Must(CustomValidatorRules.ContainsLowerCase).WithMessage("Şifre en az bir adet küçük harf içermelidir.");
             RuleFor(x => x.Password).Must(CustomValidatorRules.ContainsUpperCase).WithMessage("Şifre en az bir adet büyük harf içermelidir.");
             RuleFor(x => x.Password).Must(CustomValidatorRules.ContainsDigit).WithMessage("Şifre en az bir adet rakam içermelidir.");

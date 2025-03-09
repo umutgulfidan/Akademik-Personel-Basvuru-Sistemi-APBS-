@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,9 @@ namespace Core.Extensions.Exception
             }
             catch (System.Exception exception)
             {
+                // Hata loglanır
+                Log.Error(exception, "An unhandled exception occurred.");
+
                 await HandleExceptionAsync(httpContext,exception);
             }
         }
