@@ -40,6 +40,8 @@ namespace Business.DependencyResolvers
             builder.RegisterType<EfBolumDal>().As<IBolumDal>().SingleInstance();
             builder.RegisterType<EfPozisyonDal>().As<IPozisyonDal>().SingleInstance();
             builder.RegisterType<PozisyonManager>().As<IPozisyonService>().SingleInstance();
+            builder.RegisterType<EfOperationClaimDal>().As<IOperationClaimDal>().SingleInstance();
+            builder.RegisterType<OperationClaimManager>().As<IOperationClaimService>().SingleInstance();
 
             builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
         }
