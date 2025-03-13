@@ -7,6 +7,7 @@ using Entities.Dtos.Alan;
 using Entities.Dtos.Bolum;
 using Entities.Dtos.OperationClaim;
 using Entities.Dtos.Pozisyon;
+using Entities.Dtos.UserOperationClaim;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,11 @@ namespace Business.Mapping
 
             CreateMap<UpdateOperationClaimDto, OperationClaim>();
             CreateMap<AddOperationClaimDto, OperationClaim>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            CreateMap<UserOperationClaim, GetUserOperationClaimDto>();
+            CreateMap<UpdateUserOperationClaimDto, UserOperationClaim>();
+            CreateMap<AddUserOperationClaimDto, UserOperationClaim>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             //CreateMap<UserForRegisterDto, User>().ConstructUsing(
