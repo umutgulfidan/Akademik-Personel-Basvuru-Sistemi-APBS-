@@ -47,7 +47,8 @@ namespace Business.Mapping
             CreateMap<AddOperationClaimDto, OperationClaim>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
 
-            CreateMap<UserOperationClaim, GetUserOperationClaimDto>();
+            CreateMap<UserOperationClaim, GetUserOperationClaimDto>().ForMember(dest => dest.OperationClaimName,
+               opt => opt.MapFrom(src => src.OperationClaim.Name));
             CreateMap<UpdateUserOperationClaimDto, UserOperationClaim>();
             CreateMap<AddUserOperationClaimDto, UserOperationClaim>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
