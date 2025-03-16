@@ -2,6 +2,7 @@
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using Entities.Dtos;
+using Entities.Dtos.Users;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -12,7 +13,7 @@ namespace Business.Abstract
     public interface IUserService
     {
         Task<IResult> AddAsync(User user);
-        Task<IResult> DeleteAsync(User user);
+        Task<IResult> DeleteAsync(int id);
         Task<IResult> UpdateAsync(User user);
         Task<IDataResult<User>> GetByIdAsync(int userId);
         Task<IDataResult<User>> GetAsync(Expression<Func<User, bool>> filter);
@@ -22,5 +23,8 @@ namespace Business.Abstract
 
         //
         Task<IDataResult<GetUserDto>> GetUserDto(int id);
+        Task<IResult> ActivateUserAsync(int userId);
+        Task<IResult> DeactivateUserAsync(int userId);
+        Task<IDataResult<List<GetUserDto>>> GetUsersByQuery(UserQueryDto query);
     }
 }
