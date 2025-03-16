@@ -25,19 +25,16 @@ namespace Business.Concretes
             _mapper = mapper;
         }
 
-        [SecuredOperation("Admin")]
         public async Task<IResult> AddAsync(User user)
         {
             await _userDal.AddAsync(user);
             return new SuccessResult();
         }
-        [SecuredOperation("Admin")]
         public async Task<IResult> DeleteAsync(int id)
         {
             await _userDal.DeleteByIdAsync(id);
             return new SuccessResult();
         }
-        [SecuredOperation("Admin")]
         public async Task<IResult> UpdateAsync(User user)
         {
             await _userDal.UpdateAsync(user);
