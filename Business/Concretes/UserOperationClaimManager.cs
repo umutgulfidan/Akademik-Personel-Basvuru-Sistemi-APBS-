@@ -40,21 +40,21 @@ namespace Business.Concretes
 
         public async Task<IDataResult<List<GetUserOperationClaimDto>>> GetAll()
         {
-            var data = await _userOperationClaimDal.GetAllAsync();
+            var data = await _userOperationClaimDal.GetAllUserOperationClaimsWithRolesAsync();
             var mappedData = _mapper.Map<List<GetUserOperationClaimDto>>(data);
             return new SuccessDataResult<List<GetUserOperationClaimDto>>(mappedData);
         }
 
         public async Task<IDataResult<GetUserOperationClaimDto>> GetById(int id)
         {
-            var data = await _userOperationClaimDal.GetAsync(x=> x.Id == id);
+            var data = await _userOperationClaimDal.GetUserOperationClaimWithRoleAsync(x=> x.Id == id);
             var mappedData = _mapper.Map<GetUserOperationClaimDto>(data);
             return new SuccessDataResult<GetUserOperationClaimDto>(mappedData);
         }
 
         public async Task<IDataResult<List<GetUserOperationClaimDto>>> GetByUser(int userId)
         {
-            var data = await _userOperationClaimDal.GetAllAsync(x=> x.UserId == userId);
+            var data = await _userOperationClaimDal.GetAllUserOperationClaimsWithRolesAsync(x=> x.UserId == userId);
             var mappedData = _mapper.Map<List<GetUserOperationClaimDto>>(data);
             return new SuccessDataResult<List<GetUserOperationClaimDto>>(mappedData);
         }

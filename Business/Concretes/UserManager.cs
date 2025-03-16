@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Business.Concrete
+namespace Business.Concretes
 {
     public class UserManager : IUserService
     {
