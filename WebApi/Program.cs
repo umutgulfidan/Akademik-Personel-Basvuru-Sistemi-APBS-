@@ -9,7 +9,7 @@ using Core.Utilities.IoC;
 using Core.Utilities.Security.Encryption;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Core.Extensions.Exception;
+using Core.Extensions.Exceptions;
 using Serilog;
 using Core.CrossCuttingConcerns.Logging;
 
