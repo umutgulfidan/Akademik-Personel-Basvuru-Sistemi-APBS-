@@ -9,7 +9,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Extensions.Exception
+namespace Core.Extensions.Exceptions
 {
     public class ExceptionMiddleware
     {
@@ -55,7 +55,13 @@ namespace Core.Extensions.Exception
                     ValidationErrors = validationErrors
                 }.ToString());
             }
+            if (exception.GetType() == typeof(AuthorizationException))
+            {
+                message = exception.Message;
+                httpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
 
+                return httpContext.Response.WriteAsync(new ErrorDetails { Message = message, StatusCode = httpContext.Response.StatusCode }.ToString());
+            }
 
             return httpContext.Response.WriteAsync(new ErrorDetails
             {

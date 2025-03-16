@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Extensions.Exception
+namespace Core.Extensions.Exceptions
 {
     public class ErrorDetails
     {
