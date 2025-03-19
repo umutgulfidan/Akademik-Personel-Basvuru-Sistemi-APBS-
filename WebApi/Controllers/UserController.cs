@@ -40,7 +40,7 @@ namespace WebApi.Controllers
             return BadRequest(result.Message);
         }
         // Kullanıcıyı aktif hale getiren endpoint
-        [HttpPost("activate/{userId}")]
+        [HttpPut("activate/{userId}")]
         public async Task<IActionResult> ActivateUser(int userId)
         {
             var result = await _userService.ActivateUserAsync(userId);
@@ -52,7 +52,7 @@ namespace WebApi.Controllers
         }
 
         // Kullanıcıyı devre dışı bırakan endpoint
-        [HttpPost("deactivate/{userId}")]
+        [HttpPut("deactivate/{userId}")]
         public async Task<IActionResult> DeactivateUser(int userId)
         {
             var result = await _userService.DeactivateUserAsync(userId);
