@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.Constants;
 using Business.ValidationRules.Pozisyon;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
@@ -30,32 +31,32 @@ namespace Business.Concretes
         {
             var data = _mapper.Map<Pozisyon>(addPozisyonDto);
             await _pozisyonDal.AddAsync(data);
-            return new SuccessResult();
+            return new SuccessResult(Messages.PozisyonAdded);
         }
 
         public async Task<IResult> Delete(int id)
         {
             await _pozisyonDal.DeleteByIdAsync(id);
-            return new SuccessResult();
+            return new SuccessResult(Messages.PozisyonDeleted);
         }
 
         public async Task<IDataResult<List<Pozisyon>>> GetAll()
         {
             var data = await _pozisyonDal.GetAllAsync();
-            return new SuccessDataResult<List<Pozisyon>>(data);
+            return new SuccessDataResult<List<Pozisyon>>(Messages.PozisyonListed);
         }
 
         public async Task<IDataResult<Pozisyon>> GetById(int id)
         {
             var data = await _pozisyonDal.GetAsync(x=> x.Id == id);
-            return new SuccessDataResult<Pozisyon>(data);
+            return new SuccessDataResult<Pozisyon>(Messages.PozisyonListed);
         }
         [ValidationAspect(typeof(UpdatePozisyonDtoValidator))]
         public async Task<IResult> Update(UpdatePozisyonDto updatePozisyonDto)
         {
             var data = _mapper.Map<Pozisyon>(updatePozisyonDto);
             await _pozisyonDal.UpdateAsync(data);
-            return new SuccessResult();
+            return new SuccessResult(Messages.PozisyonUpdated);
         }
     }
 }

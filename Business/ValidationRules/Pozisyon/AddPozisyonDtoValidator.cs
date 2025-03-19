@@ -1,4 +1,5 @@
-﻿using Entities.Dtos.Pozisyon;
+﻿using Core.Utilities.Helpers;
+using Entities.Dtos.Pozisyon;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,12 @@ namespace Business.ValidationRules.Pozisyon
         public AddPozisyonDtoValidator()
         {
             RuleFor(x => x.Ad)
-                .NotEmpty().WithMessage("Ad alanı boş geçilemez.")
-                .MinimumLength(2).WithMessage("Ad alanı en az 2 karakter olmalıdır.");
+                .NotEmpty().WithMessage(ValidationMessageHelper.RequiredMessage("Ad"))
+                .MinimumLength(2).WithMessage(ValidationMessageHelper.MinLengthMessage("Ad", 2));
 
             RuleFor(x => x.Aciklama)
-                .MaximumLength(500).WithMessage("Açıklama en fazla 500 karakter olmalıdır.");
+                .MaximumLength(500).WithMessage(ValidationMessageHelper.MaxLengthMessage("Açıklama", 500));
+
         }
     }
 }

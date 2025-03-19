@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.Constants;
 using Business.ValidationRules.Alan;
 using Business.ValidationRules.Bolum;
 using Core.Aspects.Autofac.Validation;
@@ -32,7 +33,7 @@ namespace Business.Concretes
         {
             var bolum = _mapper.Map<Bolum>(addBolumDto);
             await _bolumDal.AddAsync(bolum);
-            return new SuccessResult();
+            return new SuccessResult(Messages.BolumAdded);
         }
 
         public async Task<IResult> Delete(int id)
@@ -40,19 +41,19 @@ namespace Business.Concretes
             if (_bolumDal.Get(x => x.Id == id) == null) return new ErrorResult();
 
             await _bolumDal.DeleteByIdAsync(id);
-            return new SuccessResult();
+            return new SuccessResult(Messages.BolumDeleted);
         }
 
         public async Task<IDataResult<List<Bolum>>> GetAll()
         {
             var result = await _bolumDal.GetAllBolumsWithAlanAsync();
-            return new SuccessDataResult<List<Bolum>>(result);
+            return new SuccessDataResult<List<Bolum>>(result,Messages.BolumListed);
         }
 
         public async Task<IDataResult<Bolum>> GetById(int id)
         {
             var result = await _bolumDal.GetBolumWithAlanAsync(x => x.Id == id);
-            return new SuccessDataResult<Bolum>(result);
+            return new SuccessDataResult<Bolum>(result, Messages.BolumListed);
         }
         [ValidationAspect(typeof(UpdateBolumDtoValidator))]
         public async Task<IResult> Update(UpdateBolumDto updateBolumDto)
@@ -60,7 +61,7 @@ namespace Business.Concretes
             var bolum = _mapper.Map<Bolum>(updateBolumDto);
 
             await _bolumDal.UpdateAsync(bolum);
-            return new SuccessResult();
+            return new SuccessResult(Messages.BolumUpdated);
         }
     }
 }

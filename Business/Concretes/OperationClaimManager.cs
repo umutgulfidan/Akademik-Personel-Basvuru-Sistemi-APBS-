@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.Constants;
 using Business.ValidationRules.OperationClaim;
 using Core.Aspects.Autofac.Validation;
 using Core.Entities.Concrete;
@@ -30,32 +31,32 @@ namespace Business.Concretes
         {
             var data = _mapper.Map<OperationClaim>(operationClaimDto);
             await _operationClaimDal.AddAsync(data);
-            return new SuccessResult();
+            return new SuccessResult(Messages.OperationClaimAdded);
         }
 
         public async Task<IResult> Delete(int id)
         {
             await _operationClaimDal.DeleteByIdAsync(id);
-            return new SuccessResult();
+            return new SuccessResult(Messages.OperationClaimDeleted);
         }
 
         public async Task<IDataResult<List<OperationClaim>>> GetAll()
         {
             var data = await _operationClaimDal.GetAllAsync();
-            return new SuccessDataResult<List<OperationClaim>>(data);
+            return new SuccessDataResult<List<OperationClaim>>(data,Messages.OperationClaimListed);
         }
 
         public async Task<IDataResult<OperationClaim>> GetById(int id)
         {
             var data = await _operationClaimDal.GetAsync(x=> x.Id == id);
-            return new SuccessDataResult<OperationClaim>(data);
+            return new SuccessDataResult<OperationClaim>(data,Messages.OperationClaimListed);
         }
         [ValidationAspect(typeof(UpdateOperationClaimDtoValidator))]
         public async Task<IResult> Update(UpdateOperationClaimDto operationClaimDto)
         {
             var data = _mapper.Map<OperationClaim>(operationClaimDto);
             await _operationClaimDal.UpdateAsync(data);
-            return new SuccessResult();
+            return new SuccessResult(Messages.OperationClaimUpdated);
         }
     }
 }

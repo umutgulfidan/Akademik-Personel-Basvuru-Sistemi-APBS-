@@ -1,4 +1,5 @@
-﻿using Entities.Dtos.OperationClaim;
+﻿using Core.Utilities.Helpers;
+using Entities.Dtos.OperationClaim;
 using FluentValidation;
 
 namespace Business.ValidationRules.OperationClaim
@@ -7,9 +8,13 @@ namespace Business.ValidationRules.OperationClaim
     {
         public UpdateOperationClaimDtoValidator()
         {
-            RuleFor(x => x.Id).NotEmpty().WithMessage("Id alanı boş geçilemez").GreaterThan(0).WithMessage("ID alanı 0 dan büyük olmalıdır.");
-            RuleFor(x => x.Name).NotEmpty().WithMessage("Name alanı boş geçilemez.")
-                .MinimumLength(2).WithMessage("Name alanı minimum 2 karakterden oluşmalıdır.");
+            RuleFor(x => x.Id)
+                .NotEmpty().WithMessage(ValidationMessageHelper.RequiredMessage("Id"))
+                .GreaterThan(0).WithMessage(ValidationMessageHelper.GreaterThanMessage("Id", 0));
+
+            RuleFor(x => x.Name)
+                .NotEmpty().WithMessage(ValidationMessageHelper.RequiredMessage("Name"))
+                .MinimumLength(2).WithMessage(ValidationMessageHelper.MinLengthMessage("Name", 2));
         }
     }
 

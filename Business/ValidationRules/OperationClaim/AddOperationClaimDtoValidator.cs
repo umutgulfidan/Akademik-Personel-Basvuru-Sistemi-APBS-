@@ -1,4 +1,5 @@
-﻿using Entities.Dtos.OperationClaim;
+﻿using Core.Utilities.Helpers;
+using Entities.Dtos.OperationClaim;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,11 @@ namespace Business.ValidationRules.OperationClaim
     {
         public AddOperationClaimDtoValidator()
         {
-            RuleFor(x => x.Name).NotEmpty().WithMessage("Name alanı boş geçilemez.")
-                .MinimumLength(2).WithMessage("Name alanı minimum 2 karakterden oluşmalıdır.");
+            RuleFor(x => x.Name)
+                .NotEmpty()
+                .WithMessage(ValidationMessageHelper.RequiredMessage("Name"))
+                .MinimumLength(2)
+                .WithMessage(ValidationMessageHelper.MinLengthMessage("Name", 2));
 
         }
 

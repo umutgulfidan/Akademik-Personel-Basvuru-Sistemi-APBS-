@@ -1,4 +1,5 @@
-﻿using Entities.Dtos.Bolum;
+﻿using Core.Utilities.Helpers;
+using Entities.Dtos.Bolum;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -12,23 +13,31 @@ namespace Business.ValidationRules.Bolum
     {
         public UpdateBolumDtoValidator()
         {
-            RuleFor(x=> x.Id).NotEmpty().WithMessage("Id alanı boş geçilemez.");
+            RuleFor(x => x.Id)
+                .NotEmpty()
+                .WithMessage(ValidationMessageHelper.RequiredMessage("Id"));
 
             RuleFor(x => x.AlanId)
-                .GreaterThan(0).WithMessage("AlanId pozitif bir sayı olmalıdır.");
+                .GreaterThan(0)
+                .WithMessage(ValidationMessageHelper.GreaterThanMessage("AlanId", 0));
 
             RuleFor(x => x.Ad)
-                .NotEmpty().WithMessage("Ad alanı boş geçilemez.")
-                .MinimumLength(2).WithMessage("Ad alanı en az 2 karakter olmalıdır.");
+                .NotEmpty()
+                .WithMessage(ValidationMessageHelper.RequiredMessage("Ad"))
+                .MinimumLength(2)
+                .WithMessage(ValidationMessageHelper.MinLengthMessage("Ad", 2));
 
             RuleFor(x => x.Aciklama)
-                .MaximumLength(500).WithMessage("Açıklama en fazla 500 karakter olmalıdır.");
+                .MaximumLength(500)
+                .WithMessage(ValidationMessageHelper.MaxLengthMessage("Açıklama", 500));
 
             RuleFor(x => x.Email)
-                .EmailAddress().WithMessage("Geçerli bir e-posta adresi girilmelidir.");
+                .EmailAddress()
+                .WithMessage(ValidationMessageHelper.EmailMessage("Email"));
 
             RuleFor(x => x.Adres)
-                .MaximumLength(250).WithMessage("Adres en fazla 250 karakter olmalıdır.");
+                .MaximumLength(250)
+                .WithMessage(ValidationMessageHelper.MaxLengthMessage("Adres", 250));
         }
     }
 }
