@@ -10,6 +10,7 @@ using Entities.Dtos.UserOperationClaim;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -64,8 +65,8 @@ namespace Business.Concretes
         public async Task<IResult> Update(UpdateUserOperationClaimDto updateDto)
         {
             var data = _mapper.Map<UserOperationClaim>(updateDto);
-            await _userOperationClaimDal.UpdateAsync(data,Messages.UserOperationClaimUpdated);
-            return new SuccessResult();
+            await _userOperationClaimDal.UpdateAsync(data);
+            return new SuccessResult(Messages.UserOperationClaimUpdated);
         }
     }
 }
