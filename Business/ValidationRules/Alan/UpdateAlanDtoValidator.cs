@@ -1,4 +1,5 @@
-﻿using Entities.Dtos.Alan;
+﻿using Core.Utilities.Helpers;
+using Entities.Dtos.Alan;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,17 @@ namespace Business.ValidationRules.Alan
     {
         public UpdateAlanDtoValidator()
         {
-            RuleFor(x=> x.Id).NotEmpty();
-            RuleFor(x => x.Ad).NotEmpty().WithMessage("Ad Alanı Boş Geçilemez");
-            RuleFor(x => x.Ad).MinimumLength(2).WithMessage("Ad Alanı minimum 2 karakterden oluşmali.");
+            RuleFor(x => x.Id)
+                .NotEmpty()
+                .WithMessage(ValidationMessageHelper.RequiredMessage("Id"));
+
+            RuleFor(x => x.Ad)
+                .NotEmpty()
+                .WithMessage(ValidationMessageHelper.RequiredMessage("Ad"));
+
+            RuleFor(x => x.Ad)
+                .MinimumLength(2)
+                .WithMessage(ValidationMessageHelper.MinLengthMessage("Ad", 2));
         }
     }
 }

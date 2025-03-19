@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.Constants;
 using Business.ValidationRules.Alan;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
@@ -31,27 +32,27 @@ namespace Business.Concretes
         {
             var alan = _mapper.Map<Alan>(addAlanDto);
             await _alanDal.AddAsync(alan);
-            return new SuccessResult();
+            return new SuccessResult(Messages.AlanAdded);
         }
 
         public async Task<IResult> Delete(int id)
         {
-            if(_alanDal.Get(x=> x.Id == id) == null) return new ErrorResult();
+            if(_alanDal.Get(x=> x.Id == id) == null) return new ErrorResult(Messages.AlanNotFound);
 
             await _alanDal.DeleteByIdAsync(id);
-            return new SuccessResult();
+            return new SuccessResult(Messages.AlanDeleted);
         }
 
         public async Task<IDataResult<List<Alan>>> GetAll()
         {
             var result = await _alanDal.GetAllAsync();
-            return new SuccessDataResult<List<Alan>>(result);
+            return new SuccessDataResult<List<Alan>>(result,Messages.AlanListed);
         }
 
         public async Task<IDataResult<Alan>> GetById(int id)
         {
             var result = await _alanDal.GetAsync(x=> x.Id == id);
-            return new SuccessDataResult<Alan>(result);
+            return new SuccessDataResult<Alan>(result,Messages.AlanListed);
         }
 
         [ValidationAspect(typeof(UpdateAlanDtoValidator))]
@@ -60,7 +61,7 @@ namespace Business.Concretes
             var alan = _mapper.Map<Alan>(updateAlanDto);
 
             await _alanDal.UpdateAsync(alan);
-            return new SuccessResult();
+            return new SuccessResult(Messages.AlanUpdated);
         }
     }
 }

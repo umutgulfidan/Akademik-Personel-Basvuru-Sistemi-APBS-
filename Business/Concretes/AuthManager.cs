@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Business.Abstract;
 using Business.BusinessAspects;
-using Business.ValidationRules;
+using Business.Constants;
+using Business.ValidationRules.Auth;
 using Core.Aspects.Autofac.Validation;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
@@ -20,7 +21,7 @@ namespace Business.Concrete
         private readonly ITokenHelper _tokenHelper;
         private readonly IMapper _mapper;
 
-        public AuthManager(IUserService userService, ITokenHelper tokenHelper,IMapper mapper)
+        public AuthManager(IUserService userService, ITokenHelper tokenHelper, IMapper mapper)
         {
             _userService = userService;
             _tokenHelper = tokenHelper;
@@ -34,17 +35,17 @@ namespace Business.Concrete
             var userToCheck = await _userService.GetByNationalityIdAsync(userForLoginDto.NationalityId);
             if (userToCheck == null)
             {
-                return new ErrorDataResult<User>("Messages.UserNotFound");
+                return new ErrorDataResult<User>(Messages.UserNotFound);
             }
             if (userToCheck.Data.Status == false)
             {
-                return new ErrorDataResult<User>("Messages.PassiveAccount");
+                return new ErrorDataResult<User>(Messages.UserPassiveAccount);
             }
             if (!HashingHelper.VerifyPasswordHash(userForLoginDto.Password, userToCheck.Data.PasswordHash, userToCheck.Data.PasswordSalt))
             {
-                return new ErrorDataResult<User>("Messages.PasswordError");
+                return new ErrorDataResult<User>(Messages.UserPasswordError);
             }
-            return new SuccessDataResult<User>(userToCheck.Data, "Messages.SuccessfulLogin");
+            return new SuccessDataResult<User>(userToCheck.Data, Messages.SuccessfulLogin);
         }
 
         // Kullanıcıyı kayıt etme (TC Kimlik No ile)
@@ -57,15 +58,15 @@ namespace Business.Concrete
 
             if (!CheckPerson(userForRegisterDto))
             {
-                return new ErrorDataResult<User>("Gerçek Bir Kullanıcı Değil");
+                return new ErrorDataResult<User>(Messages.InvalidUser);
             }
 
 
             if (await UserExistsAsync(userForRegisterDto.NationalityId))
             {
-                return new ErrorDataResult<User>("Messages.UserAlreadyExists");
+                return new ErrorDataResult<User>(Messages.UserAlreadyExists);
             }
-            
+
 
             HashingHelper.CreatePasswordHash(userForRegisterDto.Password, out passwordHash, out passwordSalt);
 
@@ -75,7 +76,7 @@ namespace Business.Concrete
 
             await _userService.AddAsync(user);
 
-            return new SuccessDataResult<User>(user, "Messages.UserRegistered");
+            return new SuccessDataResult<User>(user, Messages.UserRegistered);
         }
 
         // Kullanıcı var mı kontrol etme (TC Kimlik No ile)
@@ -90,7 +91,7 @@ namespace Business.Concrete
         {
             var claims = await _userService.GetClaimsAsync(user); // Claims alınıyor
             var accessToken = _tokenHelper.CreateToken(user, claims);
-            return new SuccessDataResult<AccessToken>(accessToken, "Token Created");
+            return new SuccessDataResult<AccessToken>(accessToken, Messages.TokenCreated);
         }
 
         private bool CheckPerson(UserForRegisterDto user)
