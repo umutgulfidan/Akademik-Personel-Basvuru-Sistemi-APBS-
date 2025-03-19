@@ -44,6 +44,8 @@ namespace Business.DependencyResolvers
             builder.RegisterType<OperationClaimManager>().As<IOperationClaimService>().SingleInstance();
             builder.RegisterType<EfUserOperationClaimDal>().As<IUserOperationClaimDal>().SingleInstance();
             builder.RegisterType<UserOperationClaimManager>().As<IUserOperationClaimService>().SingleInstance();
+            builder.RegisterType<IlanManager>().As<IIlanService>().SingleInstance();
+            builder.RegisterType<EfIlanDal>().As<IIlanDal>().SingleInstance();
 
             builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
         }
