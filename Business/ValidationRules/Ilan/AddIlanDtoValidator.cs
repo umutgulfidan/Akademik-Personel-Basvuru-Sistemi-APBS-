@@ -24,15 +24,15 @@ namespace Business.ValidationRules.Ilan
                 .NotEmpty().WithMessage(ValidationMessageHelper.RequiredMessage("Bölüm Id"))
                 .GreaterThan(0).WithMessage(ValidationMessageHelper.GreaterThanMessage("Bölüm Id", 0));
 
-            // Baslik zorunlu ve 3 ile 100 karakter arasında olmalı
+            // Baslik zorunlu ve 3 ile 200 karakter arasında olmalı
             RuleFor(x => x.Baslik)
                 .NotEmpty().WithMessage(ValidationMessageHelper.RequiredMessage("Başlık"))
-                .Length(3, 100).WithMessage(ValidationMessageHelper.RangeMessage("Başlık",3,100));
+                .Length(3, 200).WithMessage(ValidationMessageHelper.RangeMessage("Başlık",3,200));
 
-            // Aciklama zorunlu ve 10 ile 1000 karakter arasında olmalı
+            // Aciklama zorunlu ve 10 ile 10000 karakter arasında olmalı
             RuleFor(x => x.Aciklama)
                 .NotEmpty().WithMessage(ValidationMessageHelper.RequiredMessage("Açıklama"))
-                .Length(10, 1000).WithMessage(ValidationMessageHelper.RangeMessage("Açıklama", 10, 1000));
+                .Length(10, 10000).WithMessage(ValidationMessageHelper.RangeMessage("Açıklama", 10, 10000));
 
             // BaslangicTarihi ve BitisTarihi geçerli bir tarihe sahip olmalı
             RuleFor(x => x.BaslangicTarihi)

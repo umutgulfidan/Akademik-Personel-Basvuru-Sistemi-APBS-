@@ -100,6 +100,7 @@ namespace Business.Concretes
             var mappedResult = _mapper.Map<GetIlanDto>(result);
             return new SuccessDataResult<GetIlanDto>(mappedResult,Messages.IlanListed);
         }
+
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(UpdateIlanDtoValidator))]
         public async Task<Core.Utilities.Results.IResult> Update(UpdateIlanDto dto)
