@@ -32,7 +32,7 @@ namespace Business.ValidationRules.Ilan
             // Aciklama zorunlu ve 10 ile 1000 karakter arasında olmalı
             RuleFor(x => x.Aciklama)
                 .NotEmpty().WithMessage(ValidationMessageHelper.RequiredMessage("Açıklama"))
-                .Length(10, 1000).WithMessage(ValidationMessageHelper.RangeMessage("Başlık", 10, 1000));
+                .Length(10, 1000).WithMessage(ValidationMessageHelper.RangeMessage("Açıklama", 10, 1000));
 
             // BaslangicTarihi ve BitisTarihi geçerli bir tarihe sahip olmalı
             RuleFor(x => x.BaslangicTarihi)

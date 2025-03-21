@@ -15,7 +15,8 @@ namespace Business.ValidationRules.Alan
         {
             RuleFor(x => x.Id)
                 .NotEmpty()
-                .WithMessage(ValidationMessageHelper.RequiredMessage("Id"));
+                .WithMessage(ValidationMessageHelper.RequiredMessage("Id"))
+                .GreaterThan(0).WithMessage(ValidationMessageHelper.GreaterThanMessage("Id",0));
 
             RuleFor(x => x.Ad)
                 .NotEmpty()

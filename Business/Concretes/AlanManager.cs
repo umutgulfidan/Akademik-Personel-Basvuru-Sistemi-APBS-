@@ -60,6 +60,8 @@ namespace Business.Concretes
         {
             var alan = _mapper.Map<Alan>(updateAlanDto);
 
+            if (_alanDal.Get(x => x.Id == alan.Id) == null) return new ErrorResult(Messages.AlanNotFound);
+
             await _alanDal.UpdateAsync(alan);
             return new SuccessResult(Messages.AlanUpdated);
         }

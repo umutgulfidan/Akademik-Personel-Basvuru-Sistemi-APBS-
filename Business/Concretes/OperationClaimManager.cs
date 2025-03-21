@@ -6,6 +6,7 @@ using Core.Aspects.Autofac.Validation;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
+using DataAccess.Concretes.EntitiyFramework;
 using Entities.Dtos.OperationClaim;
 using System;
 using System.Collections.Generic;
@@ -36,6 +37,7 @@ namespace Business.Concretes
 
         public async Task<IResult> Delete(int id)
         {
+            if (_operationClaimDal.Get(x => x.Id == id) == null) return new ErrorResult(Messages.OperationClaimNotFound);
             await _operationClaimDal.DeleteByIdAsync(id);
             return new SuccessResult(Messages.OperationClaimDeleted);
         }
@@ -55,6 +57,7 @@ namespace Business.Concretes
         public async Task<IResult> Update(UpdateOperationClaimDto operationClaimDto)
         {
             var data = _mapper.Map<OperationClaim>(operationClaimDto);
+            if (_operationClaimDal.Get(x => x.Id == data.Id) == null) return new ErrorResult(Messages.OperationClaimNotFound);
             await _operationClaimDal.UpdateAsync(data);
             return new SuccessResult(Messages.OperationClaimUpdated);
         }

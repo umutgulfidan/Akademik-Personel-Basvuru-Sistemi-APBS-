@@ -45,7 +45,7 @@ namespace Business.ValidationRules.Ilan
                 .NotEmpty().WithMessage(ValidationMessageHelper.RequiredMessage("Bitiş Tarihi"))
                 .GreaterThan(x => x.BaslangicTarihi).WithMessage("Bitiş tarihi, başlangıç tarihinden büyük olmalıç");
 
-            RuleFor(x => x.Status).NotEmpty().WithMessage(ValidationMessageHelper.RequiredMessage("Status"));
+            RuleFor(x => x.Status).NotNull().WithMessage(ValidationMessageHelper.RequiredMessage("Status"));
         }
     }
 }

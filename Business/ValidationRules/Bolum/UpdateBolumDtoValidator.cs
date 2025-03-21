@@ -15,9 +15,13 @@ namespace Business.ValidationRules.Bolum
         {
             RuleFor(x => x.Id)
                 .NotEmpty()
-                .WithMessage(ValidationMessageHelper.RequiredMessage("Id"));
+                .WithMessage(ValidationMessageHelper.RequiredMessage("Id"))
+                .GreaterThan(0)
+                .WithMessage(ValidationMessageHelper.GreaterThanMessage("Id",0));
 
             RuleFor(x => x.AlanId)
+                .NotEmpty()
+                .WithMessage(ValidationMessageHelper.RequiredMessage("AlanId"))
                 .GreaterThan(0)
                 .WithMessage(ValidationMessageHelper.GreaterThanMessage("AlanId", 0));
 

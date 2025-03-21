@@ -38,7 +38,7 @@ namespace Business.Concretes
 
         public async Task<IResult> Delete(int id)
         {
-            if (_bolumDal.Get(x => x.Id == id) == null) return new ErrorResult();
+            if (_bolumDal.Get(x => x.Id == id) == null) return new ErrorResult(Messages.BolumNotFound);
 
             await _bolumDal.DeleteByIdAsync(id);
             return new SuccessResult(Messages.BolumDeleted);
@@ -59,7 +59,7 @@ namespace Business.Concretes
         public async Task<IResult> Update(UpdateBolumDto updateBolumDto)
         {
             var bolum = _mapper.Map<Bolum>(updateBolumDto);
-
+            if (_bolumDal.Get(x => x.Id == bolum.Id) == null) return new ErrorResult(Messages.BolumNotFound);
             await _bolumDal.UpdateAsync(bolum);
             return new SuccessResult(Messages.BolumUpdated);
         }

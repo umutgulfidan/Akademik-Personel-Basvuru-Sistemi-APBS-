@@ -55,11 +55,31 @@ namespace Core.Extensions.Exceptions
                     ValidationErrors = validationErrors
                 }.ToString());
             }
-            if (exception.GetType() == typeof(AuthorizationException))
+            else if (exception.GetType() == typeof(AuthorizationException))
             {
                 message = exception.Message;
                 httpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
 
+                return httpContext.Response.WriteAsync(new ErrorDetails { Message = message, StatusCode = httpContext.Response.StatusCode }.ToString());
+            }
+            else if(exception.GetType() == typeof(Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException))
+            {
+                //message = exception.InnerException.Message;
+                message = "Güncellemeye çalıştığınız varlık silinmiş ya da başkası tarafından erişiliyor olabilir.";
+                httpContext.Response.StatusCode= (int)HttpStatusCode.BadRequest;
+                return httpContext.Response.WriteAsync(new ErrorDetails { Message = message, StatusCode=httpContext.Response.StatusCode }.ToString());
+            }
+            else if (exception.GetType() == typeof(Microsoft.EntityFrameworkCore.DbUpdateException))
+            {
+                //message = exception.InnerException.Message;
+                message = "Gönderilen alanlar veri tabanına eklenemiyor. Lütfen gönderilen bilgilerin doğruluğuunu kontrol ediniz.";
+                httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return httpContext.Response.WriteAsync(new ErrorDetails { Message = message, StatusCode = httpContext.Response.StatusCode }.ToString());
+            }
+            else if (exception.GetType() == typeof(UnauthorizedAccessException))
+            {
+                message = exception.Message;
+                httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                 return httpContext.Response.WriteAsync(new ErrorDetails { Message = message, StatusCode = httpContext.Response.StatusCode }.ToString());
             }
 

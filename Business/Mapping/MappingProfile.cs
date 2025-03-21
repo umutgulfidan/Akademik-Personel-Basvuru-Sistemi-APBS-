@@ -113,6 +113,10 @@ namespace Business.Mapping
                 .ForMember(dest => dest.Pozisyon, opt => opt.Ignore()) // Pozisyon objesi
                 .ForMember(dest => dest.Bolum, opt => opt.Ignore()); // Bolum objesi
 
+            // Ilan -> GetIlanDto
+            CreateMap<Ilan, GetIlanDto>()
+                .ForMember(dest => dest.Olusturan, opt => opt.MapFrom(src => src.Olusturan));
+
             #endregion
 
             //CreateMap<UserForRegisterDto, User>().ConstructUsing(

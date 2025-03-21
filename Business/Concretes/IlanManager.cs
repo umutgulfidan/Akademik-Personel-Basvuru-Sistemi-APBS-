@@ -11,6 +11,7 @@ using DataAccess.Concretes.EntitiyFramework;
 using Entities.Concretes;
 using Entities.Dtos.Ilan;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using System.Security.Claims;
 
 namespace Business.Concretes
@@ -40,6 +41,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.IlanActivate);
         }
 
+        [SecuredOperation("Admin")]
         [ValidationAspect(typeof(AddIlanDtoValidator))]
         public async Task<Core.Utilities.Results.IResult> Add(AddIlanDto dto)
         {
@@ -52,6 +54,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.IlanAdded);
         }
 
+        [SecuredOperation("Admin")]
         public async Task<Core.Utilities.Results.IResult> DeactivateIlan(int id)
         {
             var ilan = await _ilanDal.GetAsync(x => x.Id == id);
@@ -61,9 +64,9 @@ namespace Business.Concretes
             }
             ilan.Status = false;
             await _ilanDal.UpdateAsync(ilan);
-            return new SuccessResult(Messages.IlanActivate);
+            return new SuccessResult(Messages.IlanDeactivate);
         }
-
+        [SecuredOperation("Admin")]
         public async Task<Core.Utilities.Results.IResult> Delete(int id)
         {
             await _ilanDal.DeleteByIdAsync(id);
@@ -71,32 +74,43 @@ namespace Business.Concretes
         }
 
         [SecuredOperation("Admin")]
-        public async Task<IDataResult<List<Ilan>>> GetAll()
+        public async Task<IDataResult<List<GetIlanDto>>> GetAll()
         {
-            var results = await _ilanDal.GetAllAsync();
-            return new SuccessDataResult<List<Ilan>>(results,Messages.IlanListed);
+            var results = await _ilanDal.GetAllWithBolumAndPozisyon();
+            var mappedResults = _mapper.Map<List<GetIlanDto>>(results);
+            return new SuccessDataResult<List<GetIlanDto>>(mappedResults, Messages.IlanListed);
         }
 
-        public async Task<IDataResult<List<Ilan>>> GetAllActiveIlans()
+        public async Task<IDataResult<List<GetIlanDto>>> GetAllActiveIlans()
         {
-            var results = await _ilanDal.GetAllAsync(x=> x.Status == true && x.BitisTarihi > DateTime.Now);
-            return new SuccessDataResult<List<Ilan>>(results,Messages.IlanListed);
-        }
-        public async Task<IDataResult<List<Ilan>>> GetAllExpiredIlans()
-        {
-            var results = await _ilanDal.GetAllAsync(x => x.Status == true && x.BitisTarihi < DateTime.Now);
-            return new SuccessDataResult<List<Ilan>>(results, Messages.IlanListed);
-        }
-        public async Task<IDataResult<Ilan>> GetById(int id)
-        {
-            var result = await _ilanDal.GetAsync(X=> X.Id == id);
-            return new SuccessDataResult<Ilan>(result,Messages.IlanListed);
-        }
+            var results = await _ilanDal.GetAllWithBolumAndPozisyon(x=> x.Status == true && x.BitisTarihi > DateTime.Now);
+            var mappedResults = _mapper.Map<List<GetIlanDto>>(results);
 
+            return new SuccessDataResult<List<GetIlanDto>>(mappedResults, Messages.IlanListed);
+        }
+        public async Task<IDataResult<List<GetIlanDto>>> GetAllExpiredIlans()
+        {
+            var results = await _ilanDal.GetAllWithBolumAndPozisyon(x => x.Status == true && x.BitisTarihi < DateTime.Now);
+            var mappedResults = _mapper.Map<List<GetIlanDto>>(results);
+            return new SuccessDataResult<List<GetIlanDto>>(mappedResults, Messages.IlanListed);
+        }
+        public async Task<IDataResult<GetIlanDto>> GetById(int id)
+        {
+            var result = await _ilanDal.GetWithBolumAndPozisyon(X=> X.Id == id && X.Status == true);
+            var mappedResult = _mapper.Map<GetIlanDto>(result);
+            return new SuccessDataResult<GetIlanDto>(mappedResult,Messages.IlanListed);
+        }
+        [SecuredOperation("Admin")]
         [ValidationAspect(typeof(UpdateIlanDtoValidator))]
         public async Task<Core.Utilities.Results.IResult> Update(UpdateIlanDto dto)
         {
             var ilanToUpdate = _mapper.Map<Ilan>(dto);
+            // OlusturanId'yi manuel olarak set etmeden önce mevcut ilanı al
+            var existingIlan = await _ilanDal.GetAsync(x=> x.Id == dto.Id);
+            if (existingIlan != null)
+            {
+                ilanToUpdate.OlusturanId = existingIlan.OlusturanId; // mevcut OlusturanId'yi koru
+            }
             await _ilanDal.UpdateAsync(ilanToUpdate);
             return new SuccessResult(Messages.IlanUpdated);
 

@@ -27,8 +27,15 @@ namespace Business.BusinessAspects
         protected override void OnBefore(IInvocation invocation)
         {
             var httpContext = _httpContextAccessor.HttpContext;
+
+            if (httpContext.User?.Identity?.IsAuthenticated != true)
+            {
+                throw new UnauthorizedAccessException("Bu işleve giriş yapmadan erişilemez.");
+            }
+
             var roleClaims = httpContext.User.ClaimRoles();
             var userId = httpContext.User.ClaimUserId(); // Kullanıcının kendi ID’sini çekiyoruz
+
 
             // 1️⃣ **Yetkili rollerden birine sahipse işlemi yap**
             if (_roles.Any(role => roleClaims.Contains(role)))
