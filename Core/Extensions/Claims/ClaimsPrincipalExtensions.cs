@@ -22,8 +22,17 @@ namespace Core.Extensions.Claims
 
         public static int ClaimUserId(this ClaimsPrincipal claimsPrincipal)
         {
-            var userId = claimsPrincipal?.Claims(ClaimTypes.NameIdentifier);
-            return Convert.ToInt32(userId[0]);
+            if (claimsPrincipal == null)
+                throw new ArgumentNullException(nameof(claimsPrincipal));
+
+            // Doğru claim adını bulalım
+            var userIdClaim = claimsPrincipal.Claims
+                .FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier || c.Type == "nameid" || c.Type == "sub");
+
+            if (userIdClaim == null)
+                throw new Exception("User ID claim bulunamadı!");
+
+            return int.TryParse(userIdClaim.Value, out int userId) ? userId : throw new Exception("User ID integer formatında değil!");
         }
     }
 }
