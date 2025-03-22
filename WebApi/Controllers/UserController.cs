@@ -4,6 +4,8 @@ using Entities.Dtos.Pozisyon;
 using Entities.Dtos.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using WebApi.Hubs;
 
 namespace WebApi.Controllers
 {
@@ -12,10 +14,12 @@ namespace WebApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IHubContext<SignalRHub> _hubContext;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IHubContext<SignalRHub> hubContext)
         {
             this._userService = userService;
+            this._hubContext = hubContext;
         }
 
         [HttpGet("getbyid")]
@@ -58,6 +62,8 @@ namespace WebApi.Controllers
             var result = await _userService.DeactivateUserAsync(userId);
             if (result.IsSuccess)
             {
+                // SignalR üzerinden tüm kullanıcılara mesaj gönder
+                await _hubContext.Clients.All.SendAsync("ReceiveNotification", $"Kullanıcı {userId} yasaklandı!");
                 return Ok(result);
             }
             return BadRequest(result);

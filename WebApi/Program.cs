@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Core.Extensions.Exceptions;
 using Serilog;
 using Core.CrossCuttingConcerns.Logging;
+using WebApi.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,6 +72,19 @@ builder.Services.AddDependencyResolvers(new ICoreModule[] {new CoreModule()});
 //builder.Services.AddSingleton<IUserService, UserManager>();
 //builder.Services.AddSingleton<IUserDal, EfUserDal>();
 
+builder.Services.AddSignalR();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CORSPolicy", builder =>
+        builder
+            .WithOrigins("http://localhost:4200") // Sadece Angular istemcisine izin verir
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials()
+    );
+});
+
+
 var app = builder.Build();
 
 // Yazdýðýmýz middleware
@@ -86,7 +100,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
+app.UseCors("CORSPolicy"); // Burada politikayý uyguluyoruz
 
 // Middleware'leri kullanýyoruz
 // Loglama
@@ -100,5 +114,7 @@ app.UseAuthentication(); // JWT middleware
 app.UseAuthorization();  // Authorization middleware
 
 app.MapControllers();
+app.MapHub<SignalRHub>("/signalrhub"); //localhost:1234/swagger/category/index yerine localhost:1234/signalrhub/
+                                        
 
 app.Run();

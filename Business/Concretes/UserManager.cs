@@ -77,7 +77,7 @@ namespace Business.Concretes
             return new SuccessDataResult<GetUserDto>(result,Messages.UserListed);
 
         }
-
+        [SecuredOperation("Admin")]
         public async Task<IResult> ActivateUserAsync(int userId)
         {
             var user = await _userDal.GetAsync(x => x.Id == userId);
@@ -90,6 +90,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.UserActivate);
         }
 
+        [SecuredOperation("Admin")]
         public async Task<IResult> DeactivateUserAsync(int userId)
         {
             var user = await _userDal.GetAsync(x => x.Id == userId);
@@ -102,7 +103,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.UserDeactivate);
         }
 
-
+        [SecuredOperation("Admin")]
         public async Task<IDataResult<List<GetUserDto>>> GetUsersByQuery(UserQueryDto query)
         {
             var users = await _userDal.GetUsersByQueryAsync(query);
