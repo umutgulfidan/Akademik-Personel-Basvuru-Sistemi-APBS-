@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 using System.Collections.Concurrent;
+using Microsoft.AspNetCore.Http;
+using Core.Extensions.Claims;
 
 namespace WebApi.Hubs
 {
@@ -9,18 +11,29 @@ namespace WebApi.Hubs
         // Bağlantıları saklamak için Dictionary kullanıyoruz
         private static readonly ConcurrentDictionary<string, string> _userConnections = new ConcurrentDictionary<string, string>();
 
-        // Bağlantı sağlandığında, kullanıcıyı ve bağlantı ID'sini sakla
-        public override Task OnConnectedAsync()
+        // Kullanıcı bağlantı sağladığında
+        public override async Task OnConnectedAsync()
         {
-            var userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            if (userId != null)
+            int userId = 0;
+            if (Context.User.Identity.IsAuthenticated)
             {
-                // Kullanıcı ID'sini ve bağlantı ID'sini sakla
-                _userConnections[userId] = Context.ConnectionId;
+                // Kullanıcı kimliğini Context üzerinden alıyoruz
+                userId = Context.User.ClaimUserId(); // ClaimsPrincipal üzerinden ClaimUserId metodunu çağırıyoruz
+
             }
 
-            return base.OnConnectedAsync();
+            if (userId != 0)
+            {
+                // Kullanıcı bağlantı ID'sini kaydet
+                _userConnections[Convert.ToString(userId)] = Context.ConnectionId;
+                Console.WriteLine($"Kullanıcı {userId} bağlantı kurdu: {Context.ConnectionId}");
+            }
+            else
+            {
+                Console.WriteLine("Kullanıcı kimliği alınamadı.");
+            }
+
+            await base.OnConnectedAsync();
         }
 
         // Bağlantı kesildiğinde, kullanıcıyı bağlantı listesinde temizle

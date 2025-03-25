@@ -3,6 +3,7 @@ using Business.Abstracts;
 using Business.BusinessAspects;
 using Business.Constants;
 using Core.Extensions.Claims;
+using Core.Utilities.Results;
 using Entities.Dtos.Bildirim;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +59,13 @@ namespace WebApi.Controllers
             return BadRequest(result);
         }
 
+        [HttpPost("SendNotificationAll")]
+        public async Task<IActionResult> SendNotificationAll([FromBody] BildirimDto bildirimDto)
+        {
+            await _hubContext.Clients.All.SendAsync("ReceiveNotification", bildirimDto);
+            return Ok(new SuccessResult(Messages.BildirimListed));
+        }
+
 
         [HttpPut("UpdateNotification")]
         public async Task<IActionResult> UpdateNotification([FromBody] UpdateBildirimDto updateBildirimDto)
@@ -76,7 +84,7 @@ namespace WebApi.Controllers
         [HttpDelete("DeleteNotification")]
         public async Task<IActionResult> DeleteNotification(int id)
         {
-            var result = await _bildirimService.DeleteAdmin(id); 
+            var result = await _bildirimService.DeleteAdmin(id);
 
             if (result.IsSuccess)
             {
@@ -133,7 +141,7 @@ namespace WebApi.Controllers
                 return Unauthorized("Bu işlemi gerçekleştirmek için giriş yapmalısınız.");
 
             var userId = User.ClaimUserId();
-            var result = await _bildirimService.MarkAsRead(id,userId);
+            var result = await _bildirimService.MarkAsRead(id, userId);
 
             if (result.IsSuccess) return Ok(result);
             return BadRequest(result);
@@ -154,7 +162,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> DeleteMyNotification(int id)
         {
             var userId = User.ClaimUserId();
-            var result = await _bildirimService.DeleteByUser(id,userId);
+            var result = await _bildirimService.DeleteByUser(id, userId);
 
             if (result.IsSuccess) return Ok(result);
             return BadRequest(result);

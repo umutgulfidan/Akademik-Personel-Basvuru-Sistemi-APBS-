@@ -60,6 +60,21 @@ builder.Services.AddAuthentication(options =>
         NameClaimType = ClaimTypes.Name,
         RoleClaimType = ClaimTypes.Role
     };
+
+    // SignalR için ekleme
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            // SignalR hub URL'sine gelen isteklerde token'ý al
+            var accessToken = context.Request.Query["access_token"];
+            if (!string.IsNullOrEmpty(accessToken))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
 });
 
 
