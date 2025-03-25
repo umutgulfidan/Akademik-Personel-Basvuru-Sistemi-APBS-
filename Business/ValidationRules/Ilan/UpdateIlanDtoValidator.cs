@@ -36,14 +36,9 @@ namespace Business.ValidationRules.Ilan
                 .NotEmpty().WithMessage(ValidationMessageHelper.RequiredMessage("Açıklama"))
                 .Length(10, 10000).WithMessage(ValidationMessageHelper.RangeMessage("Başlık", 10, 10000));
 
-            // BaslangicTarihi ve BitisTarihi geçerli bir tarihe sahip olmalı
-            RuleFor(x => x.BaslangicTarihi)
-                .NotEmpty().WithMessage(ValidationMessageHelper.RequiredMessage("Başlangıç Tarihi"))
-                .GreaterThan(DateTime.Now).WithMessage("Başlangıç tarihi gelecek bir tarih olmalı.");
-
             RuleFor(x => x.BitisTarihi)
                 .NotEmpty().WithMessage(ValidationMessageHelper.RequiredMessage("Bitiş Tarihi"))
-                .GreaterThan(x => x.BaslangicTarihi).WithMessage("Bitiş tarihi, başlangıç tarihinden büyük olmalıç");
+                .GreaterThan(x => x.BaslangicTarihi).WithMessage("Bitiş tarihi, başlangıç tarihinden büyük olmalı");
 
             RuleFor(x => x.Status).NotNull().WithMessage(ValidationMessageHelper.RequiredMessage("Status"));
         }

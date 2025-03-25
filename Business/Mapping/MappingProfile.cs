@@ -4,6 +4,7 @@ using Core.Utilities.Security.Hashing;
 using Entities.Concretes;
 using Entities.Dtos;
 using Entities.Dtos.Alan;
+using Entities.Dtos.Bildirim;
 using Entities.Dtos.Bolum;
 using Entities.Dtos.Ilan;
 using Entities.Dtos.OperationClaim;
@@ -104,18 +105,36 @@ namespace Business.Mapping
                 .ForMember(dest => dest.Olusturan, opt => opt.Ignore()) // Eğer kullanıcı objesini almak istiyorsanız, ekleyebilirsiniz
                 .ForMember(dest => dest.Pozisyon, opt => opt.Ignore()) // Pozisyon objesini burada manuel olarak ayarlamak gerekebilir
                 .ForMember(dest => dest.Bolum, opt => opt.Ignore()) // Aynı şekilde Bolum objesi de manuel ayarlanabilir
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => true)); // Status alanına default olarak true atıyoruz
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => true))
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.Now)); // Bu alan otomatik olarak şu anki tarihi alacak; // Status alanına default olarak true atıyoruz
 
             // UpdateIlanDto -> Ilan
             CreateMap<UpdateIlanDto, Ilan>()
                 .ForMember(dest => dest.OlusturanId, opt => opt.Ignore()) // OlusturanId burada da manuel ayarlanabilir
                 .ForMember(dest => dest.Olusturan, opt => opt.Ignore()) // Kullanıcı objesi
                 .ForMember(dest => dest.Pozisyon, opt => opt.Ignore()) // Pozisyon objesi
-                .ForMember(dest => dest.Bolum, opt => opt.Ignore()); // Bolum objesi
+                .ForMember(dest => dest.Bolum, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.Now)); // Bu alan otomatik olarak şu anki tarihi alacak; // Bolum objesi
 
             // Ilan -> GetIlanDto
             CreateMap<Ilan, GetIlanDto>()
                 .ForMember(dest => dest.Olusturan, opt => opt.MapFrom(src => src.Olusturan));
+
+            #endregion
+
+            #region Bildirim
+            CreateMap<AddBildirimDto, Bildirim>()
+                      .ForMember(dest => dest.OlusturmaTarihi, opt => opt.MapFrom(src => DateTime.Now)) // Bu alan otomatik olarak şu anki tarihi alacak
+                      .ForMember(dest => dest.Status, opt => opt.MapFrom(src => false)); // Bildirim başlangıçta okunmamış olarak ayarlanacak
+
+            CreateMap<AddBildirimDto, BildirimDto>()
+                .ForMember(dest => dest.Baslik, opt => opt.MapFrom(src => src.Baslik))
+                .ForMember(dest => dest.Aciklama, opt => opt.MapFrom(src => src.Aciklama))
+                .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.Icon))
+                .ForMember(dest => dest.Renk, opt => opt.MapFrom(src => src.Renk));
+
+            // Bildirim güncelleme DTO'sunu Bildirim modeline maple
+            CreateMap<UpdateBildirimDto, Bildirim>();
 
             #endregion
 

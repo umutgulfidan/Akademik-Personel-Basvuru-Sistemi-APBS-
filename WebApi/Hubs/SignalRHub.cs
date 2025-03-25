@@ -6,7 +6,7 @@ namespace WebApi.Hubs
     {
         public async Task SendGlobalMessage(string message)
         {
-            await Clients.All.SendAsync("ReceiveNotification", message);
+            await Clients.All.SendAsync("ReceiveNotification",message);
         }
     }
 }

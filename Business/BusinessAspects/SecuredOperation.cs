@@ -1,4 +1,5 @@
-﻿using Castle.DynamicProxy;
+﻿using Business.Constants;
+using Castle.DynamicProxy;
 using Core.Extensions.Claims;
 using Core.Extensions.Exceptions;
 using Core.Utilities.Interceptors;
@@ -15,7 +16,7 @@ namespace Business.BusinessAspects
     {
         private readonly string[] _roles;
         private readonly string _userIdPropertyName;
-        private IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public SecuredOperation(string roles, string userIdPropertyName = null)
         {
@@ -30,7 +31,7 @@ namespace Business.BusinessAspects
 
             if (httpContext.User?.Identity?.IsAuthenticated != true)
             {
-                throw new UnauthorizedAccessException("Bu işleve giriş yapmadan erişilemez.");
+                throw new UnauthorizedAccessException(Messages.Unauthorized);
             }
 
             var roleClaims = httpContext.User.ClaimRoles();

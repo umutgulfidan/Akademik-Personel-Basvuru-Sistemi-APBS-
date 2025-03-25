@@ -9,7 +9,6 @@ namespace Business.Constants
     public static class Messages
     {
         #region Alan
-        // ALAN
         public static string AlanAdded = ServiceMessageHelper.CreatedMessage("Alan");
         public static string AlanDeleted = ServiceMessageHelper.DeletedMessage("Alan");
         public static string AlanListed = ServiceMessageHelper.ListedMessage("Alanlar");
@@ -17,7 +16,6 @@ namespace Business.Constants
         public static string AlanNotFound = ServiceMessageHelper.NotFoundMessage("Alan");
         #endregion
         #region Bolum
-        // BOLUM
         public static string BolumAdded = ServiceMessageHelper.CreatedMessage("Bölüm");
         public static string BolumDeleted = ServiceMessageHelper.DeletedMessage("Bölüm");
         public static string BolumListed = ServiceMessageHelper.ListedMessage("Bölümler");
@@ -25,7 +23,6 @@ namespace Business.Constants
         public static string BolumNotFound = ServiceMessageHelper.NotFoundMessage("Bölüm");
         #endregion
         #region Pozisyon
-        // POZISYOM
         public static string PozisyonAdded = ServiceMessageHelper.CreatedMessage("Pozisyon");
         public static string PozisyonDeleted = ServiceMessageHelper.DeletedMessage("Pozisyon");
         public static string PozisyonListed = ServiceMessageHelper.ListedMessage("Pozisyonlar");
@@ -33,7 +30,6 @@ namespace Business.Constants
         public static string PozisyonNotFound = ServiceMessageHelper.NotFoundMessage("Pozisyon");
         #endregion
         #region Ilan
-        // ILAN
         public static string IlanAdded = ServiceMessageHelper.CreatedMessage("İlan");
         public static string IlanDeleted = ServiceMessageHelper.DeletedMessage("İlan");
         public static string IlanListed = ServiceMessageHelper.ListedMessage("İlanlar");
@@ -42,8 +38,14 @@ namespace Business.Constants
         public static string IlanActivate = "İlan başarıyla aktif edildi.";
         public static string IlanDeactivate = "İlan başarıyla deaktif edildi.";
         #endregion
+        #region Bildirimler
+        public static string BildirimAdded = ServiceMessageHelper.CreatedMessage("Bildirim");
+        public static string BildirimDeleted = ServiceMessageHelper.DeletedMessage("Bildirim");
+        public static string BildirimListed = ServiceMessageHelper.ListedMessage("Bildirimler");
+        public static string BildirimUpdated = ServiceMessageHelper.UpdatedMessage("Bildirim");
+        public static string BildirimNotFound = ServiceMessageHelper.NotFoundMessage("Bildirim");
+        #endregion
         #region Auth
-        // AUTH
         public static string UserPassiveAccount = "Bu hesaba erişilemiyor. Kullanıcı hesabı yasaklanmış ya da silinmiş olabilir.";
         public static string UserPasswordError = "Tc No ya da şifre hatalı.";
         public static string SuccessfulLogin = "Başarıyla giriş yapıldı.";
@@ -51,9 +53,10 @@ namespace Business.Constants
         public static string UserAlreadyExists = "Bu kullanıcı zaten mevcut.";
         public static string InvalidUser = "Gerçek bir kullanıcı değil.";
         public static string TokenCreated = "Token başarıyla oluşturuldu.";
+        public static string Unauthorized = "Bu işleve giriş yapılmadan erişilemez.";
+
         #endregion
         #region Operation Claim
-        // OPERATION CLAIM
         public static string OperationClaimAdded = ServiceMessageHelper.CreatedMessage("Rol");
         public static string OperationClaimDeleted = ServiceMessageHelper.DeletedMessage("Rol");
         public static string OperationClaimListed = ServiceMessageHelper.ListedMessage("Roller");
@@ -61,7 +64,6 @@ namespace Business.Constants
         public static string OperationClaimNotFound = ServiceMessageHelper.NotFoundMessage("Rol");
         #endregion
         #region User
-        // USER
         public static string UserAdded = ServiceMessageHelper.CreatedMessage("Kullanıcı");
         public static string UserDeleted = ServiceMessageHelper.DeletedMessage("Kullanıcı");
         public static string UserListed = ServiceMessageHelper.ListedMessage("Kullanıcı");
@@ -71,13 +73,13 @@ namespace Business.Constants
         public static string UserDeactivate = "Kullanıcı hesabı başarıyla deaktif edildi.";
         #endregion
         #region User Operation Claim
-        // USER OPERATION CLAIM
         public static string UserOperationClaimAdded = ServiceMessageHelper.CreatedMessage("Rol");
         public static string UserOperationClaimDeleted = ServiceMessageHelper.DeletedMessage("Rol");
         public static string UserOperationClaimListed = ServiceMessageHelper.ListedMessage("Roller");
         public static string UserOperationClaimUpdated = ServiceMessageHelper.UpdatedMessage("Rol");
         public static string UserOperationClaimNotFound = ServiceMessageHelper.NotFoundMessage("Rol");
         #endregion
+
     }
 
 }
