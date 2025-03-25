@@ -14,9 +14,9 @@ namespace WebApi.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly IHubContext<SignalRHub> _hubContext;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public UserController(IUserService userService, IHubContext<SignalRHub> hubContext)
+        public UserController(IUserService userService, IHubContext<NotificationHub> hubContext)
         {
             this._userService = userService;
             this._hubContext = hubContext;
