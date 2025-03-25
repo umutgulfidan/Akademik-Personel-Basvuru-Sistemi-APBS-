@@ -30,22 +30,34 @@ namespace WebApi.Controllers
         // Admin'in bir kullanıcıya bildirim göndermesi için endpoint
         [HttpPost("SendNotification")]
         public async Task<IActionResult> SendNotification([FromBody] AddBildirimDto addBildirimDto)
-        {
+        {// Bildirimi kaydet
             var result = await _bildirimService.AddAdmin(addBildirimDto);
-            // Bildirim içeriğini JSON nesnesi olarak gönderiyoruz
 
             if (result.IsSuccess)
             {
-                // DTO'yu mapleyerek SignalR üzerinden gönder
+                // Bildirim DTO'sunu SignalR'a uygun hale getir
                 var notificationDto = _mapper.Map<BildirimDto>(addBildirimDto);
 
-                await _hubContext.Clients.User(addBildirimDto.KullaniciId.ToString())
-                    .SendAsync("ReceiveNotification", notificationDto);
-                return Ok(result); 
+                // Kullanıcı bağlantı ID'sini al
+                var userId = addBildirimDto.KullaniciId.ToString();
+                var connectionId = NotificationHub.GetConnectionId(userId); // Hub üzerinden bağlantı ID'sini al
+
+                if (connectionId != null)
+                {
+                    // Kullanıcı aktifse, ona bildirim gönder
+                    await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveNotification", notificationDto);
+                    return Ok(result);
+                }
+                else
+                {
+                    // Kullanıcı bağlı değilse hata döndür
+                    return NotFound("Kullanıcı bağlantısı bulunamadı.");
+                }
             }
 
             return BadRequest(result);
         }
+
 
         [HttpPut("UpdateNotification")]
         public async Task<IActionResult> UpdateNotification([FromBody] UpdateBildirimDto updateBildirimDto)
