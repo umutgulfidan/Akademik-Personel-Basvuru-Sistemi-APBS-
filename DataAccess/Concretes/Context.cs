@@ -46,7 +46,6 @@ namespace DataAccess.Concretes
                 .HasForeignKey(r => r.JuriId)
                 .OnDelete(DeleteBehavior.Restrict);  // veya .OnDelete(DeleteBehavior.SetNull);
 
-
             base.OnModelCreating(modelBuilder);
         }
 
@@ -55,6 +54,9 @@ namespace DataAccess.Concretes
         public DbSet<User> Users { get; set; }
         public DbSet<OperationClaim> OperationClaims { get; set; }
         public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
+
+        // Bildirimler
+        public DbSet<Bildirim> Bildirimler { get; set; }
 
         // İlanlar
         public DbSet<Ilan> Ilanlar { get; set; }

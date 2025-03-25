@@ -115,6 +115,6 @@ app.UseAuthorization();  // Authorization middleware
 
 app.MapControllers();
 app.MapHub<SignalRHub>("/signalrhub"); //localhost:1234/swagger/category/index yerine localhost:1234/signalrhub/
-                                        
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();
