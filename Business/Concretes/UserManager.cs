@@ -2,8 +2,11 @@
 using Business.Abstract;
 using Business.BusinessAspects;
 using Business.Constants;
+using Business.ValidationRules.User;
+using Core.Aspects.Autofac.Validation;
 using Core.Entities.Concrete;
 using Core.Utilities.Results;
+using Core.Utilities.Security.Hashing;
 using DataAccess.Abstracts;
 using DataAccess.Concretes.EntitiyFramework;
 using Entities.Dtos;
@@ -111,7 +114,36 @@ namespace Business.Concretes
             return new SuccessDataResult<List<GetUserDto>>(mappedUsers,Messages.UserListed);
         }
 
+        [ValidationAspect(typeof(UpdateUserDtoValidator))]
+        public async Task<IResult> UpdateProfileAsync(int userId, UpdateUserDto updateUserDto)
+        {
+            var userToCheck = await GetAsync(x=> x.Id == userId);
+            if (userToCheck.Data == null)
+            {
+                return new ErrorResult(Messages.UserNotFound);
+            }
+            if (userToCheck.Data.Status == false)
+            {
+                return new ErrorResult(Messages.UserPassiveAccount);
+            }
+            if (!HashingHelper.VerifyPasswordHash(updateUserDto.CurrentPassword, userToCheck.Data.PasswordHash, userToCheck.Data.PasswordSalt))
+            {
+                return new ErrorResult(Messages.UserPasswordError);
+            }
+            var checkEmail = await GetAsync(x => x.Email == updateUserDto.Email);
+            if(checkEmail.Data != null && checkEmail.Data.Id != userToCheck.Data.Id)
+            {
+                return new ErrorResult(Messages.EmailAlreadyExists);
+            }
 
-
+            byte[] passwordHash;
+            byte[] passwordSalt;
+            HashingHelper.CreatePasswordHash(updateUserDto.NewPassword, out passwordHash, out passwordSalt);
+            userToCheck.Data.Email = updateUserDto.Email;
+            userToCheck.Data.PasswordHash = passwordHash;
+            userToCheck.Data.PasswordSalt = passwordSalt;
+            await this.UpdateAsync(userToCheck.Data);
+            return new SuccessResult(Messages.UserUpdated);
+        }
     }
 }
