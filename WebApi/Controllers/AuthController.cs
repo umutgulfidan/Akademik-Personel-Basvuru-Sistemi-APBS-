@@ -30,7 +30,7 @@ namespace WebAPI.Controllers
             var loginResult = await _authService.LoginAsync(userForLoginDto);
             if (!loginResult.IsSuccess)
             {
-                return BadRequest(loginResult.Message);
+                return BadRequest(loginResult);
             }
 
             var tokenResult = await _authService.CreateAccessTokenAsync(loginResult.Data);
@@ -38,7 +38,7 @@ namespace WebAPI.Controllers
             {
                 return Ok(tokenResult);
             }
-            return BadRequest(tokenResult.Message);
+            return BadRequest(tokenResult);
         }
 
         // Kullanıcı kayıt işlemi
@@ -48,7 +48,7 @@ namespace WebAPI.Controllers
             var registerResult = await _authService.RegisterAsync(userForRegisterDto);
             if (!registerResult.IsSuccess)
             {
-                return BadRequest(registerResult.Message);
+                return BadRequest(registerResult);
             }
 
             var tokenResult = await _authService.CreateAccessTokenAsync(registerResult.Data);
@@ -56,7 +56,7 @@ namespace WebAPI.Controllers
             {
                 return Ok(tokenResult);
             }
-            return BadRequest(tokenResult.Message);
+            return BadRequest(tokenResult);
         }
 
         [HttpGet("getuserbytoken")]

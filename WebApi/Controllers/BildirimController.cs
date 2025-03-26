@@ -2,6 +2,9 @@
 using Business.Abstracts;
 using Business.BusinessAspects;
 using Business.Constants;
+using Business.ValidationRules.Bildirim;
+using Business.ValidationRules.Ilan;
+using Core.Aspects.Autofac.Validation;
 using Core.Extensions.Claims;
 using Core.Utilities.Results;
 using Entities.Dtos.Bildirim;
