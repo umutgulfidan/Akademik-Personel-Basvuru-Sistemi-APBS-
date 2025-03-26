@@ -26,5 +26,6 @@ namespace Business.Abstract
         Task<IResult> ActivateUserAsync(int userId);
         Task<IResult> DeactivateUserAsync(int userId);
         Task<IDataResult<List<GetUserDto>>> GetUsersByQuery(UserQueryDto query);
+        Task<IResult> UpdateProfileAsync(int userId,UpdateUserDto updateUserDto);
     }
 }

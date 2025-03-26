@@ -1,5 +1,8 @@
 ﻿using Business.Abstract;
 using Business.Abstracts;
+using Business.BusinessAspects;
+using Business.Constants;
+using Core.Extensions.Claims;
 using Entities.Dtos.Pozisyon;
 using Entities.Dtos.Users;
 using Microsoft.AspNetCore.Http;
@@ -69,6 +72,19 @@ namespace WebApi.Controllers
             return BadRequest(result);
         }
 
+        [HttpPut("UpdateProfile")]
+        [AuthenticatedOperation]
+        public async Task<IActionResult> UpdateProfile([FromBody]UpdateUserDto updateUserDto)
+        {
+            // Kullanıcının giriş yapıp yapmadığını kontrol et
+            if (User?.Identity?.IsAuthenticated != true)
+            {
+                return Unauthorized(Messages.Unauthorized);
+            }
+            var userId = User.ClaimUserId();
+            var result = await _userService.UpdateProfileAsync(userId,updateUserDto);
+            return Ok(result);
+        }
 
     }
 }

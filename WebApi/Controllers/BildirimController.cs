@@ -151,7 +151,6 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("MarkAsUnread")]
-        [AuthenticatedOperation]
         public async Task<IActionResult> MarkAsUnread(int id)
         {
             var userId = User.ClaimUserId();
@@ -161,7 +160,6 @@ namespace WebApi.Controllers
             return BadRequest(result);
         }
         [HttpDelete("DeleteMyNotification")]
-        [AuthenticatedOperation]
         public async Task<IActionResult> DeleteMyNotification(int id)
         {
             var userId = User.ClaimUserId();

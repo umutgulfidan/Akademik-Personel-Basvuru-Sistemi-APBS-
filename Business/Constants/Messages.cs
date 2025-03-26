@@ -47,14 +47,14 @@ namespace Business.Constants
         #endregion
         #region Auth
         public static string UserPassiveAccount = "Bu hesaba erişilemiyor. Kullanıcı hesabı yasaklanmış ya da silinmiş olabilir.";
-        public static string UserPasswordError = "Tc No ya da şifre hatalı.";
+        public static string UserPasswordError = "Hesabın size ait olduğunu doğrulayamadık. Lütfen tekrar deneyin.";
         public static string SuccessfulLogin = "Başarıyla giriş yapıldı.";
         public static string UserRegistered = "Kullanıcı başarıyla kaydedildi.";
         public static string UserAlreadyExists = "Bu kullanıcı zaten mevcut.";
         public static string InvalidUser = "Gerçek bir kullanıcı değil.";
         public static string TokenCreated = "Token başarıyla oluşturuldu.";
         public static string Unauthorized = "Bu işleve giriş yapılmadan erişilemez.";
-
+        public static string EmailAlreadyExists = "Bu email adresi zaten kullanımda";
         #endregion
         #region Operation Claim
         public static string OperationClaimAdded = ServiceMessageHelper.CreatedMessage("Rol");
