@@ -95,5 +95,26 @@ namespace Business.Concretes
             await _bildirimDal.DeleteAsync(bildirim);
             return new SuccessResult(Messages.BildirimUpdated);
         }
+
+        public async Task<IResult> MarkAsReadAll(int userId)
+        {
+            var bildirimler = await _bildirimDal.GetAllAsync(x=>x.KullaniciId==userId && x.Status == false);
+            foreach (var item in bildirimler)
+            {
+                item.Status = true;
+                await _bildirimDal.UpdateAsync(item);
+            }
+            return new SuccessResult(Messages.BildirimUpdated);
+        }
+
+        public async Task<IResult> DeleteAllByUser(int userId)
+        {
+            var bildirimler = await _bildirimDal.GetAllAsync(x => x.KullaniciId == userId);
+            foreach (var item in bildirimler)
+            {
+                await _bildirimDal.DeleteAsync(item);
+            }
+            return new SuccessResult(Messages.BildirimDeleted);
+        }
     }
 }

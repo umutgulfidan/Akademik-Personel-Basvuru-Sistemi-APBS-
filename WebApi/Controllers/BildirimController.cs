@@ -150,6 +150,17 @@ namespace WebApi.Controllers
             return BadRequest(result);
         }
 
+        [HttpPut("MarkAllAsRead")]
+        public async Task<IActionResult> MarkAsReadAll()
+        {
+            if (User?.Identity?.IsAuthenticated != true)
+                return Unauthorized("Bu işlemi gerçekleştirmek için giriş yapmalısınız.");
+
+            var userId = User.ClaimUserId();
+            var result = await _bildirimService.MarkAsReadAll(userId);
+            return Ok(result);
+        }
+
         [HttpPut("MarkAsUnread")]
         public async Task<IActionResult> MarkAsUnread(int id)
         {
@@ -164,6 +175,16 @@ namespace WebApi.Controllers
         {
             var userId = User.ClaimUserId();
             var result = await _bildirimService.DeleteByUser(id, userId);
+
+            if (result.IsSuccess) return Ok(result);
+            return BadRequest(result);
+        }
+
+        [HttpDelete("DeleteAllMyNotifications")]
+        public async Task<IActionResult> DeleteAllMyNotifications()
+        {
+            var userId = User.ClaimUserId();
+            var result = await _bildirimService.DeleteAllByUser(userId);
 
             if (result.IsSuccess) return Ok(result);
             return BadRequest(result);

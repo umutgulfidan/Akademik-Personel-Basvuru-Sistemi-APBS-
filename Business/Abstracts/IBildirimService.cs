@@ -16,8 +16,10 @@ namespace Business.Abstracts
         Task<IDataResult<List<Bildirim>>> GetAllForAdmin();
         Task<IDataResult<List<Bildirim>>> GetAllByUser(int userId);
         Task<IResult> MarkAsRead(int id,int userId);
+        Task<IResult> MarkAsReadAll(int userId);
         Task<IResult> MarkAsUnread(int id, int userId);
         Task<IResult> DeleteByUser(int id, int userId);
+        Task<IResult> DeleteAllByUser(int userId);
 
     }
 }
