@@ -32,11 +32,11 @@ namespace DataAccess.Concretes.EntitiyFramework
 
             if (query.IlanTıpı == IlanTuru.ActiveIlans)
             {
-                ilansQuery.Where(x => x.Status == true && x.BitisTarihi > DateTime.Now);
+                ilansQuery = ilansQuery.Where(x => x.Status == true && x.BitisTarihi > DateTime.Now);
             }
             else if (query.IlanTıpı == IlanTuru.ExpiredIlans)
             {
-                ilansQuery.Where(x => x.Status == true && x.BitisTarihi < DateTime.Now);
+                ilansQuery = ilansQuery.Where(x => x.Status == true && x.BitisTarihi < DateTime.Now);
             }
 
             // Filtreleme işlemleri
@@ -104,11 +104,11 @@ namespace DataAccess.Concretes.EntitiyFramework
 
             if (query.IlanTıpı == IlanTuru.ActiveIlans)
             {
-                ilansQuery.Where(x=> x.BitisTarihi > DateTime.Now);
+                ilansQuery = ilansQuery.Where(x=> x.BitisTarihi > DateTime.Now);
             }
             else if (query.IlanTıpı == IlanTuru.ExpiredIlans)
             {
-                ilansQuery.Where(x => x.BitisTarihi < DateTime.Now);
+                ilansQuery = ilansQuery.Where(x => x.BitisTarihi < DateTime.Now);
             }
 
             // Filtreleme işlemleri
