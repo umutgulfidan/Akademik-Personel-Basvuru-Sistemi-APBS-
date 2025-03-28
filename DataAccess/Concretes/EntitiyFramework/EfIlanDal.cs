@@ -27,7 +27,7 @@ namespace DataAccess.Concretes.EntitiyFramework
         {
             using var context = new Context();
             // Veritabanı sorgusunu başlatıyoruz
-            var ilansQuery = context.Ilanlar.Include(x => x.Bolum).ThenInclude(y => y.Alan).Include(x => x.Pozisyon).Include(x => x.Olusturan).AsQueryable();
+            var ilansQuery = context.Ilanlar.Include(x => x.Bolum).ThenInclude(y => y.Alan).Include(x => x.Pozisyon).AsQueryable();
 
 
             if (query.IlanTipi == IlanTuru.ActiveIlans)
