@@ -111,6 +111,7 @@ namespace Business.Concretes
             return new SuccessDataResult<List<GetIlanDto>>(mappedIlans, Messages.UserListed);
         }
 
+        [SecuredOperation("Admin")]
         public async Task<IDataResult<List<GetIlanDto>>> GetIlansByQuery(AdminIlanQueryDto queryDto)
         {
             var results = await _ilanDal.GetIlansByQueryAsync(queryDto);
