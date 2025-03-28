@@ -68,6 +68,16 @@ namespace DataAccess.Concretes.EntitiyFramework
                 usersQuery = usersQuery.Where(u=> u.Status == query.Status);
             }
 
+            if (!string.IsNullOrEmpty(query.SearchTerm))
+            {
+                usersQuery = usersQuery.Where(u =>
+                    EF.Functions.Like(u.FirstName, $"%{query.SearchTerm}%") ||
+                    EF.Functions.Like(u.LastName, $"%{query.SearchTerm}%") ||
+                    EF.Functions.Like(u.NationalityId, $"%{query.SearchTerm}%") ||
+                    EF.Functions.Like(u.Id.ToString(), $"%{query.SearchTerm}%")
+                );
+            }
+
             // Sıralama işlemleri
             if (query.SortBy.ToLower() == "firstname")
             {
