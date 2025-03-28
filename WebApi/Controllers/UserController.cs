@@ -65,8 +65,9 @@ namespace WebApi.Controllers
             var result = await _userService.DeactivateUserAsync(userId);
             if (result.IsSuccess)
             {
+                var bildirim = NotificationTemplates.Error("Bir Kullanıcı Yasaklandı!", $"Kullanıcı {userId} yasaklandı! Lütfen topluluk kurallarını ihlal etmeyiniz.");
                 // SignalR üzerinden tüm kullanıcılara mesaj gönder
-                await _hubContext.Clients.All.SendAsync("ReceiveNotification", $"Kullanıcı {userId} yasaklandı!");
+                await _hubContext.Clients.All.SendAsync("ReceiveNotification",bildirim);
                 return Ok(result);
             }
             return BadRequest(result);

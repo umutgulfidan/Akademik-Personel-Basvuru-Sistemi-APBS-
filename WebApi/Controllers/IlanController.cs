@@ -1,9 +1,13 @@
 ﻿using Business.Abstract;
 using Business.Abstracts;
+using Business.Constants;
+using Core.Entities.Concrete;
 using Entities.Concretes;
 using Entities.Dtos.Ilan;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using WebApi.Hubs;
 
 namespace WebApi.Controllers
 {
@@ -12,10 +16,12 @@ namespace WebApi.Controllers
     public class IlanController : ControllerBase
     {
         IIlanService _ilanService;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public IlanController(IIlanService ilanService)
+        public IlanController(IIlanService ilanService, IHubContext<NotificationHub> hubContext)
         {
             _ilanService = ilanService;
+            _hubContext = hubContext;
         }
 
         [HttpGet("getall")]
@@ -89,13 +95,15 @@ namespace WebApi.Controllers
             var result = await _ilanService.Add(ilan);
             if (result.IsSuccess)
             {
+                var bildirim = NotificationTemplates.Info("Yeni ilan eklendi!", $"'{ilan.Baslik}' ismiyle yeni bir ilan oluşturuldu. Anasayfadan göz atabilirsin.");
+                // SignalR üzerinden tüm kullanıcılara mesaj gönder
+                await _hubContext.Clients.All.SendAsync("ReceiveNotification", bildirim);
                 return Ok(result);
             }
             return BadRequest(result);
         }
-        // Kullanıcıyı aktif hale getiren endpoint
         [HttpPut("activate/{id}")]
-        public async Task<IActionResult> ActivateUser(int id)
+        public async Task<IActionResult> ActivateIlan(int id)
         {
             var result = await _ilanService.ActivateIlan(id);
             if (result.IsSuccess)
@@ -105,9 +113,8 @@ namespace WebApi.Controllers
             return BadRequest(result);
         }
 
-        // Kullanıcıyı devre dışı bırakan endpoint
         [HttpPut("deactivate/{id}")]
-        public async Task<IActionResult> DeactivateUser(int id)
+        public async Task<IActionResult> DeactivateIlan(int id)
         {
             var result = await _ilanService.DeactivateIlan(id);
             if (result.IsSuccess)
