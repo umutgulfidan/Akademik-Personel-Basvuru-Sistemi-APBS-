@@ -30,11 +30,11 @@ namespace DataAccess.Concretes.EntitiyFramework
             var ilansQuery = context.Ilanlar.Include(x => x.Bolum).ThenInclude(y => y.Alan).Include(x => x.Pozisyon).Include(x => x.Olusturan).AsQueryable();
 
 
-            if (query.IlanTıpı == IlanTuru.ActiveIlans)
+            if (query.IlanTipi == IlanTuru.ActiveIlans)
             {
                 ilansQuery = ilansQuery.Where(x => x.Status == true && x.BitisTarihi > DateTime.Now);
             }
-            else if (query.IlanTıpı == IlanTuru.ExpiredIlans)
+            else if (query.IlanTipi == IlanTuru.ExpiredIlans)
             {
                 ilansQuery = ilansQuery.Where(x => x.Status == true && x.BitisTarihi < DateTime.Now);
             }
@@ -102,11 +102,11 @@ namespace DataAccess.Concretes.EntitiyFramework
             var ilansQuery = context.Ilanlar.Include(x => x.Bolum).ThenInclude(y => y.Alan).Include(x => x.Pozisyon).Include(x => x.Olusturan).AsQueryable();
 
 
-            if (query.IlanTıpı == IlanTuru.ActiveIlans)
+            if (query.IlanTipi == IlanTuru.ActiveIlans)
             {
                 ilansQuery = ilansQuery.Where(x=> x.BitisTarihi > DateTime.Now);
             }
-            else if (query.IlanTıpı == IlanTuru.ExpiredIlans)
+            else if (query.IlanTipi == IlanTuru.ExpiredIlans)
             {
                 ilansQuery = ilansQuery.Where(x => x.BitisTarihi < DateTime.Now);
             }
