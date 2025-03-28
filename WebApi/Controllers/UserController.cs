@@ -94,7 +94,8 @@ namespace WebApi.Controllers
                 return Unauthorized(Messages.Unauthorized);
             }
             var userId = User.ClaimUserId();
-            var result = _userService.ChangePassword(changePasswordDto);
+            var result = await _userService.ChangePasswordAsync(userId,changePasswordDto);
+            return Ok(result);
         }
 
     }
