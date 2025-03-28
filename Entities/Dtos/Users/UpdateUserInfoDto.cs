@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace Entities.Dtos.Users
 {
-    public class UpdateUserDto
+    public class UpdateUserInfoDto
     {
         public string Email { get; set; }
         public string CurrentPassword { get; set; }
-        public string NewPassword { get; set; }
-        public string ConfirmNewPassword { get; set; }
     }
     
 }
