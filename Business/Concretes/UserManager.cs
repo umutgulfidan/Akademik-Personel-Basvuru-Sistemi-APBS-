@@ -114,8 +114,8 @@ namespace Business.Concretes
             return new SuccessDataResult<List<GetUserDto>>(mappedUsers,Messages.UserListed);
         }
 
-        [ValidationAspect(typeof(UpdateUserDtoValidator))]
-        public async Task<IResult> UpdateProfileAsync(int userId, UpdateUserDto updateUserDto)
+        [ValidationAspect(typeof(UpdateUserInfoDtoValidator))]
+        public async Task<IResult> UpdateProfileAsync(int userId, UpdateUserInfoDto updateUserDto)
         {
             var userToCheck = await GetAsync(x=> x.Id == userId);
             if (userToCheck.Data == null)
@@ -135,11 +135,30 @@ namespace Business.Concretes
             {
                 return new ErrorResult(Messages.EmailAlreadyExists);
             }
+            userToCheck.Data.Email = updateUserDto.Email;
+            await this.UpdateAsync(userToCheck.Data);
+            return new SuccessResult(Messages.UserUpdated);
+        }
+        [ValidationAspect(typeof(ChangePasswordDtoValidator))]
+        public async Task<IResult> ChangePasswordAsync(int userId, ChangePasswordDto changePasswordDto)
+        {
+            var userToCheck = await GetAsync(x => x.Id == userId);
+            if (userToCheck.Data == null)
+            {
+                return new ErrorResult(Messages.UserNotFound);
+            }
+            if (userToCheck.Data.Status == false)
+            {
+                return new ErrorResult(Messages.UserPassiveAccount);
+            }
+            if (!HashingHelper.VerifyPasswordHash(changePasswordDto.CurrentPassword, userToCheck.Data.PasswordHash, userToCheck.Data.PasswordSalt))
+            {
+                return new ErrorResult(Messages.UserPasswordError);
+            }
 
             byte[] passwordHash;
             byte[] passwordSalt;
-            HashingHelper.CreatePasswordHash(updateUserDto.NewPassword, out passwordHash, out passwordSalt);
-            userToCheck.Data.Email = updateUserDto.Email;
+            HashingHelper.CreatePasswordHash(changePasswordDto.NewPassword, out passwordHash, out passwordSalt);
             userToCheck.Data.PasswordHash = passwordHash;
             userToCheck.Data.PasswordSalt = passwordSalt;
             await this.UpdateAsync(userToCheck.Data);

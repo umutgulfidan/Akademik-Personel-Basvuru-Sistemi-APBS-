@@ -73,8 +73,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("UpdateProfile")]
-        [AuthenticatedOperation]
-        public async Task<IActionResult> UpdateProfile([FromBody]UpdateUserDto updateUserDto)
+        public async Task<IActionResult> UpdateProfile([FromBody]UpdateUserInfoDto updateUserDto)
         {
             // Kullanıcının giriş yapıp yapmadığını kontrol et
             if (User?.Identity?.IsAuthenticated != true)
@@ -84,6 +83,18 @@ namespace WebApi.Controllers
             var userId = User.ClaimUserId();
             var result = await _userService.UpdateProfileAsync(userId,updateUserDto);
             return Ok(result);
+        }
+
+        [HttpPut("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordDto changePasswordDto)
+        {
+            // Kullanıcının giriş yapıp yapmadığını kontrol et
+            if (User?.Identity?.IsAuthenticated != true)
+            {
+                return Unauthorized(Messages.Unauthorized);
+            }
+            var userId = User.ClaimUserId();
+            var result = _userService.ChangePassword(changePasswordDto);
         }
 
     }
