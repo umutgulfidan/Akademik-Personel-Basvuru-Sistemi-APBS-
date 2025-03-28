@@ -19,7 +19,7 @@ namespace Entities.Dtos.Ilan
         public int? BolumId { get; set; }
         public int? Id { get; set; }
         public string? Baslik { get; set; }
-        public IlanTuru? IlanTıpı { get; set; }
+        public IlanTuru? IlanTipi { get; set; }
     }
 
 }
