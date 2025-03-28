@@ -9,10 +9,12 @@ using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using DataAccess.Concretes.EntitiyFramework;
 using Entities.Concretes;
+using Entities.Dtos;
 using Entities.Dtos.Ilan;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Business.Concretes
 {
@@ -94,11 +96,26 @@ namespace Business.Concretes
             var mappedResults = _mapper.Map<List<GetIlanDto>>(results);
             return new SuccessDataResult<List<GetIlanDto>>(mappedResults, Messages.IlanListed);
         }
+
         public async Task<IDataResult<GetIlanDto>> GetById(int id)
         {
             var result = await _ilanDal.GetWithBolumAndPozisyon(X=> X.Id == id && X.Status == true);
             var mappedResult = _mapper.Map<GetIlanDto>(result);
             return new SuccessDataResult<GetIlanDto>(mappedResult,Messages.IlanListed);
+        }
+
+        public async Task<IDataResult<List<GetIlanDto>>> GetIlansByQuery(UserIlanQueryDto queryDto)
+        {
+            var results = await _ilanDal.GetIlansByQueryAsync(queryDto);
+            var mappedIlans = _mapper.Map<List<GetIlanDto>>(results);
+            return new SuccessDataResult<List<GetIlanDto>>(mappedIlans, Messages.UserListed);
+        }
+
+        public async Task<IDataResult<List<GetIlanDto>>> GetIlansByQuery(AdminIlanQueryDto queryDto)
+        {
+            var results = await _ilanDal.GetIlansByQueryAsync(queryDto);
+            var mappedIlans = _mapper.Map<List<GetIlanDto>>(results);
+            return new SuccessDataResult<List<GetIlanDto>>(mappedIlans, Messages.UserListed);
         }
 
         [SecuredOperation("Admin")]

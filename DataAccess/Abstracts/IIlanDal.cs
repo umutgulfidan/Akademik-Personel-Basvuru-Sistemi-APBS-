@@ -1,5 +1,6 @@
 ﻿using Core.DataAccess.EntityFramework;
 using Entities.Concretes;
+using Entities.Dtos.Ilan;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +14,8 @@ namespace DataAccess.Abstracts
     {
         Task<List<Ilan>> GetAllWithBolumAndPozisyon(Expression<Func<Ilan, bool>> filter = null);
         Task<Ilan> GetWithBolumAndPozisyon(Expression<Func<Ilan, bool>> filter);
+
+        Task<List<Ilan>> GetIlansByQueryAsync(UserIlanQueryDto query);
+        Task<List<Ilan>> GetIlansByQueryAsync(AdminIlanQueryDto query);
     }
 }

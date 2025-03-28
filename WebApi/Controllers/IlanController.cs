@@ -4,6 +4,7 @@ using Business.Constants;
 using Core.Entities.Concrete;
 using Entities.Concretes;
 using Entities.Dtos.Ilan;
+using Entities.Dtos.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -33,6 +34,27 @@ namespace WebApi.Controllers
                 return Ok(result);
             }
             return BadRequest(result);
+        }
+        [HttpGet("getilansbyquery")]
+        public async Task<IActionResult> GetPaginatedIlans([FromQuery] UserIlanQueryDto query)
+        {
+            var result = await _ilanService.GetIlansByQuery(query);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
+        }
+
+        [HttpGet("getilansbyqueryforadmin")]
+        public async Task<IActionResult> GetPaginatedIlans([FromQuery] AdminIlanQueryDto query)
+        {
+            var result = await _ilanService.GetIlansByQuery(query);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result.Message);
         }
 
         [HttpGet("getallactives")]
