@@ -47,9 +47,9 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("getilansbyqueryforadmin")]
-        public async Task<IActionResult> GetPaginatedIlans([FromQuery] AdminIlanQueryDto query)
+        public async Task<IActionResult> GetPaginatedIlansForAdmin([FromQuery] AdminIlanQueryDto query)
         {
-            var result = await _ilanService.GetIlansByQuery(query);
+            var result = await _ilanService.GetIlansByQueryForAdmin(query);
             if (result.IsSuccess)
             {
                 return Ok(result);

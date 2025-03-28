@@ -112,7 +112,7 @@ namespace Business.Concretes
         }
 
         [SecuredOperation("Admin")]
-        public async Task<IDataResult<List<GetIlanDto>>> GetIlansByQuery(AdminIlanQueryDto queryDto)
+        public async Task<IDataResult<List<GetIlanDto>>> GetIlansByQueryForAdmin(AdminIlanQueryDto queryDto)
         {
             var results = await _ilanDal.GetIlansByQueryAsync(queryDto);
             var mappedIlans = _mapper.Map<List<GetIlanDto>>(results);

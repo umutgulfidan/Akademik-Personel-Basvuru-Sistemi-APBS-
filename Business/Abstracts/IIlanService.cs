@@ -23,6 +23,6 @@ namespace Business.Abstracts
         Task<IResult> ActivateIlan(int id);
         Task<IResult> DeactivateIlan(int id);
         Task<IDataResult<List<GetIlanDto>>> GetIlansByQuery(UserIlanQueryDto queryDto);
-        Task<IDataResult<List<GetIlanDto>>> GetIlansByQuery(AdminIlanQueryDto queryDto);
+        Task<IDataResult<List<GetIlanDto>>> GetIlansByQueryForAdmin(AdminIlanQueryDto queryDto);
     }
 }
