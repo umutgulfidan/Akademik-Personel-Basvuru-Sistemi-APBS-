@@ -57,28 +57,6 @@ namespace WebApi.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet("getallactives")]
-        public async Task<IActionResult> GetAllActives()
-        {
-            var result = await _ilanService.GetAllActiveIlans();
-            if (result.IsSuccess)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
-        [HttpGet("getallexpireds")]
-        public async Task<IActionResult> GetAllExpireds()
-        {
-            var result = await _ilanService.GetAllExpiredIlans();
-            if (result.IsSuccess)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-        }
-
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetById(int id)
         {
