@@ -3,6 +3,7 @@ using Business.Abstracts;
 using Business.BusinessAspects;
 using Business.Constants;
 using Business.ValidationRules.Ilan;
+using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.Extensions.Claims;
 using Core.Utilities.Results;
@@ -31,6 +32,8 @@ namespace Business.Concretes
             _currentUser = httpContextAccessor.HttpContext.User;
         }
 
+        [SecuredOperation("Admin")]
+        [CacheRemoveAspect("IIlanService.Get")]
         public async Task<Core.Utilities.Results.IResult> ActivateIlan(int id)
         {
             var ilan = await _ilanDal.GetAsync(x => x.Id == id);
@@ -45,6 +48,7 @@ namespace Business.Concretes
 
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(AddIlanDtoValidator))]
+        [CacheRemoveAspect("IIlanService.Get")]
         public async Task<Core.Utilities.Results.IResult> Add(AddIlanDto dto)
         {
             // JWT'den kullanıcı ID'sini alıyoruz
@@ -58,6 +62,7 @@ namespace Business.Concretes
         }
 
         [SecuredOperation("Admin")]
+        [CacheRemoveAspect("IIlanService.Get")]
         public async Task<Core.Utilities.Results.IResult> DeactivateIlan(int id)
         {
             var ilan = await _ilanDal.GetAsync(x => x.Id == id);
@@ -70,6 +75,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.IlanDeactivate);
         }
         [SecuredOperation("Admin")]
+        [CacheRemoveAspect("IIlanService.Get")]
         public async Task<Core.Utilities.Results.IResult> Delete(int id)
         {
             await _ilanDal.DeleteByIdAsync(id);
@@ -83,21 +89,7 @@ namespace Business.Concretes
             var mappedResults = _mapper.Map<List<GetIlanDto>>(results);
             return new SuccessDataResult<List<GetIlanDto>>(mappedResults, Messages.IlanListed);
         }
-
-        public async Task<IDataResult<List<GetIlanDto>>> GetAllActiveIlans()
-        {
-            var results = await _ilanDal.GetAllWithBolumAndPozisyon(x=> x.Status == true && x.BitisTarihi > DateTime.Now);
-            var mappedResults = _mapper.Map<List<GetIlanDto>>(results);
-
-            return new SuccessDataResult<List<GetIlanDto>>(mappedResults, Messages.IlanListed);
-        }
-        public async Task<IDataResult<List<GetIlanDto>>> GetAllExpiredIlans()
-        {
-            var results = await _ilanDal.GetAllWithBolumAndPozisyon(x => x.Status == true && x.BitisTarihi < DateTime.Now);
-            var mappedResults = _mapper.Map<List<GetIlanDto>>(results);
-            return new SuccessDataResult<List<GetIlanDto>>(mappedResults, Messages.IlanListed);
-        }
-
+        [CacheAspect(10)]
         public async Task<IDataResult<GetIlanDto>> GetById(int id)
         {
             var result = await _ilanDal.GetWithBolumAndPozisyon(X=> X.Id == id && X.Status == true);
@@ -105,6 +97,7 @@ namespace Business.Concretes
             return new SuccessDataResult<GetIlanDto>(mappedResult,Messages.IlanListed);
         }
 
+        [CacheAspect(5)]
         public async Task<IDataResult<List<GetIlanDto>>> GetIlansByQuery(UserIlanQueryDto queryDto)
         {
             var results = await _ilanDal.GetIlansByQueryAsync(queryDto);
@@ -113,6 +106,7 @@ namespace Business.Concretes
         }
 
         [SecuredOperation("Admin")]
+        [CacheAspect(5)]
         public async Task<IDataResult<List<GetIlanDto>>> GetIlansByQueryForAdmin(AdminIlanQueryDto queryDto)
         {
             var results = await _ilanDal.GetIlansByQueryAsync(queryDto);
@@ -122,6 +116,7 @@ namespace Business.Concretes
 
         [SecuredOperation("Admin")]
         [ValidationAspect(typeof(UpdateIlanDtoValidator))]
+        [CacheRemoveAspect("IIlanService.Get")]
         public async Task<Core.Utilities.Results.IResult> Update(UpdateIlanDto dto)
         {
             var ilanToUpdate = _mapper.Map<Ilan>(dto);

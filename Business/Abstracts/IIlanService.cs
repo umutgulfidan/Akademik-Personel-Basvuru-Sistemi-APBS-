@@ -13,8 +13,6 @@ namespace Business.Abstracts
     public interface IIlanService
     {
         Task<IDataResult<List<GetIlanDto>>> GetAll();
-        Task<IDataResult<List<GetIlanDto>>> GetAllActiveIlans();
-        Task<IDataResult<List<GetIlanDto>>> GetAllExpiredIlans();
         Task<IDataResult<GetIlanDto>> GetById(int id);
 
         Task<IResult> Update(UpdateIlanDto dto);

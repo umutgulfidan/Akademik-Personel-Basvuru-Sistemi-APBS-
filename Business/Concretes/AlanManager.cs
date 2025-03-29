@@ -2,6 +2,7 @@
 using Business.Abstracts;
 using Business.Constants;
 using Business.ValidationRules.Alan;
+using Core.Aspects.Autofac.Caching;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
@@ -13,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Core.Aspects.Autofac.Caching.CacheAspect;
 
 namespace Business.Concretes
 {
@@ -28,6 +30,7 @@ namespace Business.Concretes
         }
 
         [ValidationAspect(typeof(AddAlanDtoValidator))]
+        [CacheRemoveAspect("IAlanService.Get")]
         public async Task<IResult> Add(AddAlanDto addAlanDto)
         {
             var alan = _mapper.Map<Alan>(addAlanDto);
@@ -35,6 +38,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.AlanAdded);
         }
 
+        [CacheRemoveAspect("IAlanService.Get")]
         public async Task<IResult> Delete(int id)
         {
             if(_alanDal.Get(x=> x.Id == id) == null) return new ErrorResult(Messages.AlanNotFound);
@@ -43,6 +47,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.AlanDeleted);
         }
 
+        [CacheAspect(30)]
         public async Task<IDataResult<List<Alan>>> GetAll()
         {
             var result = await _alanDal.GetAllReadOnlyAsync();
@@ -56,6 +61,7 @@ namespace Business.Concretes
         }
 
         [ValidationAspect(typeof(UpdateAlanDtoValidator))]
+        [CacheRemoveAspect("IAlanService.Get")]
         public async Task<IResult> Update(UpdateAlanDto updateAlanDto)
         {
             var alan = _mapper.Map<Alan>(updateAlanDto);

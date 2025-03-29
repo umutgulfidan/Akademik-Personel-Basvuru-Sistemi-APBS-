@@ -21,5 +21,16 @@ namespace Entities.Dtos.Ilan
         public string? Baslik { get; set; }
         public bool? Status { get; set; }
         public IlanTuru? IlanTipi { get; set; }
+
+        public override string ToString()
+        {
+            return $"{PageSize}-{PageNumber}-{SortBy}-{IsDescending}-" +
+                   $"{Id?.ToString() ?? "null"}-" +
+                   $"{PozisyonId?.ToString() ?? "null"}-" +
+                   $"{BolumId?.ToString() ?? "null"}-" +
+                   $"{Baslik ?? "null"}-" +
+                   $"{IlanTipi?.ToString() ?? "null"}"+
+                   $"{Status?.ToString() ?? "null"}-";
+        }
     }
 }
