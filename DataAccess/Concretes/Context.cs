@@ -46,6 +46,13 @@ namespace DataAccess.Concretes
                 .HasForeignKey(r => r.JuriId)
                 .OnDelete(DeleteBehavior.Restrict);  // veya .OnDelete(DeleteBehavior.SetNull);
 
+
+            modelBuilder.Entity<Ilan>()
+                .HasIndex(i => i.Baslik)
+                .HasDatabaseName("IX_Ilanlar_Baslik"); // Index adı belirleme
+
+            base.OnModelCreating(modelBuilder);
+
             base.OnModelCreating(modelBuilder);
         }
 

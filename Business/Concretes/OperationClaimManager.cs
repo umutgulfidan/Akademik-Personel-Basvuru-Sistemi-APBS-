@@ -44,13 +44,13 @@ namespace Business.Concretes
 
         public async Task<IDataResult<List<OperationClaim>>> GetAll()
         {
-            var data = await _operationClaimDal.GetAllAsync();
+            var data = await _operationClaimDal.GetAllReadOnlyAsync();
             return new SuccessDataResult<List<OperationClaim>>(data,Messages.OperationClaimListed);
         }
 
         public async Task<IDataResult<OperationClaim>> GetById(int id)
         {
-            var data = await _operationClaimDal.GetAsync(x=> x.Id == id);
+            var data = await _operationClaimDal.GetReadOnlyAsync(x=> x.Id == id);
             return new SuccessDataResult<OperationClaim>(data,Messages.OperationClaimListed);
         }
         [ValidationAspect(typeof(UpdateOperationClaimDtoValidator))]

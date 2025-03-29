@@ -45,13 +45,13 @@ namespace Business.Concretes
 
         public async Task<IDataResult<List<Pozisyon>>> GetAll()
         {
-            var data = await _pozisyonDal.GetAllAsync();
+            var data = await _pozisyonDal.GetAllReadOnlyAsync();
             return new SuccessDataResult<List<Pozisyon>>(data,Messages.PozisyonListed);
         }
 
         public async Task<IDataResult<Pozisyon>> GetById(int id)
         {
-            var data = await _pozisyonDal.GetAsync(x=> x.Id == id);
+            var data = await _pozisyonDal.GetReadOnlyAsync(x=> x.Id == id);
             return new SuccessDataResult<Pozisyon>(data,Messages.PozisyonListed);
         }
         [ValidationAspect(typeof(UpdatePozisyonDtoValidator))]

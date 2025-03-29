@@ -27,6 +27,7 @@ namespace Entities.Concretes
         public int BolumId { get; set; }
         public Bolum Bolum { get; set; }
 
+
         public string Baslik { get; set; }
         public string Aciklama { get; set; }
         public DateTime BaslangicTarihi { get; set; }

@@ -101,5 +101,19 @@ namespace Core.DataAccess.EntityFramework
             context.Remove(entity);
             await context.SaveChangesAsync();
         }
+
+        public async Task<List<TEntity>> GetAllReadOnlyAsync(Expression<Func<TEntity, bool>> filter = null)
+        {
+            await using var context = new TContext();
+            return filter == null
+                ? await context.Set<TEntity>().AsNoTracking().ToListAsync()
+                : await context.Set<TEntity>().Where(filter).AsNoTracking().ToListAsync();
+        }
+        public async Task<TEntity> GetReadOnlyAsync(Expression<Func<TEntity, bool>> filter)
+        {
+            await using var context = new TContext();
+            return await context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(filter);
+        }
+
     }
 }

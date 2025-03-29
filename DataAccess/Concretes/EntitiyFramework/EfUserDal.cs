@@ -26,7 +26,7 @@ namespace DataAccess.Concretes.EntitiyFramework
         {
             using var context = new Context();
             // Veritabanı sorgusunu başlatıyoruz
-            var usersQuery = context.Users.AsQueryable();
+            var usersQuery = context.Users.AsNoTracking().AsQueryable();
 
             // Filtreleme işlemleri
             if (query.Id.HasValue)

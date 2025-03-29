@@ -47,7 +47,7 @@ namespace Business.Concretes
 
         public async Task<IDataResult<User>> GetByIdAsync(int userId)
         {
-            return new SuccessDataResult<User>(await _userDal.GetAsync(u => u.Id == userId),Messages.UserListed);
+            return new SuccessDataResult<User>(await _userDal.GetReadOnlyAsync(u => u.Id == userId),Messages.UserListed);
         }
 
         public async Task<IDataResult<User>> GetAsync(Expression<Func<User, bool>> filter)

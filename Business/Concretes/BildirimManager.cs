@@ -55,12 +55,12 @@ namespace Business.Concretes
         [SecuredOperation("Admin")]
         public async Task<IDataResult<List<Bildirim>>> GetAllForAdmin()
         {
-            var results = await _bildirimDal.GetAllAsync();
+            var results = await _bildirimDal.GetAllReadOnlyAsync();
             return new SuccessDataResult<List<Bildirim>>(results,Messages.BildirimListed);
         }
         public async Task<IDataResult<List<Bildirim>>> GetAllByUser(int userId)
         {
-            var results = await _bildirimDal.GetAllAsync(x=> x.KullaniciId == userId);
+            var results = await _bildirimDal.GetAllReadOnlyAsync(x=> x.KullaniciId == userId);
             return new SuccessDataResult<List<Bildirim>>(results, Messages.BildirimListed);
         }
 

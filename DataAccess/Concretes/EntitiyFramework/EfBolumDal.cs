@@ -17,14 +17,14 @@ namespace DataAccess.Concretes.EntitiyFramework
         public async Task<List<Bolum>> GetAllBolumsWithAlanAsync(Expression<Func<Bolum, bool>> filter = null)
         {
             await using var context = new Context();
-            var values = filter==null ? await context.Set<Bolum>().Include(x=>x.Alan).ToListAsync() : await context.Bolumler.Include(x => x.Alan).Where(filter).ToListAsync();
+            var values = filter==null ? await context.Set<Bolum>().Include(x=>x.Alan).AsNoTracking().ToListAsync() : await context.Bolumler.Include(x => x.Alan).Where(filter).AsNoTracking().ToListAsync();
             return values;
         }
 
         public async Task<Bolum> GetBolumWithAlanAsync(Expression<Func<Bolum, bool>> filter)
         {
             await using var context = new Context();
-            var value =  await context.Set<Bolum>().Include(x=> x.Alan).Where(filter).SingleOrDefaultAsync();
+            var value =  await context.Set<Bolum>().Include(x=> x.Alan).Where(filter).AsNoTracking().SingleOrDefaultAsync();
             return value;
         }
     }

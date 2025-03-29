@@ -45,13 +45,13 @@ namespace Business.Concretes
 
         public async Task<IDataResult<List<Alan>>> GetAll()
         {
-            var result = await _alanDal.GetAllAsync();
+            var result = await _alanDal.GetAllReadOnlyAsync();
             return new SuccessDataResult<List<Alan>>(result,Messages.AlanListed);
         }
 
         public async Task<IDataResult<Alan>> GetById(int id)
         {
-            var result = await _alanDal.GetAsync(x=> x.Id == id);
+            var result = await _alanDal.GetReadOnlyAsync(x=> x.Id == id);
             return new SuccessDataResult<Alan>(result,Messages.AlanListed);
         }
 

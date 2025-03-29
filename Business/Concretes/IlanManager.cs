@@ -51,6 +51,7 @@ namespace Business.Concretes
             var userId = _currentUser.ClaimUserId();
             var ilanToAdd = _mapper.Map<Ilan>(dto);
             ilanToAdd.OlusturanId = userId;
+            ilanToAdd.CreatedDate = DateTime.UtcNow;
 
             await _ilanDal.AddAsync(ilanToAdd);
             return new SuccessResult(Messages.IlanAdded);
@@ -130,6 +131,7 @@ namespace Business.Concretes
             {
                 ilanToUpdate.OlusturanId = existingIlan.OlusturanId; // mevcut OlusturanId'yi koru
             }
+            ilanToUpdate.UpdatedDate = DateTime.UtcNow;
             await _ilanDal.UpdateAsync(ilanToUpdate);
             return new SuccessResult(Messages.IlanUpdated);
 
