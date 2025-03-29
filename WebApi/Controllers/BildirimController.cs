@@ -108,9 +108,33 @@ namespace WebApi.Controllers
             return BadRequest(result);
         }
         [HttpGet("GetPaginatedNotifications")]
-        public async Task<IActionResult> GetPaginatedNotifications([FromQuery]BildirimQueryDto bildirimQueryDto)
+        public async Task<IActionResult> GetPaginatedNotifications([FromQuery]AdminBildirimQueryDto bildirimQueryDto)
         {
             var result = await _bildirimService.GetAllWithPaginating(bildirimQueryDto);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+        [HttpGet("GetMyPaginatedNotifications")]
+        public async Task<IActionResult> GetMyPaginatedNotifications([FromQuery] UserBildirimQueryDto bildirimQueryDto)
+        {
+            // Kullanıcının giriş yapıp yapmadığını kontrol et
+            if (User?.Identity?.IsAuthenticated != true)
+            {
+                return Unauthorized(Messages.Unauthorized);
+            }
+
+            // Kullanıcı ID'sini JWT'den al
+            var userId = User.ClaimUserId();
+
+            if (userId == 0)
+            {
+                return BadRequest(Messages.UserNotFound);
+            }
+
+            var result = await _bildirimService.GetByUserWithPaginating(userId,bildirimQueryDto);
             if (result.IsSuccess)
             {
                 return Ok(result);

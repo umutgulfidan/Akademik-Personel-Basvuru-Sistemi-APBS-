@@ -10,6 +10,7 @@ namespace DataAccess.Abstracts
 {
     public interface IBildirimDal : IEntityRepository<Bildirim>
     {
-        Task<List<Bildirim>> GetAllWithPaginating(BildirimQueryDto bildirimQueryDto);
+        Task<List<Bildirim>> GetAllWithPaginating(AdminBildirimQueryDto bildirimQueryDto);
+        Task<List<Bildirim>> GetMyPaginatedNotifications(int userId,UserBildirimQueryDto userBildirimQueryDto);
     }
 }

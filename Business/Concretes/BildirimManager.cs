@@ -118,10 +118,17 @@ namespace Business.Concretes
             return new SuccessResult(Messages.BildirimDeleted);
         }
 
-        public async Task<IDataResult<List<Bildirim>>> GetAllWithPaginating(BildirimQueryDto bildirimQueryDto)
+        [SecuredOperation("Admin")]
+        public async Task<IDataResult<List<Bildirim>>> GetAllWithPaginating(AdminBildirimQueryDto bildirimQueryDto)
         {
             var results = await _bildirimDal.GetAllWithPaginating(bildirimQueryDto);
             return new SuccessDataResult<List<Bildirim>>(results,Messages.BildirimListed);
+        }
+
+        public async Task<IDataResult<List<Bildirim>>> GetByUserWithPaginating(int userId, UserBildirimQueryDto userBildirimQueryDto)
+        {
+            var results = await _bildirimDal.GetMyPaginatedNotifications(userId,userBildirimQueryDto);
+            return new SuccessDataResult<List<Bildirim>>(results, Messages.BildirimListed);
         }
     }
 }
