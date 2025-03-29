@@ -175,7 +175,7 @@ namespace DataAccess.Concretes.EntitiyFramework
         public async Task<Ilan> GetWithBolumAndPozisyon(Expression<Func<Ilan, bool>> filter)
         {
             await using var context = new Context();
-            var value = await context.Set<Ilan>().Include(x => x.Pozisyon).Include(x => x.Olusturan).Include(x => x.Bolum).ThenInclude(y => y.Alan).Where(filter).SingleOrDefaultAsync();
+            var value = await context.Set<Ilan>().Include(x => x.Pozisyon).Include(x => x.Bolum).ThenInclude(y => y.Alan).Where(filter).SingleOrDefaultAsync();
             return value;
 
         }

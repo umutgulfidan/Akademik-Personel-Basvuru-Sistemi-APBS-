@@ -1,4 +1,5 @@
 ﻿using Core.DataAccess.EntityFramework;
+using Entities.Dtos.Bildirim;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace DataAccess.Abstracts
 {
     public interface IBildirimDal : IEntityRepository<Bildirim>
     {
+        Task<List<Bildirim>> GetAllWithPaginating(BildirimQueryDto bildirimQueryDto);
     }
 }

@@ -117,5 +117,11 @@ namespace Business.Concretes
             }
             return new SuccessResult(Messages.BildirimDeleted);
         }
+
+        public async Task<IDataResult<List<Bildirim>>> GetAllWithPaginating(BildirimQueryDto bildirimQueryDto)
+        {
+            var results = await _bildirimDal.GetAllWithPaginating(bildirimQueryDto);
+            return new SuccessDataResult<List<Bildirim>>(results,Messages.BildirimListed);
+        }
     }
 }

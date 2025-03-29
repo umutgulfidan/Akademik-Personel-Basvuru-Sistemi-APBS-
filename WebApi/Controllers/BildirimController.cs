@@ -107,6 +107,16 @@ namespace WebApi.Controllers
             }
             return BadRequest(result);
         }
+        [HttpGet("GetPaginatedNotifications")]
+        public async Task<IActionResult> GetPaginatedNotifications([FromQuery]BildirimQueryDto bildirimQueryDto)
+        {
+            var result = await _bildirimService.GetAllWithPaginating(bildirimQueryDto);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
 
         [HttpGet("GetMyNotifications")]
         public async Task<IActionResult> GetMyNotifications()

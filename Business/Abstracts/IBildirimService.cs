@@ -14,6 +14,7 @@ namespace Business.Abstracts
         Task<IResult> DeleteAdmin(int id);
         Task<IResult> UpdateAdmin(UpdateBildirimDto bildirim);
         Task<IDataResult<List<Bildirim>>> GetAllForAdmin();
+        Task<IDataResult<List<Bildirim>>> GetAllWithPaginating(BildirimQueryDto bildirimQueryDto);
         Task<IDataResult<List<Bildirim>>> GetAllByUser(int userId);
         Task<IResult> MarkAsRead(int id,int userId);
         Task<IResult> MarkAsReadAll(int userId);

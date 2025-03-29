@@ -102,7 +102,7 @@ namespace Business.Concretes
         {
             var results = await _ilanDal.GetIlansByQueryAsync(queryDto);
             var mappedIlans = _mapper.Map<List<GetIlanDto>>(results);
-            return new SuccessDataResult<List<GetIlanDto>>(mappedIlans, Messages.UserListed);
+            return new SuccessDataResult<List<GetIlanDto>>(mappedIlans, Messages.IlanListed);
         }
 
         [SecuredOperation("Admin")]
@@ -111,7 +111,7 @@ namespace Business.Concretes
         {
             var results = await _ilanDal.GetIlansByQueryAsync(queryDto);
             var mappedIlans = _mapper.Map<List<GetIlanDto>>(results);
-            return new SuccessDataResult<List<GetIlanDto>>(mappedIlans, Messages.UserListed);
+            return new SuccessDataResult<List<GetIlanDto>>(mappedIlans, Messages.IlanListed);
         }
 
         [SecuredOperation("Admin")]
