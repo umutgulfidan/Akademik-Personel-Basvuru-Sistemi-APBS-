@@ -18,6 +18,7 @@ namespace Business.Concretes
 
         public AwsFileManager(IConfiguration configuration)
         {
+            DotNetEnv.Env.Load(AppDomain.CurrentDomain.BaseDirectory + "\\.env");
             // .env dosyasından veya ortam değişkenlerinden kimlik bilgilerini al
             var accessKey = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY");
             var secretKey = Environment.GetEnvironmentVariable("AWS_SECRET_KEY");

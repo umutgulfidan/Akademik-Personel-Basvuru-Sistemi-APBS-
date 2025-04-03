@@ -22,5 +22,11 @@ namespace WebApi.Controllers
             var result = await _fileService.UploadFileAsync(file);
             return Ok(result);
         }
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> Delete()
+        {
+            var result = await _fileService.DeleteFileAsync("s3://apbs-file-storage/db08a4ce-7525-4eee-bc88-1e11f26349c4.pdf");
+            return Ok(result);
+        }
     }
 }
