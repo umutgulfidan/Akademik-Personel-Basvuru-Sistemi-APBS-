@@ -11,6 +11,7 @@ using Entities.Dtos.Ilan;
 using Entities.Dtos.Kriter;
 using Entities.Dtos.OperationClaim;
 using Entities.Dtos.Pozisyon;
+using Entities.Dtos.PuanKriteri;
 using Entities.Dtos.UserOperationClaim;
 using System;
 using System.Collections.Generic;
@@ -157,6 +158,19 @@ namespace Business.Mapping
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Alan, opt => opt.Ignore())
                 .ForMember(dest => dest.Pozisyon, opt => opt.Ignore()) 
+                .ForMember(dest => dest.Kriter, opt => opt.Ignore());
+            #endregion
+
+            #region Puan Kriteri
+            CreateMap<UpdatePuanKriteriDto, PuanKriteri>()
+                .ForMember(dest => dest.Alan, opt => opt.Ignore())
+                .ForMember(dest => dest.Pozisyon, opt => opt.Ignore())
+                .ForMember(dest => dest.Kriter, opt => opt.Ignore());
+
+            CreateMap<AddPuanKriteriDto, PuanKriteri>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Alan, opt => opt.Ignore())
+                .ForMember(dest => dest.Pozisyon, opt => opt.Ignore())
                 .ForMember(dest => dest.Kriter, opt => opt.Ignore());
             #endregion
 

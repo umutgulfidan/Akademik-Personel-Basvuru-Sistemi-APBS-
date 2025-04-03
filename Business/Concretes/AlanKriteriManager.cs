@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.BusinessAspects;
 using Business.Constants;
 using Business.ValidationRules.AlanKriteri;
 using Business.ValidationRules.Kriter;
@@ -29,13 +30,14 @@ namespace Business.Concretes
         }
 
         [ValidationAspect(typeof(AddAlanKriteriDtoValidator))]
+        [SecuredOperation("Admin")]
         public async Task<IResult> Add(AddAlanKriteriDto kriterDto)
         {
             var kriter = _mapper.Map<AlanKriteri>(kriterDto);
             await _alanKriteriDal.AddAsync(kriter);
             return new SuccessResult(Messages.AlanKriteriAdded);
         }
-
+        [SecuredOperation("Admin")]
         public async Task<IResult> Delete(int id)
         {
             if (await _alanKriteriDal.GetReadOnlyAsync(x => x.Id == id) == null) return new ErrorResult(Messages.AlanKriteriNotFound);
@@ -57,13 +59,14 @@ namespace Business.Concretes
         }
 
         [ValidationAspect(typeof(UpdateAlanKriteriDtoValidator))]
+        [SecuredOperation("Admin")]
         public async Task<IResult> Update(UpdateAlanKriteriDto kriterDto)
         {
             var kriter = _mapper.Map<AlanKriteri>(kriterDto);
-            if (await _alanKriteriDal.GetAsync(x => x.Id == kriterDto.Id) == null) return new ErrorResult(Messages.KriterNotFound);
+            if (await _alanKriteriDal.GetAsync(x => x.Id == kriterDto.Id) == null) return new ErrorResult(Messages.AlanKriteriNotFound);
 
             await _alanKriteriDal.UpdateAsync(kriter);
-            return new SuccessResult(Messages.KriterUpdated);
+            return new SuccessResult(Messages.AlanKriteriUpdated);
         }
     }
 }
