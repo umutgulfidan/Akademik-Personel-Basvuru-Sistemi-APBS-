@@ -16,7 +16,7 @@ namespace WebApi.Controllers
     [ApiController]
     public class IlanController : ControllerBase
     {
-        IIlanService _ilanService;
+        private readonly IIlanService _ilanService;
         private readonly IHubContext<NotificationHub> _hubContext;
 
         public IlanController(IIlanService ilanService, IHubContext<NotificationHub> hubContext)
@@ -60,7 +60,7 @@ namespace WebApi.Controllers
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetById(int id)
         {
-            var result = await _ilanService.GetById(id);
+            var result = await _ilanService.GetIlanDetail(id);
             if (result.IsSuccess)
             {
                 return Ok(result);

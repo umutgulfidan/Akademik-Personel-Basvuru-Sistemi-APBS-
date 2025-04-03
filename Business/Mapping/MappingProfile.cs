@@ -120,8 +120,19 @@ namespace Business.Mapping
                 .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.Now)); // Bu alan otomatik olarak şu anki tarihi alacak; // Bolum objesi
 
             // Ilan -> GetIlanDto
-            CreateMap<Ilan, GetIlanDto>()
+            CreateMap<Ilan, GetIlanAdminDto>()
                 .ForMember(dest => dest.Olusturan, opt => opt.MapFrom(src => src.Olusturan));
+
+            // Ilan -> GetIlanDto
+            CreateMap<Ilan, GetIlanDto>()
+                .ForMember(dest => dest.Pozisyon, opt => opt.MapFrom(src => src.Pozisyon))
+                .ForMember(dest => dest.Bolum, opt => opt.MapFrom(src => src.Bolum));
+
+            // Ilan -> GetIlanDetailDto
+            CreateMap<Ilan, GetIlanDetailDto>()
+                .ForMember(dest => dest.Pozisyon, opt => opt.MapFrom(src => src.Pozisyon))
+                .ForMember(dest => dest.Bolum, opt => opt.MapFrom(src => src.Bolum))
+                .ForMember(dest => dest.AlanKriterleri, opt => opt.Ignore());
 
             #endregion
 
