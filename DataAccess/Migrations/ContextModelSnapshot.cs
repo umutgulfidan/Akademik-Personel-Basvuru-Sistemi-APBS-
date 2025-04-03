@@ -204,9 +204,10 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("AlanId");
 
-                    b.HasIndex("KriterId");
-
                     b.HasIndex("PozisyonId");
+
+                    b.HasIndex("KriterId", "AlanId", "PozisyonId")
+                        .IsUnique();
 
                     b.ToTable("AlanKriterleri");
                 });
@@ -480,9 +481,10 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("AlanId");
 
-                    b.HasIndex("KriterId");
-
                     b.HasIndex("PozisyonId");
+
+                    b.HasIndex("KriterId", "AlanId", "PozisyonId")
+                        .IsUnique();
 
                     b.ToTable("PuanKriterleri");
                 });
