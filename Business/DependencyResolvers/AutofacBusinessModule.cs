@@ -48,6 +48,7 @@ namespace Business.DependencyResolvers
             builder.RegisterType<EfIlanDal>().As<IIlanDal>().SingleInstance();
             builder.RegisterType<BildirimManager>().As<IBildirimService>().SingleInstance();
             builder.RegisterType<EfBildirimDal>().As<IBildirimDal>().SingleInstance();
+            builder.RegisterType<AwsFileManager>().As<IFileService>().SingleInstance();
 
             builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
         }
