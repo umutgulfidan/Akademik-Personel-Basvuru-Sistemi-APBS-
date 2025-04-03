@@ -19,7 +19,7 @@ namespace WebApi.Controllers
         [HttpPost("Upload")]
         public async Task<IActionResult> Upload(IFormFile file)
         {
-            var result = _fileService.UploadFileAsync(file);
+            var result = await _fileService.UploadFileAsync(file);
             return Ok(result);
         }
     }
