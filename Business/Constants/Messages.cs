@@ -87,12 +87,20 @@ namespace Business.Constants
         public static string KriterNotFound = ServiceMessageHelper.NotFoundMessage("Kriter");
         #endregion
 
-        #region
+        #region Alan Kriteri
         public static string AlanKriteriAdded = ServiceMessageHelper.CreatedMessage("Alan Kriteri");
         public static string AlanKriteriDeleted = ServiceMessageHelper.DeletedMessage("Alan Kriteri");
         public static string AlanKriteriListed = ServiceMessageHelper.ListedMessage("Alan Kriterleri");
         public static string AlanKriteriUpdated = ServiceMessageHelper.UpdatedMessage("Alan Kriteri");
         public static string AlanKriteriNotFound = ServiceMessageHelper.NotFoundMessage("Alan Kriteri");
+        #endregion
+
+        #region Puan Kriteri
+        public static string PuanKriteriAdded = ServiceMessageHelper.CreatedMessage("Puan Kriteri");
+        public static string PuanKriteriDeleted = ServiceMessageHelper.DeletedMessage("Puan Kriteri");
+        public static string PuanKriteriListed = ServiceMessageHelper.ListedMessage("Puan Kriterleri");
+        public static string PuanKriteriUpdated = ServiceMessageHelper.UpdatedMessage("Puan Kriteri");
+        public static string PuanKriteriNotFound = ServiceMessageHelper.NotFoundMessage("Puan Kriteri");
         #endregion
     }
 

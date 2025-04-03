@@ -16,7 +16,7 @@ namespace DataAccess.Concretes.EntitiyFramework
         public async Task<List<AlanKriteri>> GetAllWithIncludesAsync(Expression<Func<AlanKriteri, bool>> filter = null)
         {
             await using var context = new Context();
-            var values = filter == null ? await context.Set<AlanKriteri>().AsNoTracking().Include(x => x.Kriter).Include(x => x.Alan).Include(x=> x.Pozisyon).ToListAsync() : await context.AlanKriterleri.AsNoTracking().Include(x => x.Kriter).Where(filter).ToListAsync();
+            var values = filter == null ? await context.Set<AlanKriteri>().AsNoTracking().Include(x => x.Kriter).Include(x => x.Alan).Include(x=> x.Pozisyon).ToListAsync() : await context.AlanKriterleri.AsNoTracking().Include(x => x.Kriter).Include(x => x.Alan).Include(x => x.Pozisyon).Where(filter).ToListAsync();
             return values;
 
         }

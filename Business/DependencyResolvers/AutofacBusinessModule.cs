@@ -32,26 +32,39 @@ namespace Business.DependencyResolvers
         {
             // Servis ve DataAccess katmanındaki sınıfları toplu şekilde kaydetmek için
             builder.RegisterType<AuthManager>().As<IAuthService>().SingleInstance();
+
             builder.RegisterType<UserManager>().As<IUserService>().SingleInstance();
             builder.RegisterType<EfUserDal>().As<IUserDal>().SingleInstance();
+
             builder.RegisterType<AlanManager>().As<IAlanService>().SingleInstance();
             builder.RegisterType<EfAlanDal>().As<IAlanDal>().SingleInstance();
+
             builder.RegisterType<BolumManager>().As<IBolumService>().SingleInstance();
             builder.RegisterType<EfBolumDal>().As<IBolumDal>().SingleInstance();
+
             builder.RegisterType<EfPozisyonDal>().As<IPozisyonDal>().SingleInstance();
             builder.RegisterType<PozisyonManager>().As<IPozisyonService>().SingleInstance();
+
             builder.RegisterType<EfOperationClaimDal>().As<IOperationClaimDal>().SingleInstance();
             builder.RegisterType<OperationClaimManager>().As<IOperationClaimService>().SingleInstance();
+
             builder.RegisterType<EfUserOperationClaimDal>().As<IUserOperationClaimDal>().SingleInstance();
             builder.RegisterType<UserOperationClaimManager>().As<IUserOperationClaimService>().SingleInstance();
+
             builder.RegisterType<IlanManager>().As<IIlanService>().SingleInstance();
             builder.RegisterType<EfIlanDal>().As<IIlanDal>().SingleInstance();
+
             builder.RegisterType<BildirimManager>().As<IBildirimService>().SingleInstance();
             builder.RegisterType<EfBildirimDal>().As<IBildirimDal>().SingleInstance();
+
             builder.RegisterType<EfKriterDal>().As<IKriterDal>().SingleInstance();
             builder.RegisterType<KriterManager>().As<IKriterService>().SingleInstance();
+
             builder.RegisterType<EfAlanKriteriDal>().As<IAlanKriteriDal>().SingleInstance();
             builder.RegisterType<AlanKriteriManager>().As<IAlanKriteriService>().SingleInstance();
+
+            builder.RegisterType<EfPuanKriteriDal>().As<IPuanKriteriDal>().SingleInstance();
+            builder.RegisterType<PuanKriteriManager>().As<IPuanKriteriService>().SingleInstance();
 
 
             builder.RegisterType<AwsFileManager>().As<IFileService>().SingleInstance();
