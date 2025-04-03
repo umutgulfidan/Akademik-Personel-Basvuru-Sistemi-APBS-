@@ -48,6 +48,8 @@ namespace Business.DependencyResolvers
             builder.RegisterType<EfIlanDal>().As<IIlanDal>().SingleInstance();
             builder.RegisterType<BildirimManager>().As<IBildirimService>().SingleInstance();
             builder.RegisterType<EfBildirimDal>().As<IBildirimDal>().SingleInstance();
+            builder.RegisterType<EfKriterDal>().As<IKriterDal>().SingleInstance();
+            builder.RegisterType<KriterManager>().As<IKriterService>().SingleInstance();
 
             builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
         }
