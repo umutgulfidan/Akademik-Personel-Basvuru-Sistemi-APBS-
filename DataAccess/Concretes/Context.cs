@@ -51,8 +51,14 @@ namespace DataAccess.Concretes
                 .HasIndex(i => i.Baslik)
                 .HasDatabaseName("IX_Ilanlar_Baslik"); // Index adı belirleme
 
-            base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<AlanKriteri>()
+                .HasIndex(ak => new { ak.KriterId, ak.AlanId, ak.PozisyonId })
+                .IsUnique();
+
+            modelBuilder.Entity<PuanKriteri>()
+                .HasIndex(ak => new { ak.KriterId, ak.AlanId, ak.PozisyonId })
+                .IsUnique();
             base.OnModelCreating(modelBuilder);
         }
 
