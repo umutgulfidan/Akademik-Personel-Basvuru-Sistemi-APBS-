@@ -28,9 +28,20 @@ namespace Business.ValidationRules.PuanKriteri
                 .WithMessage(ValidationMessageHelper.RequiredMessage("Pozisyon Id"));
             RuleFor(x => x.PozisyonId).GreaterThan(0).WithMessage(ValidationMessageHelper.GreaterThanMessage("Pozisyon Id", 0));
 
-            RuleFor(x => x.MinPuan).GreaterThan(0).WithMessage(ValidationMessageHelper.GreaterThanMessage("Min Puan", 0));
-            RuleFor(x => x.MaxPuan).GreaterThan(0).WithMessage(ValidationMessageHelper.GreaterThanMessage("Max Puan", 0))
-                .GreaterThan(x => x.MinPuan).WithMessage("Maximum puan alanı, minimum puandan büyük olmalı.");
+            RuleFor(x => x.MinPuan)
+                .GreaterThan(0)
+                .When(x => x.MinPuan.HasValue)
+                .WithMessage(ValidationMessageHelper.GreaterThanMessage("Min Puan", 0));
+
+            RuleFor(x => x.MaxPuan)
+                .GreaterThan(0)
+                .When(x => x.MaxPuan.HasValue)
+                .WithMessage(ValidationMessageHelper.GreaterThanMessage("Max Puan", 0));
+
+            RuleFor(x => x.MaxPuan)
+                .GreaterThan(x => x.MinPuan.Value)
+                .When(x => x.MinPuan.HasValue && x.MaxPuan.HasValue)
+                .WithMessage("Maximum puan alanı, minimum puandan büyük olmalı.");
         }
     }
 }
