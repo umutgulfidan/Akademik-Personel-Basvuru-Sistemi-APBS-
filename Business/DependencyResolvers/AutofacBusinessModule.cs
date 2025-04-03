@@ -50,6 +50,7 @@ namespace Business.DependencyResolvers
             builder.RegisterType<EfBildirimDal>().As<IBildirimDal>().SingleInstance();
             builder.RegisterType<EfKriterDal>().As<IKriterDal>().SingleInstance();
             builder.RegisterType<KriterManager>().As<IKriterService>().SingleInstance();
+            builder.RegisterType<AwsFileManager>().As<IFileService>().SingleInstance();
 
             builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
         }
