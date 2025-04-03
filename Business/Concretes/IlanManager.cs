@@ -22,14 +22,15 @@ namespace Business.Concretes
     public class IlanManager : IIlanService
     {
         private readonly IIlanDal _ilanDal;
+        private readonly IAlanKriteriDal _alanKriteriDal;
         private readonly IMapper _mapper;
         private readonly ClaimsPrincipal _currentUser;
-
-        public IlanManager(IIlanDal ilanDal, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+        public IlanManager(IIlanDal ilanDal, IAlanKriteriDal alanKriteriDal, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _ilanDal = ilanDal;
+            _alanKriteriDal = alanKriteriDal;
             _mapper = mapper;
-            _currentUser = httpContextAccessor.HttpContext.User;
+            _currentUser = httpContextAccessor.HttpContext?.User ?? throw new Exception("User not found");
         }
 
         [SecuredOperation("Admin")]
@@ -85,16 +86,24 @@ namespace Business.Concretes
         [SecuredOperation("Admin")]
         public async Task<IDataResult<List<GetIlanDto>>> GetAll()
         {
-            var results = await _ilanDal.GetAllWithBolumAndPozisyon();
+            var results = await _ilanDal.GetAllWithBolumPozisyonOlusturan();
             var mappedResults = _mapper.Map<List<GetIlanDto>>(results);
             return new SuccessDataResult<List<GetIlanDto>>(mappedResults, Messages.IlanListed);
         }
         [CacheAspect(10)]
         public async Task<IDataResult<GetIlanDto>> GetById(int id)
         {
-            var result = await _ilanDal.GetWithBolumAndPozisyon(X=> X.Id == id && X.Status == true);
+            var result = await _ilanDal.GetWithBolumPozisyon(X=> X.Id == id && X.Status == true);
             var mappedResult = _mapper.Map<GetIlanDto>(result);
             return new SuccessDataResult<GetIlanDto>(mappedResult,Messages.IlanListed);
+        }
+
+        public async Task<IDataResult<GetIlanDetailDto>> GetIlanDetail(int id)
+        {
+            var result = await _ilanDal.GetWithBolumPozisyon(x=> x.Id == id);
+            var mappedResult = _mapper.Map<GetIlanDetailDto>(result);
+            mappedResult.AlanKriterleri = await _alanKriteriDal.GetAllWithIncludesAsync(x=> x.AlanId == result.Bolum.AlanId && x.PozisyonId == result.PozisyonId);
+            return new SuccessDataResult<GetIlanDetailDto>(mappedResult,Messages.IlanListed);
         }
 
         [CacheAspect(5)]
@@ -107,11 +116,11 @@ namespace Business.Concretes
 
         [SecuredOperation("Admin")]
         [CacheAspect(5)]
-        public async Task<IDataResult<List<GetIlanDto>>> GetIlansByQueryForAdmin(AdminIlanQueryDto queryDto)
+        public async Task<IDataResult<List<GetIlanAdminDto>>> GetIlansByQueryForAdmin(AdminIlanQueryDto queryDto)
         {
             var results = await _ilanDal.GetIlansByQueryAsync(queryDto);
-            var mappedIlans = _mapper.Map<List<GetIlanDto>>(results);
-            return new SuccessDataResult<List<GetIlanDto>>(mappedIlans, Messages.IlanListed);
+            var mappedIlans = _mapper.Map<List<GetIlanAdminDto>>(results);
+            return new SuccessDataResult<List<GetIlanAdminDto>>(mappedIlans, Messages.IlanListed);
         }
 
         [SecuredOperation("Admin")]

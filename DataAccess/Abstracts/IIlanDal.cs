@@ -1,6 +1,9 @@
 ﻿using Core.DataAccess.EntityFramework;
+using DataAccess.Concretes;
 using Entities.Concretes;
 using Entities.Dtos.Ilan;
+using Entities.Enums;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +15,11 @@ namespace DataAccess.Abstracts
 {
     public interface IIlanDal : IEntityRepository<Ilan>
     {
-        Task<List<Ilan>> GetAllWithBolumAndPozisyon(Expression<Func<Ilan, bool>> filter = null);
-        Task<Ilan> GetWithBolumAndPozisyon(Expression<Func<Ilan, bool>> filter);
-
+        Task<List<Ilan>> GetAllWithBolumPozisyonOlusturan(Expression<Func<Ilan, bool>> filter = null);
+        Task<Ilan> GetWithBolumPozisyon(Expression<Func<Ilan, bool>> filter);
         Task<List<Ilan>> GetIlansByQueryAsync(UserIlanQueryDto query);
         Task<List<Ilan>> GetIlansByQueryAsync(AdminIlanQueryDto query);
+        Task<List<Ilan>> GetAllWithBolumPozisyon(Expression<Func<Ilan, bool>> filter = null);
+
     }
 }
