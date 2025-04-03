@@ -7,6 +7,7 @@ using Entities.Dtos.Alan;
 using Entities.Dtos.Bildirim;
 using Entities.Dtos.Bolum;
 using Entities.Dtos.Ilan;
+using Entities.Dtos.Kriter;
 using Entities.Dtos.OperationClaim;
 using Entities.Dtos.Pozisyon;
 using Entities.Dtos.UserOperationClaim;
@@ -136,6 +137,15 @@ namespace Business.Mapping
             // Bildirim güncelleme DTO'sunu Bildirim modeline maple
             CreateMap<UpdateBildirimDto, Bildirim>();
 
+            #endregion
+
+            #region Kriter
+            // UpdateAlanDto -> Alan
+            CreateMap<UpdateKriterDto, Kriter>();
+
+            // AddAlanDto -> Alan
+            CreateMap<AddKriterDto, Kriter>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore()); // Id manuel olarak ayarlanacak
             #endregion
 
             //CreateMap<UserForRegisterDto, User>().ConstructUsing(

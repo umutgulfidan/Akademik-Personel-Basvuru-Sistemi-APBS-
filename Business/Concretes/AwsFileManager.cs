@@ -22,7 +22,7 @@ namespace Business.Concretes
 
         public AwsFileManager()
         {
-            DotNetEnv.Env.Load(); 
+            DotNetEnv.Env.Load(AppDomain.CurrentDomain.BaseDirectory + "\\.env");
 
             _accessKey = Environment.GetEnvironmentVariable("CLOUDFLARE_ACCESS_KEY");
             _secretKey = Environment.GetEnvironmentVariable("CLOUDFLARE_SECRET_KEY");

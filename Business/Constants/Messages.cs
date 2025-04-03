@@ -79,7 +79,13 @@ namespace Business.Constants
         public static string UserOperationClaimUpdated = ServiceMessageHelper.UpdatedMessage("Rol");
         public static string UserOperationClaimNotFound = ServiceMessageHelper.NotFoundMessage("Rol");
         #endregion
-
+        #region Kriter
+        public static string KriterAdded = ServiceMessageHelper.CreatedMessage("Kriter");
+        public static string KriterDeleted = ServiceMessageHelper.DeletedMessage("Kriter");
+        public static string KriterListed = ServiceMessageHelper.ListedMessage("Kriterler");
+        public static string KriterUpdated = ServiceMessageHelper.UpdatedMessage("Kriter");
+        public static string KriterNotFound = ServiceMessageHelper.NotFoundMessage("Kriter");
+        #endregion
     }
 
 }
