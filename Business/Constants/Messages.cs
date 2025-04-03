@@ -86,6 +86,14 @@ namespace Business.Constants
         public static string KriterUpdated = ServiceMessageHelper.UpdatedMessage("Kriter");
         public static string KriterNotFound = ServiceMessageHelper.NotFoundMessage("Kriter");
         #endregion
+
+        #region
+        public static string AlanKriteriAdded = ServiceMessageHelper.CreatedMessage("Alan Kriteri");
+        public static string AlanKriteriDeleted = ServiceMessageHelper.DeletedMessage("Alan Kriteri");
+        public static string AlanKriteriListed = ServiceMessageHelper.ListedMessage("Alan Kriterleri");
+        public static string AlanKriteriUpdated = ServiceMessageHelper.UpdatedMessage("Alan Kriteri");
+        public static string AlanKriteriNotFound = ServiceMessageHelper.NotFoundMessage("Alan Kriteri");
+        #endregion
     }
 
 }

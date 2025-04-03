@@ -18,7 +18,7 @@ namespace DataAccess.Concretes.EntitiyFramework
         public async Task<List<Ilan>> GetAllWithBolumAndPozisyon(Expression<Func<Ilan, bool>> filter = null)
         {
             await using var context = new Context();
-            var values = filter == null ? await context.Set<Ilan>().Include(x=>x.Pozisyon).Include(x => x.Olusturan).Include(x=>x.Bolum).ThenInclude(y=> y.Alan).ToListAsync() : await context.Ilanlar.Include(x => x.Pozisyon).Include(x => x.Olusturan).Include(x => x.Bolum).Where(filter).ToListAsync();
+            var values = filter == null ? await context.Set<Ilan>().AsNoTracking().Include(x=>x.Pozisyon).Include(x => x.Olusturan).Include(x=>x.Bolum).ThenInclude(y=> y.Alan).ToListAsync() : await context.Ilanlar.AsNoTracking().Include(x => x.Pozisyon).Include(x => x.Olusturan).Include(x => x.Bolum).Where(filter).ToListAsync();
             return values;
 
         }
@@ -175,7 +175,7 @@ namespace DataAccess.Concretes.EntitiyFramework
         public async Task<Ilan> GetWithBolumAndPozisyon(Expression<Func<Ilan, bool>> filter)
         {
             await using var context = new Context();
-            var value = await context.Set<Ilan>().Include(x => x.Pozisyon).Include(x => x.Bolum).ThenInclude(y => y.Alan).Where(filter).SingleOrDefaultAsync();
+            var value = await context.Set<Ilan>().AsNoTracking().Include(x => x.Pozisyon).AsNoTracking().Include(x => x.Bolum).ThenInclude(y => y.Alan).Where(filter).SingleOrDefaultAsync();
             return value;
 
         }

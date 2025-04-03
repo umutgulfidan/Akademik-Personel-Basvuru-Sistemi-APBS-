@@ -33,7 +33,7 @@ namespace Business.Concretes
 
         public async Task<IResult> Delete(int id)
         {
-            if (_kriterDal.Get(x => x.Id == id) == null) return new ErrorResult(Messages.KriterNotFound);
+            if (await _kriterDal.GetAllReadOnlyAsync(x => x.Id == id) == null) return new ErrorResult(Messages.KriterNotFound);
 
             await _kriterDal.DeleteByIdAsync(id);
             return new SuccessResult(Messages.KriterDeleted);

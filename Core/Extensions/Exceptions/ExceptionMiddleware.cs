@@ -72,7 +72,7 @@ namespace Core.Extensions.Exceptions
             else if (exception.GetType() == typeof(Microsoft.EntityFrameworkCore.DbUpdateException))
             {
                 //message = exception.InnerException.Message;
-                message = "Gönderilen alanlar veri tabanına eklenemiyor. Lütfen gönderilen bilgilerin doğruluğuunu kontrol ediniz.";
+                message = "Gönderilen alanlar veri tabanına eklenemiyor. Lütfen gönderilen bilgilerin doğruluğunu kontrol ediniz.";
                 httpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return httpContext.Response.WriteAsync(new ErrorDetails { Message = message, StatusCode = httpContext.Response.StatusCode }.ToString());
             }

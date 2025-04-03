@@ -4,6 +4,7 @@ using Core.Utilities.Security.Hashing;
 using Entities.Concretes;
 using Entities.Dtos;
 using Entities.Dtos.Alan;
+using Entities.Dtos.AlanKriteri;
 using Entities.Dtos.Bildirim;
 using Entities.Dtos.Bolum;
 using Entities.Dtos.Ilan;
@@ -140,12 +141,23 @@ namespace Business.Mapping
             #endregion
 
             #region Kriter
-            // UpdateAlanDto -> Alan
             CreateMap<UpdateKriterDto, Kriter>();
 
-            // AddAlanDto -> Alan
             CreateMap<AddKriterDto, Kriter>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore()); // Id manuel olarak ayarlanacak
+            #endregion
+
+            #region Alan Kriteri
+            CreateMap<UpdateAlanKriteriDto, AlanKriteri>()
+                .ForMember(dest => dest.Alan, opt => opt.Ignore())
+                .ForMember(dest => dest.Pozisyon, opt => opt.Ignore())
+                .ForMember(dest => dest.Kriter, opt => opt.Ignore());
+
+            CreateMap<AddAlanKriteriDto, AlanKriteri>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Alan, opt => opt.Ignore())
+                .ForMember(dest => dest.Pozisyon, opt => opt.Ignore()) 
+                .ForMember(dest => dest.Kriter, opt => opt.Ignore());
             #endregion
 
             //CreateMap<UserForRegisterDto, User>().ConstructUsing(
