@@ -68,6 +68,7 @@ namespace Business.DependencyResolvers
 
 
             builder.RegisterType<AwsFileManager>().As<IFileService>().SingleInstance();
+            builder.RegisterType<EmailManager>().As<IEmailService>().SingleInstance();
             builder.RegisterType<JwtHelper>().As<ITokenHelper>().SingleInstance();
         }
 
