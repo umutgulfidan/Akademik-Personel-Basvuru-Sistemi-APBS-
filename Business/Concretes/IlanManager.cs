@@ -101,6 +101,10 @@ namespace Business.Concretes
         public async Task<IDataResult<GetIlanDetailDto>> GetIlanDetail(int id)
         {
             var result = await _ilanDal.GetWithBolumPozisyon(x=> x.Id == id);
+            if(result == null)
+            {
+                return new ErrorDataResult<GetIlanDetailDto>(Messages.IlanNotFound);
+            }
             var mappedResult = _mapper.Map<GetIlanDetailDto>(result);
             mappedResult.AlanKriterleri = await _alanKriteriDal.GetAllWithIncludesAsync(x=> x.AlanId == result.Bolum.AlanId && x.PozisyonId == result.PozisyonId);
             return new SuccessDataResult<GetIlanDetailDto>(mappedResult,Messages.IlanListed);

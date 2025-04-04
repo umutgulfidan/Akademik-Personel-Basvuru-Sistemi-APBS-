@@ -44,7 +44,7 @@ namespace WebApi.Controllers
             {
                 return Ok(result);
             }
-            return BadRequest(result.Message);
+            return BadRequest(result);
         }
 
         [HttpGet("getilansbyqueryforadmin")]
@@ -55,7 +55,7 @@ namespace WebApi.Controllers
             {
                 return Ok(result);
             }
-            return BadRequest(result.Message);
+            return BadRequest(result);
         }
 
         [HttpGet("getbyid")]
