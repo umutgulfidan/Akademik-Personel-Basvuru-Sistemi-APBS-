@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Entities.Dtos.Email;
 using Business.Constants;
-using Core.Extensions.Claims; // Bu dosyayı oluşturmanız gerekecek
+using Core.Extensions.Claims;
+using Microsoft.AspNetCore.SignalR;
+using WebApi.Hubs; // Bu dosyayı oluşturmanız gerekecek
 
 namespace WebApi.Controllers
 {
@@ -12,10 +14,12 @@ namespace WebApi.Controllers
     public class EmailController : ControllerBase
     {
         private readonly IEmailService _emailService;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public EmailController(IEmailService emailService)
+        public EmailController(IEmailService emailService, IHubContext<NotificationHub> hubContext)
         {
             _emailService = emailService;
+            _hubContext = hubContext;
         }
 
         private bool HasEmailPermission()
@@ -27,7 +31,7 @@ namespace WebApi.Controllers
             return roles.Contains("Admin") || roles.Contains("Yonetici");
         }
 
-        [HttpPost("send")]
+        [HttpPost("Send")]
         public async Task<IActionResult> SendEmail(SendEmailDto sendEmailDto)
         {
             if (!HasEmailPermission())
@@ -43,7 +47,7 @@ namespace WebApi.Controllers
             return BadRequest(result);
         }
 
-        [HttpPost("send-to-user")]
+        [HttpPost("SendToUser")]
         public async Task<IActionResult> SendEmailToUser(SendUserEmailDto sendUserEmailDto)
         {
             if (!HasEmailPermission())
@@ -52,8 +56,17 @@ namespace WebApi.Controllers
             }
 
             var result = await _emailService.SendEmailToUser(sendUserEmailDto.UserId, sendUserEmailDto.Subject, sendUserEmailDto.Body);
+
             if (result.IsSuccess)
             {
+                var connectionId = NotificationHub.GetConnectionId(sendUserEmailDto.UserId.ToString()); // Hub üzerinden bağlantı ID'sini al
+
+                if (connectionId != null)
+                {
+                    var bildirim = NotificationTemplates.Info("Yeni bir e-postanız var!", $"Gelen kutunuza '{sendUserEmailDto.Subject}' başlıklı yeni bir e-posta iletildi. Detaylar için e-mailinizi kontrol ediniz.");
+                    // Kullanıcı aktifse, ona bildirim gönder
+                    await _hubContext.Clients.Client(connectionId).SendAsync("ReceiveNotification", bildirim);
+                }
                 return Ok(result);
             }
             return BadRequest(result);
