@@ -2,6 +2,7 @@
 using Business.Abstracts;
 using Business.Constants;
 using Core.Entities.Concrete;
+using Core.Extensions.Claims;
 using Entities.Concretes;
 using Entities.Dtos.Ilan;
 using Entities.Dtos.Users;
@@ -61,11 +62,25 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var result = await _ilanService.GetIlanDetail(id);
-            if (result.IsSuccess)
+
+            if (!result.IsSuccess)
             {
-                return Ok(result);
+                return BadRequest(result);
             }
-            return BadRequest(result);
+
+            var ilan = result.Data;
+
+            // İlan statusu false ve kullanıcı admin değilse erişimi engelle
+            if (ilan.Status == false)
+            {
+                // Eğer kullanıcı doğrulanmamışsa veya admin değilse
+                if (User?.Identity?.IsAuthenticated != true || !User.ClaimRoles().Contains("Admin"))
+                {
+                    return Forbid();
+                }
+            }
+
+            return Ok(result);
         }
 
         [HttpDelete("delete")]
