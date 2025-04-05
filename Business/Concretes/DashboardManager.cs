@@ -37,7 +37,7 @@ namespace Business.Concretes
 
             var totalBildirim = await _context.Bildirimler.CountAsync();
             var totalReadBildirim = await _context.Bildirimler.CountAsync(x => x.Status);
-            var totalUnreadBildirim = await _context.Bildirimler.CountAsync(x => x.Status);
+            var totalUnreadBildirim = await _context.Bildirimler.CountAsync(x => !x.Status);
 
 
 
