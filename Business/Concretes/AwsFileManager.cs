@@ -15,6 +15,7 @@ namespace Business.Concretes
     {
         private readonly IAmazonS3 _s3Client;
         private readonly string _bucketName;
+        private const string DEFAULT_FOLDER = "General";
 
         public AwsFileManager(IConfiguration configuration)
         {
@@ -46,7 +47,7 @@ namespace Business.Concretes
             _s3Client = new AmazonS3Client(accessKey, secretKey, RegionEndpoint.GetBySystemName(region));
         }
 
-        public async Task<string> UploadFileAsync(IFormFile file)
+        public async Task<string> UploadFileAsync(IFormFile file, string folderName = null)
         {
             if (file == null || file.Length == 0)
             {
@@ -55,9 +56,16 @@ namespace Business.Concretes
 
             try
             {
+                // Klasör adını belirle, belirtilmemişse varsayılan klasörü kullan
+                string folder = !string.IsNullOrWhiteSpace(folderName) ? folderName : DEFAULT_FOLDER;
+
+                // Klasör adında başında veya sonunda '/' karakteri varsa temizle
+                folder = folder.Trim('/');
+
                 // Benzersiz bir dosya adı oluştur
                 var fileExtension = Path.GetExtension(file.FileName);
-                var fileName = $"{Guid.NewGuid()}{fileExtension}";
+                var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+                var key = string.IsNullOrEmpty(folder) ? uniqueFileName : $"{folder}/{uniqueFileName}";
 
                 using (var fileStream = file.OpenReadStream())
                 {
@@ -65,7 +73,7 @@ namespace Business.Concretes
                     {
                         InputStream = fileStream,
                         BucketName = _bucketName,
-                        Key = fileName,
+                        Key = key,
                         ContentType = file.ContentType
                     };
 
@@ -74,7 +82,7 @@ namespace Business.Concretes
                 }
 
                 // Yüklenen dosyanın URL'sini döndür
-                return $"https://{_bucketName}.s3.amazonaws.com/{fileName}";
+                return $"https://{_bucketName}.s3.amazonaws.com/{key}";
             }
             catch (Exception ex)
             {
@@ -92,13 +100,20 @@ namespace Business.Concretes
 
             try
             {
-                // URL'den dosya adını çıkart
-                var fileName = Path.GetFileName(new Uri(fileUrl).AbsolutePath);
+                // URL'den dosya yolunu çıkart (klasör dahil)
+                var uri = new Uri(fileUrl);
+                var key = uri.AbsolutePath.TrimStart('/');
+
+                // Bucket adını URL'den çıkar (eğer varsa)
+                if (key.StartsWith(_bucketName + "/"))
+                {
+                    key = key.Substring(_bucketName.Length + 1);
+                }
 
                 var deleteRequest = new DeleteObjectRequest
                 {
                     BucketName = _bucketName,
-                    Key = fileName
+                    Key = key
                 };
 
                 var response = await _s3Client.DeleteObjectAsync(deleteRequest);
@@ -120,13 +135,20 @@ namespace Business.Concretes
 
             try
             {
-                // URL'den dosya adını çıkart
-                var fileName = Path.GetFileName(new Uri(fileUrl).AbsolutePath);
+                // URL'den dosya yolunu çıkart (klasör dahil)
+                var uri = new Uri(fileUrl);
+                var key = uri.AbsolutePath.TrimStart('/');
+
+                // Bucket adını URL'den çıkar (eğer varsa)
+                if (key.StartsWith(_bucketName + "/"))
+                {
+                    key = key.Substring(_bucketName.Length + 1);
+                }
 
                 var request = new GetObjectRequest
                 {
                     BucketName = _bucketName,
-                    Key = fileName
+                    Key = key
                 };
 
                 using (var response = await _s3Client.GetObjectAsync(request))
@@ -144,7 +166,7 @@ namespace Business.Concretes
             }
         }
 
-        public async Task<string> UpdateFileAsync(IFormFile file, string oldFileUrl)
+        public async Task<string> UpdateFileAsync(IFormFile file, string oldFileUrl, string folderName = null)
         {
             if (file == null || file.Length == 0)
             {
@@ -161,8 +183,36 @@ namespace Business.Concretes
                 // Önce eski dosyayı sil
                 await DeleteFileAsync(oldFileUrl);
 
+                // Klasör adı belirtilmemişse, eski URL'den klasör adını çıkarmaya çalış
+                if (string.IsNullOrWhiteSpace(folderName))
+                {
+                    try
+                    {
+                        var uri = new Uri(oldFileUrl);
+                        var path = uri.AbsolutePath.TrimStart('/');
+
+                        // Bucket adını URL'den çıkar (eğer varsa)
+                        if (path.StartsWith(_bucketName + "/"))
+                        {
+                            path = path.Substring(_bucketName.Length + 1);
+                        }
+
+                        // Klasör adını bul (son '/' karakterine kadar)
+                        var slashIndex = path.LastIndexOf('/');
+                        if (slashIndex > 0)
+                        {
+                            folderName = path.Substring(0, slashIndex);
+                        }
+                    }
+                    catch
+                    {
+                        // URL'den klasör adı çıkarılamadıysa varsayılan klasörü kullan
+                        folderName = DEFAULT_FOLDER;
+                    }
+                }
+
                 // Sonra yeni dosyayı yükle
-                return await UploadFileAsync(file);
+                return await UploadFileAsync(file, folderName);
             }
             catch (Exception ex)
             {

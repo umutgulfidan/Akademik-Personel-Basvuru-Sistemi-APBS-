@@ -19,13 +19,13 @@ namespace WebApi.Controllers
         [HttpPost("Upload")]
         public async Task<IActionResult> Upload(IFormFile file)
         {
-            var result = await _fileService.UploadFileAsync(file);
+            var result = await _fileService.UploadFileAsync(file , "Raporlar");
             return Ok(result);
         }
         [HttpDelete("Delete")]
         public async Task<IActionResult> Delete()
         {
-            var result = await _fileService.DeleteFileAsync("s3://apbs-file-storage/db08a4ce-7525-4eee-bc88-1e11f26349c4.pdf");
+            var result = await _fileService.DeleteFileAsync("https://apbs-file-storage.s3.us-east-1.amazonaws.com/Raporlar/glioma5.jpg");
             return Ok(result);
         }
     }
