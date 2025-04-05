@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Business.Concretes
@@ -47,6 +48,21 @@ namespace Business.Concretes
             _s3Client = new AmazonS3Client(accessKey, secretKey, RegionEndpoint.GetBySystemName(region));
         }
 
+        public async Task<string> GetPreSignedUrlAsync(string objectKey, int expirationMinutes = 60)
+        {
+            // GetPreSignedUrlRequest nesnesi oluşturuyoruz
+            var request = new GetPreSignedUrlRequest
+            {
+                BucketName = this._bucketName,  // S3 bucket ismi
+                Key = objectKey,  // Erişilmesi istenen dosyanın anahtarı (key)
+                Expires = DateTime.Now.AddMinutes(expirationMinutes)  // URL'nin geçerlilik süresi
+            };
+
+            // Pre-signed URL oluşturuyoruz
+            var preSignedUrl = await _s3Client.GetPreSignedURLAsync(request);
+
+            return preSignedUrl;  // Pre-signed URL'yi döndürüyoruz
+        }
         public async Task<string> UploadFileAsync(IFormFile file, string folderName = null)
         {
             if (file == null || file.Length == 0)
@@ -82,7 +98,7 @@ namespace Business.Concretes
                 }
 
                 // Yüklenen dosyanın URL'sini döndür
-                return $"https://{_bucketName}.s3.amazonaws.com/{key}";
+                return key;
             }
             catch (Exception ex)
             {
@@ -91,37 +107,21 @@ namespace Business.Concretes
             }
         }
 
-        public async Task<bool> DeleteFileAsync(string fileUrl)
+        public async Task<bool> DeleteFileAsync(string s3Key)
         {
-            if (string.IsNullOrEmpty(fileUrl))
-            {
-                throw new ArgumentException("Dosya URL'i boş olamaz", nameof(fileUrl));
-            }
-
             try
             {
-                // URL'den dosya yolunu çıkart (klasör dahil)
-                var uri = new Uri(fileUrl);
-                var key = uri.AbsolutePath.TrimStart('/');
-
-                // Bucket adını URL'den çıkar (eğer varsa)
-                if (key.StartsWith(_bucketName + "/"))
-                {
-                    key = key.Substring(_bucketName.Length + 1);
-                }
-
                 var deleteRequest = new DeleteObjectRequest
                 {
                     BucketName = _bucketName,
-                    Key = key
+                    Key = s3Key
                 };
 
                 var response = await _s3Client.DeleteObjectAsync(deleteRequest);
-                return response.HttpStatusCode == System.Net.HttpStatusCode.NoContent;
+                return response.HttpStatusCode == HttpStatusCode.NoContent;
             }
             catch (Exception ex)
             {
-                // Hata yönetimi
                 throw new Exception($"Dosya silme hatası: {ex.Message}", ex);
             }
         }
@@ -166,59 +166,37 @@ namespace Business.Concretes
             }
         }
 
-        public async Task<string> UpdateFileAsync(IFormFile file, string oldFileUrl, string folderName = null)
+        public async Task<string> UpdateFileAsync(IFormFile file, string oldKey, string folderName = null)
         {
             if (file == null || file.Length == 0)
-            {
                 throw new ArgumentException("Dosya boş olamaz", nameof(file));
-            }
 
-            if (string.IsNullOrEmpty(oldFileUrl))
-            {
-                throw new ArgumentException("Eski dosya URL'i boş olamaz", nameof(oldFileUrl));
-            }
+            if (string.IsNullOrEmpty(oldKey))
+                throw new ArgumentException("Eski dosya key'i boş olamaz", nameof(oldKey));
 
             try
             {
-                // Önce eski dosyayı sil
-                await DeleteFileAsync(oldFileUrl);
+                // Eski dosyayı sil
+                await DeleteFileAsync(oldKey);
 
-                // Klasör adı belirtilmemişse, eski URL'den klasör adını çıkarmaya çalış
+                // Klasör adı belirlenmediyse eski key'den çıkar
                 if (string.IsNullOrWhiteSpace(folderName))
                 {
-                    try
-                    {
-                        var uri = new Uri(oldFileUrl);
-                        var path = uri.AbsolutePath.TrimStart('/');
-
-                        // Bucket adını URL'den çıkar (eğer varsa)
-                        if (path.StartsWith(_bucketName + "/"))
-                        {
-                            path = path.Substring(_bucketName.Length + 1);
-                        }
-
-                        // Klasör adını bul (son '/' karakterine kadar)
-                        var slashIndex = path.LastIndexOf('/');
-                        if (slashIndex > 0)
-                        {
-                            folderName = path.Substring(0, slashIndex);
-                        }
-                    }
-                    catch
-                    {
-                        // URL'den klasör adı çıkarılamadıysa varsayılan klasörü kullan
+                    var slashIndex = oldKey.LastIndexOf('/');
+                    if (slashIndex > 0)
+                        folderName = oldKey.Substring(0, slashIndex);
+                    else
                         folderName = DEFAULT_FOLDER;
-                    }
                 }
 
-                // Sonra yeni dosyayı yükle
+                // Yeni dosyayı yükle
                 return await UploadFileAsync(file, folderName);
             }
             catch (Exception ex)
             {
-                // Hata yönetimi
                 throw new Exception($"Dosya güncelleme hatası: {ex.Message}", ex);
             }
         }
+
     }
 }
