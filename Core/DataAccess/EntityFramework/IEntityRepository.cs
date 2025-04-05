@@ -23,8 +23,16 @@ namespace Core.DataAccess.EntityFramework
         Task UpdateAsync(TEntity entity);
         Task DeleteAsync(TEntity entity);
         Task DeleteByIdAsync(int id);
+
+
+        Task DeleteManyAsync(Expression<Func<TEntity, bool>> filter);
+        Task UpdateManyAsync(Expression<Func<TEntity, bool>> filter, Expression<Func<TEntity, TEntity>> updateExpression);
+
+
         Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filter);
         Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter = null);
+
+
         Task<List<TEntity>> GetAllReadOnlyAsync(Expression<Func<TEntity, bool>> filter = null);
         Task<TEntity> GetReadOnlyAsync(Expression<Func<TEntity, bool>> filter);
     }
