@@ -363,7 +363,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/DataAccess/Migrations
 
 # Çevresel değişkenler için
 .env
