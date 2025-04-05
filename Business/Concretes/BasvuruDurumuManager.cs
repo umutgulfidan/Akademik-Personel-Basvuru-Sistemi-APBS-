@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using Business.Abstracts;
+using Business.BusinessAspects;
 using Business.Constants;
+using Business.ValidationRules.BasvuruDurumu;
+using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
 using DataAccess.Concretes.EntitiyFramework;
@@ -27,13 +30,15 @@ namespace Business.Concretes
             _mapper = mapper;
         }
 
+        [SecuredOperation("Admin")]
+        [ValidationAspect(typeof(AddBasvuruDurumuDtoValidator))]
         public async Task<IResult> Add(AddBasvuruDurumuDto basvuruDurumuDto)
         {
             var alan = _mapper.Map<BasvuruDurumu>(basvuruDurumuDto);
             await _basvuruDurumuDal.AddAsync(alan);
             return new SuccessResult(Messages.BasvuruDurumuAdded);
         }
-
+        [SecuredOperation("Admin")]
         public async Task<IResult> Delete(int id)
         {
             if (_basvuruDurumuDal.Get(x => x.Id == id) == null) return new ErrorResult(Messages.BasvuruDurumuNotFound);
@@ -54,6 +59,8 @@ namespace Business.Concretes
             return new SuccessDataResult<BasvuruDurumu>(result, Messages.BasvuruDurumuListed);
         }
 
+        [SecuredOperation("Admin")]
+        [ValidationAspect(typeof(UpdateBasvuruDurumuDtoValidator))]
         public async Task<IResult> Update(UpdateBasvuruDurumuDto basvuruDurumuDto)
         {
             var alan = _mapper.Map<BasvuruDurumu>(basvuruDurumuDto);
