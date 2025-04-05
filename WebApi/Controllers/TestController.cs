@@ -23,9 +23,21 @@ namespace WebApi.Controllers
             return Ok(result);
         }
         [HttpDelete("Delete")]
-        public async Task<IActionResult> Delete()
+        public async Task<IActionResult> Delete(string key)
         {
-            var result = await _fileService.DeleteFileAsync("https://apbs-file-storage.s3.us-east-1.amazonaws.com/Raporlar/glioma5.jpg");
+            var result = await _fileService.DeleteFileAsync(key);
+            return Ok(result);
+        }
+        [HttpGet("geturl")]
+        public async Task<IActionResult> GetUrl(string key)
+        {
+            var result = await _fileService.GetPreSignedUrlAsync(key, 10);
+            return Ok(result);
+        }
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update(IFormFile file,string key)
+        {
+            var result = await _fileService.UpdateFileAsync(file,key);
             return Ok(result);
         }
     }
