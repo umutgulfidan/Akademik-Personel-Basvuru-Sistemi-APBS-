@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Z.EntityFramework.Plus;
 
 namespace Core.DataAccess.EntityFramework
 {
@@ -113,6 +114,18 @@ namespace Core.DataAccess.EntityFramework
         {
             await using var context = new TContext();
             return await context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(filter);
+        }
+
+        public async Task DeleteManyAsync(Expression<Func<TEntity, bool>> filter)
+        {
+            using var context = new TContext();
+            await context.Set<TEntity>().Where(filter).DeleteAsync();
+        }
+
+        public async Task UpdateManyAsync(Expression<Func<TEntity, bool>> filter, Expression<Func<TEntity, TEntity>> updateExpression)
+        {
+            using var context = new TContext();
+            await context.Set<TEntity>().Where(filter).UpdateAsync(updateExpression);
         }
 
     }

@@ -99,22 +99,16 @@ namespace Business.Concretes
 
         public async Task<IResult> MarkAsReadAll(int userId)
         {
-            var bildirimler = await _bildirimDal.GetAllAsync(x=>x.KullaniciId==userId && x.Status == false);
-            foreach (var item in bildirimler)
-            {
-                item.Status = true;
-                await _bildirimDal.UpdateAsync(item);
-            }
+            await _bildirimDal.UpdateManyAsync(
+                x => x.KullaniciId == userId, // Filtre: Kullanıcı ID'sine göre
+                x => new Bildirim { Status = true } // Güncelleme: IsRead'ı true yap
+            );
             return new SuccessResult(Messages.BildirimUpdated);
         }
 
         public async Task<IResult> DeleteAllByUser(int userId)
         {
-            var bildirimler = await _bildirimDal.GetAllAsync(x => x.KullaniciId == userId);
-            foreach (var item in bildirimler)
-            {
-                await _bildirimDal.DeleteAsync(item);
-            }
+            await _bildirimDal.DeleteManyAsync(x=> x.KullaniciId == userId);
             return new SuccessResult(Messages.BildirimDeleted);
         }
 
