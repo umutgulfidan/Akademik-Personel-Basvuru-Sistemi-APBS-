@@ -66,6 +66,9 @@ namespace Business.DependencyResolvers
             builder.RegisterType<EfPuanKriteriDal>().As<IPuanKriteriDal>().SingleInstance();
             builder.RegisterType<PuanKriteriManager>().As<IPuanKriteriService>().SingleInstance();
 
+            builder.RegisterType<EfBasvuruDurumuDal>().As<IBasvuruDurumuDal>().SingleInstance();
+            builder.RegisterType<BasvuruDurumuManager>().As<IBasvuruDurumuService>().SingleInstance();
+
 
             builder.RegisterType<AwsFileManager>().As<IFileService>().SingleInstance();
             builder.RegisterType<EmailManager>().As<IEmailService>().SingleInstance();

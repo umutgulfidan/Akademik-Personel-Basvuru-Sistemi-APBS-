@@ -102,6 +102,14 @@ namespace Business.Constants
         public static string PuanKriteriUpdated = ServiceMessageHelper.UpdatedMessage("Puan Kriteri");
         public static string PuanKriteriNotFound = ServiceMessageHelper.NotFoundMessage("Puan Kriteri");
         #endregion
+
+        #region Basvuru Durumu
+        public static string BasvuruDurumuAdded = ServiceMessageHelper.CreatedMessage("Basvuru Durumu");
+        public static string BasvuruDurumuDeleted = ServiceMessageHelper.DeletedMessage("Basvuru Durumu");
+        public static string BasvuruDurumuListed = ServiceMessageHelper.ListedMessage("Basvuru Durumları");
+        public static string BasvuruDurumuUpdated = ServiceMessageHelper.UpdatedMessage("Basvuru Durumu");
+        public static string BasvuruDurumuNotFound = ServiceMessageHelper.NotFoundMessage("Basvuru Durumu");
+        #endregion
     }
 
 }
