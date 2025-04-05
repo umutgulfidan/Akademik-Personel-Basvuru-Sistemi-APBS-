@@ -9,7 +9,9 @@ using Business.Mapping;
 using Core.Utilities.Interceptors;
 using Core.Utilities.Security.Jwt;
 using DataAccess.Abstracts;
+using DataAccess.Concretes;
 using DataAccess.Concretes.EntitiyFramework;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace Business.DependencyResolvers
@@ -18,6 +20,9 @@ namespace Business.DependencyResolvers
     {
         protected override void Load(ContainerBuilder builder)
         {
+            // Register the Context (DbContext)
+            builder.RegisterType<Context>().AsSelf().InstancePerLifetimeScope();
+
             // Servis ve Dal sınıflarının tek bir metodda kaydı
             RegisterServiceAndDal(builder);
 
@@ -69,6 +74,7 @@ namespace Business.DependencyResolvers
             builder.RegisterType<EfBasvuruDurumuDal>().As<IBasvuruDurumuDal>().SingleInstance();
             builder.RegisterType<BasvuruDurumuManager>().As<IBasvuruDurumuService>().SingleInstance();
 
+            builder.RegisterType<DashboardManager>().As<IDashboardService>().SingleInstance();
 
             builder.RegisterType<AwsFileManager>().As<IFileService>().SingleInstance();
             builder.RegisterType<EmailManager>().As<IEmailService>().SingleInstance();
