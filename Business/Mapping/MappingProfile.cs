@@ -38,7 +38,8 @@ namespace Business.Mapping
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => true));
 
             // User -> GetUserDto
-            CreateMap<User, GetUserDto>();
+            CreateMap<User, GetUserDto>()
+                .ForMember(dest=> dest.ImageUrl, opt=> opt.Ignore());
 
             #endregion
 

@@ -14,6 +14,8 @@ namespace Entities.Dtos
         public string LastName { get; set; }
         public string Email { get; set; }
         public bool Status { get; set; }
+
+        public string? ImageUrl { get; set; }
         public DateTime DateOfBirth { get; set; }
     }
 }

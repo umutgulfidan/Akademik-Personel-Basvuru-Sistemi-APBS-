@@ -28,5 +28,7 @@ namespace Business.Abstract
         Task<IDataResult<List<GetUserDto>>> GetUsersByQuery(UserQueryDto query);
         Task<IResult> UpdateProfileAsync(int userId,UpdateUserInfoDto updateUserDto);
         Task<IResult> ChangePasswordAsync(int userId,ChangePasswordDto changePasswordDto);
+
+        Task<IResult> ChangeProfilePhoto(int userId,Microsoft.AspNetCore.Http.IFormFile file);
     }
 }
