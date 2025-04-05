@@ -59,29 +59,7 @@ namespace WebAPI.Controllers
             return BadRequest(tokenResult);
         }
 
-        [HttpGet("getuserbytoken")]
-        public async Task<IActionResult> GetUserFromToken()
-        {
-            if (!HttpContext.User.Identity?.IsAuthenticated ?? false)
-            {
-                return Unauthorized("User is not authenticated.");
-            }
 
-            var userId = HttpContext.User.ClaimUserId();
-
-            if (userId == null)
-            {
-                return Unauthorized("Invalid or missing user ID in token.");
-            }
-
-            var result = await _userService.GetUserDto(userId);
-            if (result.IsSuccess)
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
-
-        }
 
     }
 }

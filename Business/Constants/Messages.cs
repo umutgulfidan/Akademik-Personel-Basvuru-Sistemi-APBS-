@@ -71,6 +71,7 @@ namespace Business.Constants
         public static string UserNotFound = ServiceMessageHelper.NotFoundMessage("Kullanıcı");
         public static string UserActivate = "Kullanıcı hesabı başarıyla aktif edildi.";
         public static string UserDeactivate = "Kullanıcı hesabı başarıyla deaktif edildi.";
+        public static string UserProfilePhotoUpdated = "Kullanıcı profil resmi başarıyla güncellendi.";
         #endregion
         #region User Operation Claim
         public static string UserOperationClaimAdded = ServiceMessageHelper.CreatedMessage("Rol");

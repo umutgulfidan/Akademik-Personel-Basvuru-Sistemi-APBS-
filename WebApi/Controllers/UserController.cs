@@ -36,6 +36,30 @@ namespace WebApi.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet("getuserbytoken")]
+        public async Task<IActionResult> GetUserFromToken()
+        {
+            if (!HttpContext.User.Identity?.IsAuthenticated ?? false)
+            {
+                return Unauthorized("User is not authenticated.");
+            }
+
+            var userId = HttpContext.User.ClaimUserId();
+
+            if (userId == null)
+            {
+                return Unauthorized("Invalid or missing user ID in token.");
+            }
+
+            var result = await _userService.GetUserDto(userId);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+
+        }
+
         [HttpGet("getusersbyquery")]
         public async Task<IActionResult> GetPaginatedUsers([FromQuery] UserQueryDto query)
         {
@@ -96,6 +120,22 @@ namespace WebApi.Controllers
             }
             var userId = User.ClaimUserId();
             var result = await _userService.ChangePasswordAsync(userId,changePasswordDto);
+            return Ok(result);
+        }
+
+
+        [HttpPut("ChangeProfilePhoto")]
+        public async Task<IActionResult> ChangeProfilePhoto(IFormFile file)
+        {
+            // Kullanıcının giriş yapıp yapmadığını kontrol et
+            if (User?.Identity?.IsAuthenticated != true)
+            {
+                return Unauthorized(Messages.Unauthorized);
+            }
+
+            var userId = User.ClaimUserId();
+
+            var result = await _userService.ChangeProfilePhoto(userId,file);
             return Ok(result);
         }
 

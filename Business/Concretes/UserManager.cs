@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Business.Abstract;
+using Business.Abstracts;
 using Business.BusinessAspects;
 using Business.Constants;
 using Business.ValidationRules.User;
@@ -23,10 +24,12 @@ namespace Business.Concretes
     {
         private readonly IUserDal _userDal;
         private readonly IMapper _mapper;
-        public UserManager(IUserDal userDal, IMapper mapper)
+        private readonly IFileService _fileService;
+        public UserManager(IUserDal userDal, IMapper mapper,IFileService fileService)
         {
             _userDal = userDal;
             _mapper = mapper;
+            _fileService = fileService;
         }
 
         public async Task<IResult> AddAsync(User user)
@@ -76,6 +79,10 @@ namespace Business.Concretes
         {
             var user = await _userDal.GetAsync(u => u.Id == id);
             var result = _mapper.Map<GetUserDto>(user);
+            if (user.ImageKey != null) {
+                result.ImageUrl = await _fileService.GetPreSignedUrlAsync(user.ImageKey, 10);
+            }
+
 
             return new SuccessDataResult<GetUserDto>(result,Messages.UserListed);
 
@@ -163,6 +170,25 @@ namespace Business.Concretes
             userToCheck.Data.PasswordSalt = passwordSalt;
             await this.UpdateAsync(userToCheck.Data);
             return new SuccessResult(Messages.UserUpdated);
+        }
+
+        public async Task<IResult> ChangeProfilePhoto(int userId,Microsoft.AspNetCore.Http.IFormFile file)
+        {
+            var userToCheck = await _userDal.GetAsync(x=> x.Id == userId);
+            var imageKey =  userToCheck.ImageKey;
+
+            if (imageKey == null)
+            {
+                imageKey = await _fileService.UploadFileAsync(file,Paths.AwsProfilePhotoFolder);
+            }
+            else
+            {
+                imageKey = await _fileService.UpdateFileAsync(file,imageKey,Paths.AwsProfilePhotoFolder);
+            }
+
+            userToCheck.ImageKey = imageKey;
+            await _userDal.UpdateAsync(userToCheck);
+            return new SuccessResult(Messages.UserProfilePhotoUpdated);
         }
     }
 }
