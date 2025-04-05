@@ -50,6 +50,11 @@ namespace WebApi.Hubs
             return base.OnDisconnectedAsync(exception);
         }
 
+        public static int GetOnlineUserCount()
+        {
+            return _userConnections.Count; // Bağlantı sayısını döndür
+        }
+
         // Kullanıcı bağlantı ID'sini almak için bir statik metot
         public static string GetConnectionId(string userId)
         {

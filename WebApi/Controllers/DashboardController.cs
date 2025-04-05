@@ -1,6 +1,8 @@
 ﻿using Business.Abstracts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using WebApi.Hubs;
 
 namespace WebApi.Controllers
 {
@@ -9,11 +11,13 @@ namespace WebApi.Controllers
     public class DashboardController : ControllerBase
     {
         private readonly IDashboardService _dashboardService;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
         // DashboardStatsService'i constructor üzerinden alıyoruz
-        public DashboardController(IDashboardService dashboardService)
+        public DashboardController(IDashboardService dashboardService, IHubContext<NotificationHub> hubContext)
         {
             _dashboardService = dashboardService;
+            _hubContext = hubContext;
         }
 
         // GET api/dashboard/stats
@@ -22,6 +26,7 @@ namespace WebApi.Controllers
         {
             // İstatistikleri alıyoruz
             var dashboardStats = await _dashboardService.GetDashboardStatsAsync();
+            dashboardStats.OnlineUser = NotificationHub.GetOnlineUserCount(); // NotificationHub'dan online kullanıcı sayısını alıyoruz.
 
             // İstatistikler başarıyla alındıysa, veriyi JSON formatında döndürüyoruz
             return Ok(dashboardStats);
