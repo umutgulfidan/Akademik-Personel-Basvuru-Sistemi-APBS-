@@ -5,6 +5,7 @@ using Entities.Concretes;
 using Entities.Dtos;
 using Entities.Dtos.Alan;
 using Entities.Dtos.AlanKriteri;
+using Entities.Dtos.BasvuruDurumu;
 using Entities.Dtos.Bildirim;
 using Entities.Dtos.Bolum;
 using Entities.Dtos.Ilan;
@@ -183,6 +184,16 @@ namespace Business.Mapping
                 .ForMember(dest => dest.Alan, opt => opt.Ignore())
                 .ForMember(dest => dest.Pozisyon, opt => opt.Ignore())
                 .ForMember(dest => dest.Kriter, opt => opt.Ignore());
+            #endregion
+
+            #region Basvuru Durumu
+
+            // UpdateAlanDto -> Alan
+            CreateMap<UpdateBasvuruDurumuDto, BasvuruDurumu>();
+
+            // AddAlanDto -> Alan
+            CreateMap<AddBasvuruDurumuDto, BasvuruDurumu>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore()); // Id manuel olarak ayarlanacak
             #endregion
 
             //CreateMap<UserForRegisterDto, User>().ConstructUsing(
