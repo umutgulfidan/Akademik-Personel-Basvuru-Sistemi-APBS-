@@ -9,6 +9,7 @@ namespace Entities.Dtos.Dashboard
     public class DashboardStats
     {
         public int? OnlineUser { get; set; }
+        public int? VisitorCount { get; set; }
 
         public int? TotalUsers { get; set; }
         public int? ActiveUsers { get; set; }

@@ -26,7 +26,8 @@ namespace WebApi.Controllers
         {
             // İstatistikleri alıyoruz
             var dashboardStats = await _dashboardService.GetDashboardStatsAsync();
-            dashboardStats.OnlineUser = NotificationHub.GetOnlineUserCount(); // NotificationHub'dan online kullanıcı sayısını alıyoruz.
+            dashboardStats.OnlineUser = NotificationHub.GetAuthenticatedUserCount(); // NotificationHub'dan online kullanıcı sayısını alıyoruz.
+            dashboardStats.VisitorCount = NotificationHub.GetUnauthenticatedUserCount();
 
             // İstatistikler başarıyla alındıysa, veriyi JSON formatında döndürüyoruz
             return Ok(dashboardStats);
