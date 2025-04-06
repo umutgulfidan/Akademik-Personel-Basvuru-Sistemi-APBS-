@@ -68,7 +68,7 @@ namespace WebApi.Controllers
             {
                 return Ok(result);
             }
-            return BadRequest(result.Message);
+            return BadRequest(result);
         }
         // Kullanıcıyı aktif hale getiren endpoint
         [HttpPut("activate/{userId}")]
