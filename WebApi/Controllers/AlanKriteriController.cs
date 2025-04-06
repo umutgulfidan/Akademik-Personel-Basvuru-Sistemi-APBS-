@@ -71,6 +71,16 @@ namespace WebApi.Controllers
             }
             return BadRequest(result);
         }
+        [HttpGet("GetByIlanId")]
+        public async Task<IActionResult> GetByIlanId(int ilanId)
+        {
+            var result = await _alanKriteriService.GetByIlanId(ilanId);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
 
     }
 }

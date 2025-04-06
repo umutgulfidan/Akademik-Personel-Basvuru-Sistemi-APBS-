@@ -12,6 +12,7 @@ namespace DataAccess.Abstracts
     public interface IAlanKriteriDal : IEntityRepository<AlanKriteri>
     {
         Task<List<AlanKriteri>> GetAllWithIncludesAsync(Expression<Func<AlanKriteri, bool>> filter = null);
+        Task<List<AlanKriteri>> GetAllWithKriterAsync(Expression<Func<AlanKriteri, bool>> filter = null);
         Task<AlanKriteri> GetWithIncludesAsync(Expression<Func<AlanKriteri, bool>> filter);
     }
 }

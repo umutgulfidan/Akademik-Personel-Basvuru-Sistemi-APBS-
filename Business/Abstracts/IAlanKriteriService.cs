@@ -13,6 +13,7 @@ namespace Business.Abstracts
     public interface IAlanKriteriService
     {
         Task<IDataResult<List<AlanKriteri>>> GetAll();
+        Task<IDataResult<List<AlanKriteri>>> GetByIlanId(int ilanId);
         Task<IDataResult<AlanKriteri>> GetById(int id);
 
         Task<IResult> Update(UpdateAlanKriteriDto kriterDto);

@@ -22,11 +22,13 @@ namespace Business.Concretes
     {
         private readonly IAlanKriteriDal _alanKriteriDal;
         private readonly IMapper _mapper;
+        private readonly IIlanService _ilanService;
 
-        public AlanKriteriManager(IAlanKriteriDal alanKriteriDal, IMapper mapper)
+        public AlanKriteriManager(IAlanKriteriDal alanKriteriDal, IMapper mapper, IIlanService ilanService)
         {
             _alanKriteriDal = alanKriteriDal;
             _mapper = mapper;
+            _ilanService = ilanService;
         }
 
         [ValidationAspect(typeof(AddAlanKriteriDtoValidator))]
@@ -56,6 +58,18 @@ namespace Business.Concretes
         {
             var result = await _alanKriteriDal.GetWithIncludesAsync(x => x.Id == id);
             return new SuccessDataResult<AlanKriteri>(result, Messages.AlanKriteriListed);
+        }
+
+        public async Task<IDataResult<List<AlanKriteri>>> GetByIlanId(int ilanId)
+        {
+            var ilan = await _ilanService.GetById(ilanId);
+            if (ilan == null)
+                return new ErrorDataResult<List<AlanKriteri>>(Messages.IlanNotFound);
+
+            var ilanData = ilan.Data;
+            var result = await _alanKriteriDal.GetAllWithKriterAsync(x => x.PozisyonId == ilanData.PozisyonId && x.AlanId == ilanData.Bolum.AlanId);
+
+            return new SuccessDataResult<List<AlanKriteri>>(result, Messages.AlanKriteriListed);
         }
 
         [ValidationAspect(typeof(UpdateAlanKriteriDtoValidator))]
