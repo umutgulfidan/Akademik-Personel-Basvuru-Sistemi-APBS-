@@ -74,6 +74,11 @@ namespace Business.DependencyResolvers
             builder.RegisterType<EfBasvuruDurumuDal>().As<IBasvuruDurumuDal>().SingleInstance();
             builder.RegisterType<BasvuruDurumuManager>().As<IBasvuruDurumuService>().SingleInstance();
 
+            builder.RegisterType<IlanBasvuruManager>().As<IIlanBasvuruService>().SingleInstance();
+            builder.RegisterType<EfIlanBasvuruDal>().As<IIlanBasvuruDal>().SingleInstance();
+
+            builder.RegisterType<EfIlanBasvuruDosyaDal>().As<IIlanBasvuruDosyaDal>().SingleInstance();
+
             builder.RegisterType<DashboardManager>().As<IDashboardService>().SingleInstance();
 
             builder.RegisterType<AwsFileManager>().As<IFileService>().SingleInstance();

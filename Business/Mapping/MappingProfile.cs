@@ -9,6 +9,7 @@ using Entities.Dtos.BasvuruDurumu;
 using Entities.Dtos.Bildirim;
 using Entities.Dtos.Bolum;
 using Entities.Dtos.Ilan;
+using Entities.Dtos.IlanBasvuru;
 using Entities.Dtos.Kriter;
 using Entities.Dtos.OperationClaim;
 using Entities.Dtos.Pozisyon;
@@ -195,6 +196,20 @@ namespace Business.Mapping
             // AddAlanDto -> Alan
             CreateMap<AddBasvuruDurumuDto, BasvuruDurumu>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore()); // Id manuel olarak ayarlanacak
+            #endregion
+
+            #region Başvuru
+            // ApplyDto => IlanBasvuru mapping
+            CreateMap<ApplyDto, IlanBasvuru>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore()) // Id DB tarafından atanacak
+                .ForMember(dest => dest.BasvuruDurumuId, opt => opt.MapFrom(src => 1)) // Varsayılan başvuru durumu (örnek: 1 = "Başvuru Alındı")
+                .ForMember(dest => dest.Ilan, opt => opt.Ignore())
+                .ForMember(dest => dest.Basvuran, opt => opt.Ignore())
+                .ForMember(dest=> dest.BasvuranId, opt=> opt.Ignore())
+                .ForMember(dest => dest.BasvuruDurumu, opt => opt.Ignore())
+                .ForMember(dest=> dest.CreatedDate, opt=> opt.MapFrom(src=> DateTime.Now));
+
+
             #endregion
 
             //CreateMap<UserForRegisterDto, User>().ConstructUsing(

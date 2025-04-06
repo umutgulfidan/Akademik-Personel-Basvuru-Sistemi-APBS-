@@ -86,7 +86,7 @@ namespace DataAccess.Concretes
         public DbSet<IlanBasvuru> IlanBasvurulari { get; set; }
         public DbSet<BasvuruDurumu> BasvuruDurumlari { get; set; }
         public DbSet<BasvuruJuri> BasvuruJurileri { get; set; }
-        public DbSet<BasvuruDosya> BasvuruDosyalari { get; set; }
+        public DbSet<IlanBasvuruDosya> BasvuruDosyalari { get; set; }
         public DbSet<RaporDosya> RaporDosyalari { get; set; }
     }
 }

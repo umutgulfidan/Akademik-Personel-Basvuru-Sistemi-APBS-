@@ -111,6 +111,16 @@ namespace Business.Constants
         public static string BasvuruDurumuUpdated = ServiceMessageHelper.UpdatedMessage("Basvuru Durumu");
         public static string BasvuruDurumuNotFound = ServiceMessageHelper.NotFoundMessage("Basvuru Durumu");
         #endregion
+
+        #region Basvuru
+        public static string BasvuruAdded = ServiceMessageHelper.CreatedMessage("Başvuru");
+        public static string BasvuruDeleted = ServiceMessageHelper.DeletedMessage("Başvuru");
+        public static string BasvuruListed = ServiceMessageHelper.ListedMessage("Başvurular");
+        public static string BasvuruUpdated = ServiceMessageHelper.UpdatedMessage("Başvuru");
+        public static string BasvuruNotFound = ServiceMessageHelper.NotFoundMessage("Başvuru");
+        public static string AlreadyAppliedMessage = "Bu ilana daha önce başvuru yapılmış.";
+        public static string NotAppliedYetMessage = "Bu ilana henüz başvuru yapılmamış.";
+        #endregion
     }
 
 }
