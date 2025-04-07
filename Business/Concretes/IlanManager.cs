@@ -36,7 +36,7 @@ namespace Business.Concretes
             _currentUser = httpContextAccessor.HttpContext?.User ?? throw new Exception("User not found");
         }
 
-        [SecuredOperation("Admin")]
+        [SecuredOperation("Admin,Yonetici")]
         [CacheRemoveAspect("IIlanService.Get")]
         public async Task<Core.Utilities.Results.IResult> ActivateIlan(int id)
         {
@@ -154,7 +154,7 @@ namespace Business.Concretes
         {
             var basvurular = await _ilanBasvuruService.GetByUser(userId);
             var basvurulanIlanIdListesi = basvurular.Data.Select(x=> x.IlanId).ToList();
-            var ilanlar = _ilanDal.GetAllReadOnlyAsync(i => basvurulanIlanIdListesi.Contains(i.Id));
+            var ilanlar = await _ilanDal.GetAllWithBolumPozisyon(i => basvurulanIlanIdListesi.Contains(i.Id));
             var mappedIlans = _mapper.Map<List<GetIlanDto>>(ilanlar);
             return new SuccessDataResult<List<GetIlanDto>>(mappedIlans);
         }

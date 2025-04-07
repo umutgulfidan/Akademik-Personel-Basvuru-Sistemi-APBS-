@@ -34,8 +34,6 @@ namespace Business.Concretes
             _fileService = fileService;
         }
 
-
-        [TransactionScopeAspect]
         [AuthenticatedOperation]
         [ValidationAspect(typeof(ApplyDtoValidator))]
         public async Task<IResult> Apply(ApplyDto applyDto, int userId)

@@ -187,5 +187,6 @@ namespace DataAccess.Concretes.EntitiyFramework
             return value;
 
         }
+
     }
 }
