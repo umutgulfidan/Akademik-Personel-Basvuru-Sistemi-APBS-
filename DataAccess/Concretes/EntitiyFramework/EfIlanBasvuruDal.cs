@@ -37,7 +37,14 @@ namespace DataAccess.Concretes.EntitiyFramework
             {
                 ilanBasvuruQuery = ilanBasvuruQuery.Where(u => u.BasvuruDurumuId == query.BasvuruDurumuId);
             }
-
+            if (query.MinBasvuruTarihi.HasValue)
+            {
+                ilanBasvuruQuery = ilanBasvuruQuery.Where(x => x.BasvuruTarihi >= query.MinBasvuruTarihi);
+            }
+            if (query.MaxBasvuruTarihi.HasValue)
+            {
+                ilanBasvuruQuery = ilanBasvuruQuery.Where(x => x.BasvuruTarihi <= query.MaxBasvuruTarihi);
+            }
 
             // Sıralama işlemleri
             if (query.SortBy.ToLower() == "id")
