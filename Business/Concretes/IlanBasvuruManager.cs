@@ -73,7 +73,7 @@ namespace Business.Concretes
             var result = await _ilanBasvuruDal.GetAsync(x => x.Id == id);
             if ( result == null) return new ErrorResult(Messages.BasvuruNotFound);
 
-            await _ilanBasvuruDald.DeleteAsync(result);
+            await _ilanBasvuruDal.DeleteAsync(result);
             return new SuccessResult(Messages.BasvuruDeleted);
         }
 
