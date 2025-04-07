@@ -30,7 +30,7 @@ namespace Business.Concretes
             _mapper = mapper;
         }
 
-        [SecuredOperation("Admin")]
+        [SecuredOperation("Admin,Yonetici")]
         [ValidationAspect(typeof(AddBasvuruDurumuDtoValidator))]
         public async Task<IResult> Add(AddBasvuruDurumuDto basvuruDurumuDto)
         {
@@ -38,7 +38,7 @@ namespace Business.Concretes
             await _basvuruDurumuDal.AddAsync(alan);
             return new SuccessResult(Messages.BasvuruDurumuAdded);
         }
-        [SecuredOperation("Admin")]
+        [SecuredOperation("Admin,Yonetici")]
         public async Task<IResult> Delete(int id)
         {
             if (_basvuruDurumuDal.Get(x => x.Id == id) == null) return new ErrorResult(Messages.BasvuruDurumuNotFound);
@@ -59,7 +59,7 @@ namespace Business.Concretes
             return new SuccessDataResult<BasvuruDurumu>(result, Messages.BasvuruDurumuListed);
         }
 
-        [SecuredOperation("Admin")]
+        [SecuredOperation("Admin,Yonetici")]
         [ValidationAspect(typeof(UpdateBasvuruDurumuDtoValidator))]
         public async Task<IResult> Update(UpdateBasvuruDurumuDto basvuruDurumuDto)
         {
