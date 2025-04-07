@@ -78,6 +78,7 @@ namespace Business.DependencyResolvers
             builder.RegisterType<EfIlanBasvuruDal>().As<IIlanBasvuruDal>().SingleInstance();
 
             builder.RegisterType<EfIlanBasvuruDosyaDal>().As<IIlanBasvuruDosyaDal>().SingleInstance();
+            builder.RegisterType<IlanBasvuruDosyaManager>().As<IIlanBasvuruDosyaService>().SingleInstance();
 
             builder.RegisterType<DashboardManager>().As<IDashboardService>().SingleInstance();
 

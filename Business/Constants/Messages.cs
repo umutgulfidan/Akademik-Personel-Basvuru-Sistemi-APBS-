@@ -121,6 +121,14 @@ namespace Business.Constants
         public static string AlreadyAppliedMessage = "Bu ilana daha önce başvuru yapılmış.";
         public static string NotAppliedYetMessage = "Bu ilana henüz başvuru yapılmamış.";
         #endregion
+
+        #region Ilan Basvuru Dosya
+        public static string IlanBasvuruDosyaAdded = ServiceMessageHelper.CreatedMessage("Başvuru dosyası");
+        public static string IlanBasvuruDosyaDeleted = ServiceMessageHelper.DeletedMessage("Başvuru dosyası");
+        public static string IlanBasvuruDosyaListed = ServiceMessageHelper.ListedMessage("Başvuru dosyaları");
+        public static string IlanBasvuruDosyaUpdated = ServiceMessageHelper.UpdatedMessage("Başvuru dosyası");
+        public static string IlanBasvuruDosyaNotFound = ServiceMessageHelper.NotFoundMessage("Başvuru dosyası");
+        #endregion
     }
 
 }

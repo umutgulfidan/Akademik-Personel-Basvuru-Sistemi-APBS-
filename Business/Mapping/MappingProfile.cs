@@ -10,6 +10,7 @@ using Entities.Dtos.Bildirim;
 using Entities.Dtos.Bolum;
 using Entities.Dtos.Ilan;
 using Entities.Dtos.IlanBasvuru;
+using Entities.Dtos.IlanBasvuruDosya;
 using Entities.Dtos.Kriter;
 using Entities.Dtos.OperationClaim;
 using Entities.Dtos.Pozisyon;
@@ -220,6 +221,14 @@ namespace Business.Mapping
 
 
 
+            #endregion
+
+            #region Ilan Basvuru Dosya
+            // Entity'den DTO'ya dönüşüm
+            CreateMap<IlanBasvuruDosya, GetIlanBasvuruDosyaDto>()
+                .ForMember(dest => dest.DosyaYolu, opt => opt.MapFrom(src => src.DosyaYolu))  // DosyaYolu eşlemesi
+                .ForMember(dest => dest.YuklenmeTarihi, opt => opt.MapFrom(src => src.YuklenmeTarihi)) // YuklenmeTarihi eşlemesi
+                .ForMember(dest => dest.DosyaUrl, opt => opt.Ignore()); // DosyaUrl'yi ignore ediyoruz, çünkü bunu ayrı olarak alacağız
             #endregion
 
             //CreateMap<UserForRegisterDto, User>().ConstructUsing(
