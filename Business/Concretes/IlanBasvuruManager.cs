@@ -7,7 +7,9 @@ using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstracts;
+using DataAccess.Concretes.EntitiyFramework;
 using Entities.Concretes;
+using Entities.Dtos.Alan;
 using Entities.Dtos.IlanBasvuru;
 using System;
 using System.Collections.Generic;
@@ -68,7 +70,32 @@ namespace Business.Concretes
             return new SuccessResult(Messages.BasvuruAdded);
         }
 
+        public async Task<IResult> Delete(int id)
+        {
+            var result = await _ilanBasvuruDosyaDal.GetAsync(x => x.Id == id);
+            if ( result == null) return new ErrorResult(Messages.BasvuruNotFound);
 
+            await _ilanBasvuruDosyaDal.DeleteAsync(result);
+            return new SuccessResult(Messages.BasvuruDeleted);
+        }
+
+        public async Task<IDataResult<List<IlanBasvuru>>> GetAll()
+        {
+            var result = await _ilanBasvuruDal.GetAllReadOnlyAsync();
+            return new SuccessDataResult<List<IlanBasvuru>>(result,Messages.BasvuruListed);
+        }
+
+        public async Task<IDataResult<IlanBasvuru>> GetById(int id)
+        {
+            var result = await _ilanBasvuruDal.GetReadOnlyAsync(x => x.Id == id);
+            return new SuccessDataResult<IlanBasvuru>(result, Messages.BasvuruListed);
+        }
+
+        public async Task<IDataResult<List<IlanBasvuru>>> GetByUser(int userId)
+        {
+            var result = await _ilanBasvuruDal.GetAllReadOnlyAsync(x=> x.BasvuranId == userId);
+            return new SuccessDataResult<List<IlanBasvuru>>(result,Messages.BasvuruListed);
+        }
 
         public async Task<IDataResult<bool>> IsAppliedBefore(int userId, int ilanId)
         {
@@ -78,6 +105,17 @@ namespace Business.Concretes
                 return new SuccessDataResult<bool>(false, Messages.NotAppliedYetMessage);
             }
             return new SuccessDataResult<bool>(true, Messages.AlreadyAppliedMessage);
+        }
+
+        public async Task<IResult> Update(UpdateIlanBasvuruDto updateIlanBasvuruDto)
+        {
+            var ilanBasvuru = _mapper.Map<IlanBasvuru>(updateIlanBasvuruDto);
+            var result = await _ilanBasvuruDal.GetReadOnlyAsync(x=>x.Id == ilanBasvuru.Id);
+
+            if (result == null) return new ErrorResult(Messages.BasvuruNotFound);
+
+            await _ilanBasvuruDal.UpdateAsync(ilanBasvuru);
+            return new SuccessResult(Messages.BasvuruUpdated);
         }
     }
 }

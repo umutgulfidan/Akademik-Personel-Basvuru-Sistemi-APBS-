@@ -1,6 +1,7 @@
 ﻿using Business.Abstracts;
 using Core.Extensions.Claims;
 using Entities.Concretes;
+using Entities.Dtos.Alan;
 using Entities.Dtos.Ilan;
 using Entities.Dtos.IlanBasvuru;
 using Microsoft.AspNetCore.Http;
@@ -66,6 +67,52 @@ namespace WebApi.Controllers
             return BadRequest(result);
 
         }
+
+
+        [HttpGet("getall")]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _ilanBasvuruService.GetAll();
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("getbyid")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var result = await _ilanBasvuruService.GetById(id);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpDelete("delete")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _ilanBasvuruService.Delete(id);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPut("update")]
+        public async Task<IActionResult> Update(UpdateIlanBasvuruDto updateIlanBasvuruDto)
+        {
+            var result = await _ilanBasvuruService.Update(updateIlanBasvuruDto);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
 
     }
 }

@@ -139,5 +139,39 @@ namespace WebApi.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet("GetAppliedIlanByUser")]
+        public async Task<IActionResult> GetAppliedIlanByUser(int userId)
+        {
+            var result = await _ilanService.GetAppliedIlanByUser(userId);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("GetAppliedIlanByToken")]
+        public async Task<IActionResult> GetAppliedIlanByToken()
+        {
+            if (!HttpContext.User.Identity?.IsAuthenticated ?? false)
+            {
+                return Unauthorized("User is not authenticated.");
+            }
+
+            var userId = HttpContext.User.ClaimUserId();
+
+            if (userId == null)
+            {
+                return Unauthorized("Invalid or missing user ID in token.");
+            }
+
+            var result = await _ilanService.GetAppliedIlanByUser(userId);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
     }
 }

@@ -26,7 +26,7 @@ namespace Business.Concretes
             _mapper = mapper;
         }
 
-        [SecuredOperation("Admin")]
+        [SecuredOperation("Admin,Yonetici")]
         [ValidationAspect(typeof(AddBildirimDtoValidator))]
         public async Task<IResult> AddAdmin(AddBildirimDto bildirim)
         {
@@ -34,7 +34,7 @@ namespace Business.Concretes
             await _bildirimDal.AddAsync(mappedBildirim);
             return new SuccessResult(Messages.BildirimAdded);
         }
-        [SecuredOperation("Admin")]
+        [SecuredOperation("Admin,Yonetici")]
         public async Task<IResult> DeleteAdmin(int id)
         {
             var bildirim = await _bildirimDal.GetAsync(b => b.Id == id);
@@ -43,7 +43,7 @@ namespace Business.Concretes
 
         }
 
-        [SecuredOperation("Admin")]
+        [SecuredOperation("Admin,Yonetici")]
         [ValidationAspect(typeof(UpdateBildirimDtoValidator))]
         public async Task<IResult> UpdateAdmin(UpdateBildirimDto bildirim)
         {
@@ -52,7 +52,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.BildirimAdded);
         }
 
-        [SecuredOperation("Admin")]
+        [SecuredOperation("Admin,Yonetici")]
         public async Task<IDataResult<List<Bildirim>>> GetAllForAdmin()
         {
             var results = await _bildirimDal.GetAllReadOnlyAsync();
@@ -112,7 +112,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.BildirimDeleted);
         }
 
-        [SecuredOperation("Admin")]
+        [SecuredOperation("Admin,Yonetici")]
         public async Task<IDataResult<List<Bildirim>>> GetAllWithPaginating(AdminBildirimQueryDto bildirimQueryDto)
         {
             var results = await _bildirimDal.GetAllWithPaginating(bildirimQueryDto);

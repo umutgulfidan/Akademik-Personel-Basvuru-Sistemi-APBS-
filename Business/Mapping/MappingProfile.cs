@@ -40,7 +40,7 @@ namespace Business.Mapping
 
             // User -> GetUserDto
             CreateMap<User, GetUserDto>()
-                .ForMember(dest=> dest.ImageUrl, opt=> opt.Ignore());
+                .ForMember(dest => dest.ImageUrl, opt => opt.Ignore());
 
             #endregion
 
@@ -171,7 +171,7 @@ namespace Business.Mapping
             CreateMap<AddAlanKriteriDto, AlanKriteri>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Alan, opt => opt.Ignore())
-                .ForMember(dest => dest.Pozisyon, opt => opt.Ignore()) 
+                .ForMember(dest => dest.Pozisyon, opt => opt.Ignore())
                 .ForMember(dest => dest.Kriter, opt => opt.Ignore());
             #endregion
 
@@ -205,9 +205,17 @@ namespace Business.Mapping
                 .ForMember(dest => dest.BasvuruDurumuId, opt => opt.MapFrom(src => 1)) // Varsayılan başvuru durumu (örnek: 1 = "Başvuru Alındı")
                 .ForMember(dest => dest.Ilan, opt => opt.Ignore())
                 .ForMember(dest => dest.Basvuran, opt => opt.Ignore())
-                .ForMember(dest=> dest.BasvuranId, opt=> opt.Ignore())
+                .ForMember(dest => dest.BasvuranId, opt => opt.Ignore())
                 .ForMember(dest => dest.BasvuruDurumu, opt => opt.Ignore())
-                .ForMember(dest=> dest.CreatedDate, opt=> opt.MapFrom(src=> DateTime.Now));
+                .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.Now)).ForMember(dest => dest.BasvuruTarihi, opt => opt.MapFrom(src => DateTime.Now));
+
+            CreateMap<UpdateIlanBasvuruDto, IlanBasvuru>()
+           .ForMember(dest => dest.Ilan, opt => opt.Ignore()) // Navigation property, sadece ID atanıyor
+           .ForMember(dest => dest.Basvuran, opt => opt.Ignore()) // Navigation property
+           .ForMember(dest => dest.BasvuruDurumu, opt => opt.Ignore()) // Navigation property
+           .ForMember(dest => dest.CreatedDate, opt => opt.Ignore()) // Genellikle değiştirilmez
+           .ForMember(dest => dest.DeletedDate, opt => opt.Ignore())
+           .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.Now)); ; // Güncellemede kullanılmaz
 
 
             #endregion

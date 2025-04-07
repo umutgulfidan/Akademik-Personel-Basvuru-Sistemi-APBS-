@@ -21,16 +21,19 @@ namespace Business.Concretes
 {
     public class IlanManager : IIlanService
     {
+        private readonly IIlanBasvuruService _ilanBasvuruService;
         private readonly IIlanDal _ilanDal;
         private readonly IAlanKriteriDal _alanKriteriDal;
         private readonly IMapper _mapper;
         private readonly ClaimsPrincipal _currentUser;
-        public IlanManager(IIlanDal ilanDal, IAlanKriteriDal alanKriteriDal, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+
+        public IlanManager(IIlanBasvuruService ilanBasvuruService, IIlanDal ilanDal, IAlanKriteriDal alanKriteriDal, IMapper mapper, ClaimsPrincipal currentUser)
         {
+            _ilanBasvuruService = ilanBasvuruService;
             _ilanDal = ilanDal;
             _alanKriteriDal = alanKriteriDal;
             _mapper = mapper;
-            _currentUser = httpContextAccessor.HttpContext?.User ?? throw new Exception("User not found");
+            _currentUser = currentUser;
         }
 
         [SecuredOperation("Admin")]
@@ -47,7 +50,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.IlanActivate);
         }
 
-        [SecuredOperation("Admin")]
+        [SecuredOperation("Admin,Yonetici")]
         [ValidationAspect(typeof(AddIlanDtoValidator))]
         [CacheRemoveAspect("IIlanService.Get")]
         public async Task<Core.Utilities.Results.IResult> Add(AddIlanDto dto)
@@ -62,7 +65,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.IlanAdded);
         }
 
-        [SecuredOperation("Admin")]
+        [SecuredOperation("Admin,Yonetici")]
         [CacheRemoveAspect("IIlanService.Get")]
         public async Task<Core.Utilities.Results.IResult> DeactivateIlan(int id)
         {
@@ -75,7 +78,7 @@ namespace Business.Concretes
             await _ilanDal.UpdateAsync(ilan);
             return new SuccessResult(Messages.IlanDeactivate);
         }
-        [SecuredOperation("Admin")]
+        [SecuredOperation("Admin,Yonetici")]
         [CacheRemoveAspect("IIlanService.Get")]
         public async Task<Core.Utilities.Results.IResult> Delete(int id)
         {
@@ -83,13 +86,15 @@ namespace Business.Concretes
             return new SuccessResult(Messages.IlanDeleted);
         }
 
-        [SecuredOperation("Admin")]
+        [SecuredOperation("Admin,Yonetici")]
         public async Task<IDataResult<List<GetIlanDto>>> GetAll()
         {
             var results = await _ilanDal.GetAllWithBolumPozisyonOlusturan();
             var mappedResults = _mapper.Map<List<GetIlanDto>>(results);
             return new SuccessDataResult<List<GetIlanDto>>(mappedResults, Messages.IlanListed);
         }
+
+
         [CacheAspect(10)]
         public async Task<IDataResult<GetIlanDto>> GetById(int id)
         {
@@ -118,7 +123,7 @@ namespace Business.Concretes
             return new SuccessDataResult<List<GetIlanDto>>(mappedIlans, Messages.IlanListed);
         }
 
-        [SecuredOperation("Admin")]
+        [SecuredOperation("Admin,Yonetici")]
         [CacheAspect(5)]
         public async Task<IDataResult<List<GetIlanAdminDto>>> GetIlansByQueryForAdmin(AdminIlanQueryDto queryDto)
         {
@@ -127,7 +132,7 @@ namespace Business.Concretes
             return new SuccessDataResult<List<GetIlanAdminDto>>(mappedIlans, Messages.IlanListed);
         }
 
-        [SecuredOperation("Admin")]
+        [SecuredOperation("Admin,Yonetici")]
         [ValidationAspect(typeof(UpdateIlanDtoValidator))]
         [CacheRemoveAspect("IIlanService.Get")]
         public async Task<Core.Utilities.Results.IResult> Update(UpdateIlanDto dto)
@@ -143,6 +148,15 @@ namespace Business.Concretes
             await _ilanDal.UpdateAsync(ilanToUpdate);
             return new SuccessResult(Messages.IlanUpdated);
 
+        }
+
+        public async Task<IDataResult<List<GetIlanDto>>> GetAppliedIlanByUser(int userId)
+        {
+            var basvurular = await _ilanBasvuruService.GetByUser(userId);
+            var basvurulanIlanIdListesi = basvurular.Data.Select(x=> x.IlanId).ToList();
+            var ilanlar = _ilanDal.GetAllReadOnlyAsync(i => basvurulanIlanIdListesi.Contains(i.Id));
+            var mappedIlans = _mapper.Map<List<GetIlanDto>>(ilanlar);
+            return new SuccessDataResult<List<GetIlanDto>>(mappedIlans);
         }
     }
 }

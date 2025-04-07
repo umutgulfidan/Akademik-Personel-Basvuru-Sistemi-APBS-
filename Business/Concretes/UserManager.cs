@@ -113,7 +113,7 @@ namespace Business.Concretes
             return new SuccessResult(Messages.UserDeactivate);
         }
 
-        [SecuredOperation("Admin")]
+        [SecuredOperation("Admin,Yonetici")]
         public async Task<IDataResult<List<GetUserDto>>> GetUsersByQuery(UserQueryDto query)
         {
             var users = await _userDal.GetUsersByQueryAsync(query);
