@@ -27,13 +27,13 @@ namespace Business.Concretes
         private readonly IMapper _mapper;
         private readonly ClaimsPrincipal _currentUser;
 
-        public IlanManager(IIlanBasvuruService ilanBasvuruService, IIlanDal ilanDal, IAlanKriteriDal alanKriteriDal, IMapper mapper, ClaimsPrincipal currentUser)
+        public IlanManager(IIlanBasvuruService ilanBasvuruService, IIlanDal ilanDal, IAlanKriteriDal alanKriteriDal, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _ilanBasvuruService = ilanBasvuruService;
             _ilanDal = ilanDal;
             _alanKriteriDal = alanKriteriDal;
             _mapper = mapper;
-            _currentUser = currentUser;
+            _currentUser = httpContextAccessor.HttpContext?.User ?? throw new Exception("User not found");
         }
 
         [SecuredOperation("Admin")]
