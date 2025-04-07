@@ -70,10 +70,10 @@ namespace Business.Concretes
 
         public async Task<IResult> Delete(int id)
         {
-            var result = await _ilanBasvuruDosyaDal.GetAsync(x => x.Id == id);
+            var result = await _ilanBasvuruDal.GetAsync(x => x.Id == id);
             if ( result == null) return new ErrorResult(Messages.BasvuruNotFound);
 
-            await _ilanBasvuruDosyaDal.DeleteAsync(result);
+            await _ilanBasvuruDald.DeleteAsync(result);
             return new SuccessResult(Messages.BasvuruDeleted);
         }
 
@@ -107,13 +107,16 @@ namespace Business.Concretes
 
         public async Task<IResult> Update(UpdateIlanBasvuruDto updateIlanBasvuruDto)
         {
-            var ilanBasvuru = _mapper.Map<IlanBasvuru>(updateIlanBasvuruDto);
-            var result = await _ilanBasvuruDal.GetReadOnlyAsync(x=>x.Id == ilanBasvuru.Id);
+            var ilanBasvuru = await _ilanBasvuruDal.GetReadOnlyAsync(x => x.Id == updateIlanBasvuruDto.Id);
 
-            if (result == null) return new ErrorResult(Messages.BasvuruNotFound);
+            if (ilanBasvuru == null)
+                return new ErrorResult(Messages.BasvuruNotFound); 
+
+            _mapper.Map(updateIlanBasvuruDto, ilanBasvuru); 
 
             await _ilanBasvuruDal.UpdateAsync(ilanBasvuru);
-            return new SuccessResult(Messages.BasvuruUpdated);
+
+            return new SuccessResult(Messages.BasvuruUpdated); 
         }
     }
 }

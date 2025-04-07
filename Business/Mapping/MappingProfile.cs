@@ -210,12 +210,14 @@ namespace Business.Mapping
                 .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.Now)).ForMember(dest => dest.BasvuruTarihi, opt => opt.MapFrom(src => DateTime.Now));
 
             CreateMap<UpdateIlanBasvuruDto, IlanBasvuru>()
-           .ForMember(dest => dest.Ilan, opt => opt.Ignore()) // Navigation property, sadece ID atanıyor
-           .ForMember(dest => dest.Basvuran, opt => opt.Ignore()) // Navigation property
-           .ForMember(dest => dest.BasvuruDurumu, opt => opt.Ignore()) // Navigation property
-           .ForMember(dest => dest.CreatedDate, opt => opt.Ignore()) // Genellikle değiştirilmez
-           .ForMember(dest => dest.DeletedDate, opt => opt.Ignore())
-           .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.Now)); ; // Güncellemede kullanılmaz
+                .ForMember(dest => dest.Ilan, opt => opt.Ignore()) // Ignore navigation property 'Ilan'
+                .ForMember(dest => dest.Basvuran, opt => opt.Ignore()) // Ignore navigation property 'Basvuran'
+                .ForMember(dest => dest.BasvuruDurumu, opt => opt.Ignore()) // Ignore navigation property 'BasvuruDurumu'
+                .ForMember(dest => dest.CreatedDate, opt => opt.Ignore()) // Ignore 'CreatedDate', doesn't change on update
+                .ForMember(dest => dest.DeletedDate, opt => opt.Ignore()) // Ignore 'DeletedDate', doesn't change on update
+                .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.Now)) // Set 'UpdatedDate' to current time
+                .ForMember(dest => dest.BasvuruDurumuId, opt => opt.MapFrom(src => src.BasvuruDurumuId)); // Map 'BasvuruDurumuId' directly
+
 
 
             #endregion
