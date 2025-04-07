@@ -80,6 +80,17 @@ namespace WebApi.Controllers
             return BadRequest(result);
         }
 
+        [HttpGet("getbyquery")]
+        public async Task<IActionResult> GetByQuery([FromQuery]IlanBasvuruQueryDto queryDto)
+        {
+            var result = await _ilanBasvuruService.GetAllByQuery(queryDto);
+            if (result.IsSuccess)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
         [HttpGet("getbyid")]
         public async Task<IActionResult> GetById(int id)
         {

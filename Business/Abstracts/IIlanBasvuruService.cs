@@ -1,6 +1,7 @@
 ﻿using Core.Utilities.Results;
 using Entities.Concretes;
 using Entities.Dtos.Alan;
+using Entities.Dtos.Ilan;
 using Entities.Dtos.IlanBasvuru;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace Business.Abstracts
         Task<IDataResult<bool>> IsAppliedBefore(int userId,int ilanId);
 
         Task<IDataResult<List<IlanBasvuru>>> GetAll();
+        Task<IDataResult<List<IlanBasvuru>>> GetAllByQuery(IlanBasvuruQueryDto queryDto);
         Task<IDataResult<IlanBasvuru>> GetById(int id);
         Task<IDataResult<List<IlanBasvuru>>> GetByUser(int userId);
         Task<IResult> Update(UpdateIlanBasvuruDto alan);

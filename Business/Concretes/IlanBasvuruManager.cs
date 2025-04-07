@@ -10,6 +10,7 @@ using DataAccess.Abstracts;
 using DataAccess.Concretes.EntitiyFramework;
 using Entities.Concretes;
 using Entities.Dtos.Alan;
+using Entities.Dtos.Ilan;
 using Entities.Dtos.IlanBasvuru;
 using System;
 using System.Collections.Generic;
@@ -93,6 +94,13 @@ namespace Business.Concretes
         {
             var result = await _ilanBasvuruDal.GetAllReadOnlyAsync(x=> x.BasvuranId == userId);
             return new SuccessDataResult<List<IlanBasvuru>>(result,Messages.BasvuruListed);
+        }
+
+        [SecuredOperation("Admin,Yonetici")]
+        public async Task<IDataResult<List<IlanBasvuru>>> GetAllByQuery(IlanBasvuruQueryDto queryDto)
+        {
+            var result = await _ilanBasvuruDal.GetAllByQueryAsync(queryDto);
+            return new SuccessDataResult<List<IlanBasvuru>>(result, Messages.BasvuruListed);
         }
 
         public async Task<IDataResult<bool>> IsAppliedBefore(int userId, int ilanId)
