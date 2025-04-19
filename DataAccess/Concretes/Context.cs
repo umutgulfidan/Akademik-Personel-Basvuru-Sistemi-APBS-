@@ -28,7 +28,7 @@ namespace DataAccess.Concretes
             .HasForeignKey(b => b.BasvuranId)
             .OnDelete(DeleteBehavior.Restrict); // ON DELETE CASCADE yerine RESTRICT kullanıldı
 
-            modelBuilder.Entity<BasvuruJuri>()
+            modelBuilder.Entity<IlanJuri>()
             .HasOne(b => b.Kullanici)
             .WithMany()
             .HasForeignKey(b => b.KullaniciId)
@@ -85,7 +85,7 @@ namespace DataAccess.Concretes
         // Başvuru
         public DbSet<IlanBasvuru> IlanBasvurulari { get; set; }
         public DbSet<BasvuruDurumu> BasvuruDurumlari { get; set; }
-        public DbSet<BasvuruJuri> BasvuruJurileri { get; set; }
+        public DbSet<IlanJuri> IlanJurileri { get; set; }
         public DbSet<IlanBasvuruDosya> BasvuruDosyalari { get; set; }
         public DbSet<RaporDosya> RaporDosyalari { get; set; }
     }

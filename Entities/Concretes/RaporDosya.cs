@@ -12,7 +12,7 @@ namespace Entities.Concretes
         public IlanBasvuru Basvuru { get; set; }
 
         public int JuriId { get; set; }
-        public BasvuruJuri Juri { get; set; }
+        public IlanJuri Juri { get; set; }
 
         public string DosyaYolu { get; set; }
         public DateTime YuklenmeTarihi { get; set; }

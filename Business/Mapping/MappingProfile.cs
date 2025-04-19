@@ -11,6 +11,7 @@ using Entities.Dtos.Bolum;
 using Entities.Dtos.Ilan;
 using Entities.Dtos.IlanBasvuru;
 using Entities.Dtos.IlanBasvuruDosya;
+using Entities.Dtos.IlanJuri;
 using Entities.Dtos.Kriter;
 using Entities.Dtos.OperationClaim;
 using Entities.Dtos.Pozisyon;
@@ -127,9 +128,11 @@ namespace Business.Mapping
                 .ForMember(dest => dest.Bolum, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => DateTime.Now)); // Bu alan otomatik olarak şu anki tarihi alacak; // Bolum objesi
 
-            // Ilan -> GetIlanDto
+            // Ilan -> GetIlanAdminDto
             CreateMap<Ilan, GetIlanAdminDto>()
-                .ForMember(dest => dest.Olusturan, opt => opt.MapFrom(src => src.Olusturan));
+                .ForMember(dest => dest.Pozisyon, opt => opt.MapFrom(src => src.Pozisyon))  // Pozisyon bilgisini ekliyoruz
+                .ForMember(dest => dest.Bolum, opt => opt.MapFrom(src => src.Bolum))  // Bolum bilgisini ekliyoruz
+                .ForMember(dest => dest.Olusturan, opt => opt.MapFrom(src => src.Olusturan));  // Olusturan bilgisi
 
             // Ilan -> GetIlanDto
             CreateMap<Ilan, GetIlanDto>()
@@ -233,6 +236,25 @@ namespace Business.Mapping
                 .ForMember(dest => dest.DosyaYolu, opt => opt.MapFrom(src => src.DosyaYolu))  // DosyaYolu eşlemesi
                 .ForMember(dest => dest.YuklenmeTarihi, opt => opt.MapFrom(src => src.YuklenmeTarihi)) // YuklenmeTarihi eşlemesi
                 .ForMember(dest => dest.DosyaUrl, opt => opt.Ignore()); // DosyaUrl'yi ignore ediyoruz, çünkü bunu ayrı olarak alacağız
+            #endregion
+
+            #region İlan Jüri
+            // AddAlanDto -> Alan
+            CreateMap<AddIlanJuriDto, IlanJuri>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Kullanici, opt => opt.Ignore());
+
+            // IlanJuri -> GetIlanJuriDto
+            CreateMap<IlanJuri, GetIlanJuriDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.KullaniciId, opt => opt.MapFrom(src => src.KullaniciId))
+                .ForMember(dest => dest.IlanId, opt => opt.MapFrom(src => src.IlanId))
+                .ForMember(dest => dest.Juri, opt => opt.MapFrom(src => src.Kullanici)); // Mapping Kullanici to Juri
+
+            // Mapping from User (Kullanici) to IlanJuriUserDto
+            CreateMap<User, IlanJuriUserDto>()
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName));
             #endregion
 
             //CreateMap<UserForRegisterDto, User>().ConstructUsing(

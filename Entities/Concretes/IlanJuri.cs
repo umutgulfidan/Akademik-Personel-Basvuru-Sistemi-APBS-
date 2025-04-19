@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Concretes
 {
-    public class BasvuruJuri : IEntity
+    public class IlanJuri : IEntity
     {
         [Key]
         public int Id { get; set; }
@@ -17,8 +17,8 @@ namespace Entities.Concretes
         public int KullaniciId { get; set; }
         public User Kullanici { get; set; }
 
-        public int BasvuruId { get; set; }
-        public IlanBasvuru Basvuru { get; set; }
+        public int IlanId { get; set; }
+
 
     }
 }
