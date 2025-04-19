@@ -13,10 +13,12 @@ namespace Core.Entities.Concrete
         public string Email { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
-
         public string? ImageKey { get; set; }
+
         public DateTime DateOfBirth { get; set; }
         public bool Status { get; set; }
+
+        public ICollection<UserOperationClaim> OperationClaims { get; set; }
 
     }
 }

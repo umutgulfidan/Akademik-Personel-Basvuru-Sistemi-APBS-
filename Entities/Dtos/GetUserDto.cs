@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Core.Entities.Concrete;
+using Entities.Dtos.UserOperationClaim;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +16,8 @@ namespace Entities.Dtos
         public string LastName { get; set; }
         public string Email { get; set; }
         public bool Status { get; set; }
+
+        public List<GetUserOperationClaimDto>? OperationClaims { get; set; }
 
         public string? ImageUrl { get; set; }
         public DateTime DateOfBirth { get; set; }

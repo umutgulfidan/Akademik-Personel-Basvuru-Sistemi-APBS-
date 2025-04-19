@@ -37,11 +37,15 @@ namespace Business.Mapping
                 .ForMember(dest => dest.CreatedDate, opt => opt.MapFrom(src => DateTime.Now))
                 .ForMember(dest => dest.UpdatedDate, opt => opt.MapFrom(src => (DateTime?)null)) // Null atanıyor
                 .ForMember(dest => dest.DeletedDate, opt => opt.MapFrom(src => (DateTime?)null)) // Null atanıyor
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => true));
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => true))
+                .ForMember(dest => dest.OperationClaims, opt => opt.Ignore()); 
 
             // User -> GetUserDto
             CreateMap<User, GetUserDto>()
-                .ForMember(dest => dest.ImageUrl, opt => opt.Ignore());
+                .ForMember(dest => dest.ImageUrl, opt => opt.Ignore())
+                .ForMember(dest => dest.OperationClaims,
+                opt => opt.MapFrom(src => src.OperationClaims));
+
 
             #endregion
 

@@ -17,6 +17,9 @@ namespace Entities.Dtos.Users
         public string? LastName { get; set; }
         public string? NationalityId { get; set; }
         public string? Email { get; set; }
+
+        public string? OperationClaimId { get; set; }
+        public string? OperationClaimName { get; set; }
         public DateTime? MinDateOfBirth { get; set; }
         public DateTime? MaxDateOfBirth { get; set; }
         public bool? Status { get; set; } // Kullanıcı Durumu (aktif, pasif vb.)

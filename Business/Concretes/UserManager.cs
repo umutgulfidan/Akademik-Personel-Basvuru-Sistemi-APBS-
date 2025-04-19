@@ -118,6 +118,15 @@ namespace Business.Concretes
         {
             var users = await _userDal.GetUsersByQueryAsync(query);
             var mappedUsers = _mapper.Map<List<GetUserDto>>(users);
+
+            for (int i = 0; i < mappedUsers.Count; i++)
+            {
+                var userEntity = users[i];
+                if (!string.IsNullOrEmpty(userEntity.ImageKey))
+                {
+                    mappedUsers[i].ImageUrl = await _fileService.GetPreSignedUrlAsync(userEntity.ImageKey, 15);
+                }
+            }
             return new SuccessDataResult<List<GetUserDto>>(mappedUsers,Messages.UserListed);
         }
 

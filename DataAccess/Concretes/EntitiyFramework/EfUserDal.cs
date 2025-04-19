@@ -26,7 +26,7 @@ namespace DataAccess.Concretes.EntitiyFramework
         {
             using var context = new Context();
             // Veritabanı sorgusunu başlatıyoruz
-            var usersQuery = context.Users.AsNoTracking().AsQueryable();
+            var usersQuery = context.Users.Include(u => u.OperationClaims).ThenInclude(uoc => uoc.OperationClaim).AsNoTracking().AsQueryable();
 
             // Filtreleme işlemleri
             if (query.Id.HasValue)
@@ -66,6 +66,20 @@ namespace DataAccess.Concretes.EntitiyFramework
             if (query.Status.HasValue)
             {
                 usersQuery = usersQuery.Where(u=> u.Status == query.Status);
+            }
+
+            if (!string.IsNullOrEmpty(query.OperationClaimId))
+            {
+                usersQuery = usersQuery.Where(u =>
+                    u.OperationClaims.Any(uoc =>
+                        uoc.OperationClaim.Id.ToString() == query.OperationClaimId));
+            }
+
+            if (!string.IsNullOrEmpty(query.OperationClaimName))
+            {
+                usersQuery = usersQuery.Where(u =>
+                    u.OperationClaims.Any(uoc =>
+                        EF.Functions.Like(uoc.OperationClaim.Name, $"%{query.OperationClaimName}%")));
             }
 
             if (!string.IsNullOrEmpty(query.SearchTerm))
