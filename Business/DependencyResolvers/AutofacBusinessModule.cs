@@ -80,6 +80,9 @@ namespace Business.DependencyResolvers
             builder.RegisterType<EfIlanBasvuruDosyaDal>().As<IIlanBasvuruDosyaDal>().SingleInstance();
             builder.RegisterType<IlanBasvuruDosyaManager>().As<IIlanBasvuruDosyaService>().SingleInstance();
 
+            builder.RegisterType<EfIlanJuriDal>().As<IIlanJuriDal>().SingleInstance();
+            builder.RegisterType<IlanJuriManager>().As<IIlanJuriService>().SingleInstance();
+
             builder.RegisterType<DashboardManager>().As<IDashboardService>().SingleInstance();
 
             builder.RegisterType<AwsFileManager>().As<IFileService>().SingleInstance();

@@ -129,6 +129,14 @@ namespace Business.Constants
         public static string IlanBasvuruDosyaUpdated = ServiceMessageHelper.UpdatedMessage("Başvuru dosyası");
         public static string IlanBasvuruDosyaNotFound = ServiceMessageHelper.NotFoundMessage("Başvuru dosyası");
         #endregion
+
+        #region IlanJuri
+        public static string IlanJuriAdded = ServiceMessageHelper.CreatedMessage("İlan jüri");
+        public static string IlanJuriDeleted = ServiceMessageHelper.DeletedMessage("İlan jüri");
+        public static string IlanJuriListed = ServiceMessageHelper.ListedMessage("İlan jürileri");
+        public static string IlanJuriUpdated = ServiceMessageHelper.UpdatedMessage("İlan jüri");
+        public static string IlanJuriNotFound = ServiceMessageHelper.NotFoundMessage("İlan jüri");
+        #endregion
     }
 
 }
