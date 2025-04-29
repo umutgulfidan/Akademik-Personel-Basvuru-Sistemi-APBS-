@@ -83,6 +83,10 @@ Frontend için [APBS-Frontend](https://github.com/Utku-Genc/APBS-Frontend) adres
 
 ------------
 
+## Proje Raporu
+
+Proje raporuna [Rapor](https://github.com/user-attachments/files/19960362/yazlab_rapor.pdf) linkinden erişebilirsiniz.
+
 
 
 ### Hazırlayanlar
